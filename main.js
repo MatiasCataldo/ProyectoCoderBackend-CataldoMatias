@@ -89,3 +89,32 @@ manejadorProductos.addProduct(
 );
 
 console.log(manejadorProductos.getProducts());
+
+// Obtén todos los botones "Comprar" y los popups de productos
+const buyButtons = document.querySelectorAll('.buy-button');
+const productPopups = document.querySelectorAll('.product-popup');
+
+buyButtons.forEach((buyButton, index) => {
+    buyButton.addEventListener('click', () => {
+        // Muestra el popup correspondiente al botón "Comprar" clicado
+        productPopups[index].style.display = 'block';
+    });
+});
+
+// Cuando se hace clic en "Agregar al carrito"
+const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+addToCartButtons.forEach((addToCartButton) => {
+    addToCartButton.addEventListener('click', () => {
+        // Recopila las opciones del producto, por ejemplo, los sabores seleccionados
+        const selectedFlavors = Array.from(document.querySelectorAll('input[name="flavor"]:checked'))
+            .map((flavor) => flavor.value);
+
+        // Realiza la lógica para agregar el producto al carrito, por ejemplo, guardar en una lista
+        // y actualizar el contador del carrito
+        // ...
+
+        // Cierra el popup
+        addToCartButton.closest('.product-popup').style.display = 'none';
+    });
+});

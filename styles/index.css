@@ -1,8 +1,13 @@
+
+
 .logoHeader{
     height: 70px;
     width: max-content;
 }
 
+h3{
+    margin-left: 5px;
+}
 
 header{
     background-image: url(../images/Captura\ de\ pantalla\ 2023-10-31\ 090121.png);
@@ -130,4 +135,16 @@ body {
 
 footer {
     margin-top: 20px;
+}
+
+
+.product-popup {
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
 }
