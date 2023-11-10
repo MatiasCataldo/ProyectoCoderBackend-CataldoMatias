@@ -17,11 +17,16 @@ class ProductManager{
         const data = fs.readFileSync(this.path, "utf8");
         if(data){
             this.products = JSON.parse(data);
-            this.nextProductId = this.products.length + 1;
+            this.nextProductId = this.getNextProductId();
         } else{
             this.products = [];
             this.nextProductId = 1;
         }
+    }
+
+    getNextProductId() {
+        const lastProduct = this.products[this.products.length - 1];
+        return lastProduct ? lastProduct.code + 1 : 1;
     }
 
     addProduct(product) {
