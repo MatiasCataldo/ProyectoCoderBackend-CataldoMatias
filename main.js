@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 class ProductManager{
     constructor(){
@@ -112,27 +112,18 @@ class Product{
     }
 }
 
+export default ProductManager
+
 // Pruebas
 const manejadorProductos = new ProductManager();
 
-// PRODUCTO 1:
-console.log("agregando Producto1: TITLE:'Helado Artesanal de 1/4Kg', DESCRIPTION:'Helado artesanal de 1/4 de kilo con 3 sabores a elegir.', PRICE'1600', URL:'...', ID:'1', STOCK:'50'");
-
-manejadorProductos.addProduct(new Product("Helado Artesanal de 1/4Kg", "Helado artesanal de 1/4 de kilo con 3 sabores a elegir.", 1600, "url", 0, 50));
-
-// PRODUCTO 2:
-console.log("agregando Producto2: TITLE:'Helado Artesanal de 1/2Kg', DESCRIPTION:'Helado artesanal de 1/2 de kilo con 3 sabores a elegir.', PRICE'2900', URL:'...', ID:'1', STOCK:'50'");
-
-manejadorProductos.addProduct(new Product("Helado Artesanal de 1/2Kg", "Helado artesanal de 1/2 de kilo con 3 sabores a elegir.", 2900, "url", 0, 50));
-
-// PRODUCTO 3:
-console.log("agregando Producto3: TITLE:'Helado Artesanal de 1Kg', DESCRIPTION:'Helado artesanal de 1 kilo con 4 sabores a elegir.', PRICE'4800', URL:'...', ID:'1', STOCK:'50'");
-
-manejadorProductos.addProduct(new Product("Helado Artesanal de 1Kg", "Helado artesanal de 1 kilo con 4 sabores a elegir.", 4800, "url", 0, 50));
-
-// PRODUCTO 4 INCOMPLETO:
-console.log("agregando Producto4: TITLE:'', DESCRIPTION:'Helado artesanal de 1 kilo con 4 sabores a elegir.', PRICE'4800', URL:'...', ID:'1', STOCK:'50'");
-
-manejadorProductos.addProduct(new Product("", "Helado artesanal de 1 kilo con 4 sabores a elegir.", 4800, "url", 0, 50));
+//manejadorProductos.addProduct(new Product("Helado Artesanal de 1/4Kg", "Helado artesanal de 1/4 de kilo con 2 sabores a elegir.", 1600, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Helado Artesanal de 1/2Kg", "Helado artesanal de 1/2 de kilo con 3 sabores a elegir.", 2900, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Helado Artesanal de 1Kg", "Helado artesanal de 1 kilo con 4 sabores a elegir.", 4800, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Frambuesas Huapis", "Frambuesas bañadas en chocolate Huapis 150gr.", 2200, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Torta Helada Chocotorta", "Base de pionono rellena de dulce de leche, galletitas y helado de chocotorta. Decorada con una fina capa de dulce de leche y galletitas. 2.5kg aprox.", 10500, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Torta Helada Oreo", "Base de pionono, con helado artesanal de crema oreo, veteado de chocolate, crema y galletitas oreo.", 10500, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Barra Patagónica", "Base de pionono con helado de frutos rojos y mascarpone, corazón de frutos del bosque y veteado de frutos del bosque. Crema cereza y frambuesa.", 8900, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("Bombon Escoces", "Helado Artesanal de chocolate y crema americana, con corazón de dulce de leche repostero, cubierto con baño de repostería.", 5800, "url", 50, 0));
 
 console.log(manejadorProductos.getProducts());
