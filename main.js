@@ -2,7 +2,7 @@ import fs from "fs";
 
 class ProductManager{
     constructor(){
-        this.path = "./productos.txt";
+        this.path = "./productos.json";
         this.loadProductsFromFile();
     }
 
@@ -98,16 +98,22 @@ class ProductManager{
 }
 
 class Product{
-    constructor(title, 
+    constructor(id,
+        title, 
         description, 
         price, 
         thumbnail, 
-        stock) {
+        stock,
+        category
+) {
+        this.id = id,
         this.title = title;
         this.description = description;
         this.price = price;
         this.thumbnail = thumbnail;
         this.stock = stock;
+        this.category = category;
+        this.status = true;
         this.code = null;
     }
 }
@@ -117,13 +123,13 @@ export default ProductManager
 // Pruebas
 const manejadorProductos = new ProductManager();
 
-//manejadorProductos.addProduct(new Product("Helado Artesanal de 1/4Kg", "Helado artesanal de 1/4 de kilo con 2 sabores a elegir.", 1600, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Helado Artesanal de 1/2Kg", "Helado artesanal de 1/2 de kilo con 3 sabores a elegir.", 2900, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Helado Artesanal de 1Kg", "Helado artesanal de 1 kilo con 4 sabores a elegir.", 4800, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Frambuesas Huapis", "Frambuesas bañadas en chocolate Huapis 150gr.", 2200, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Torta Helada Chocotorta", "Base de pionono rellena de dulce de leche, galletitas y helado de chocotorta. Decorada con una fina capa de dulce de leche y galletitas. 2.5kg aprox.", 10500, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Torta Helada Oreo", "Base de pionono, con helado artesanal de crema oreo, veteado de chocolate, crema y galletitas oreo.", 10500, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Barra Patagónica", "Base de pionono con helado de frutos rojos y mascarpone, corazón de frutos del bosque y veteado de frutos del bosque. Crema cereza y frambuesa.", 8900, "url", 50, 0));
-//manejadorProductos.addProduct(new Product("Bombon Escoces", "Helado Artesanal de chocolate y crema americana, con corazón de dulce de leche repostero, cubierto con baño de repostería.", 5800, "url", 50, 0));
+//manejadorProductos.addProduct(new Product("H14","Helado Artesanal de 1/4Kg", "Helado artesanal de 1/4 de kilo con 2 sabores a elegir.", 1600, "url", 50, "Helado", true));
+//manejadorProductos.addProduct(new Product("H12", "Helado Artesanal de 1/2Kg", "Helado artesanal de 1/2 de kilo con 3 sabores a elegir.", 2900, "url", 50, "Helado", true));
+//manejadorProductos.addProduct(new Product("H1", "Helado Artesanal de 1Kg", "Helado artesanal de 1 kilo con 4 sabores a elegir.", 4800, "url", 50, "Helado", true));
+//manejadorProductos.addProduct(new Product("F1", "Frambuesas Huapis", "Frambuesas bañadas en chocolate Huapis 150gr.", 2200, "url", 50, "Bombones/Tortas", true));
+//manejadorProductos.addProduct(new Product("BT1", "Torta Helada Chocotorta", "Base de pionono rellena de dulce de leche, galletitas y helado de chocotorta. Decorada con una fina capa de dulce de leche y galletitas. 2.5kg aprox.", 10500, "url", 50, "Bombones/Tortas", true));
+//manejadorProductos.addProduct(new Product("BT2", "Torta Helada Oreo", "Base de pionono, con helado artesanal de crema oreo, veteado de chocolate, crema y galletitas oreo.", 10500, "url", 50, "Bombones/Tortas", true));
+//manejadorProductos.addProduct(new Product("BT3", "Barra Patagónica", "Base de pionono con helado de frutos rojos y mascarpone, corazón de frutos del bosque y veteado de frutos del bosque. Crema cereza y frambuesa.", 8900, "url", 50, "Bombones/Tortas", true));
+//manejadorProductos.addProduct(new Product("BT4", "Bombon Escoces", "Helado Artesanal de chocolate y crema americana, con corazón de dulce de leche repostero, cubierto con baño de repostería.", 5800, "url", 50, "Bombones/Tortas", true));
 
 console.log(manejadorProductos.getProducts());
