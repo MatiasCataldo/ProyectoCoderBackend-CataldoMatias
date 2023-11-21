@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Helanus</title>
+    <link rel="shortcut icon" href="images/icon.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/eb496ab1a0.js" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <script defer src="./main.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#!"> 
+                <img src="./images/logo.png" class="logoHeader" alt="logo pagina">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="./index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!"></a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#Helados">Helados Artesanales</a></li>
+                            <li><a class="dropdown-item" href="#Tortas">Bombones/Tortas</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <a href="./pages/checkout.html" class="btn btn-outline-dark"  type="submit">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div class="container" id="container"></div>
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1>Helanus<img src="./images/icon.png" class="logoPrincipal" alt="logo pagina"></h1>
+                    <p class="lead fw-normal text-50 mb-0">Fabrica de Helados Premium con ingredientes de calidad Gourmet.</p>
+                </div>
+            </div>
+        </header>
+    </main>
+    <h3 id="Helados">Helados Artenales</h3>
+    <div id="cards" class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <img src="./images/1-4.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Helado Artesanal de 1/4Kg</h5>
+                    <p class="card-text">Helado artesanal de 1/4 de kilo con 2 sabores a elegir.</p>
+                    <div class="precios">
+                        $1.600
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="./images/1-2.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Helado Artesanal de 1/2Kg</h5>
+                    <p class="card-text">Helado artesanal de 1/2 de kilo con 3 sabores a elegir.</p>
+                    <div class="precios">
+                        $2.900
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.6rem; right: 0.6rem">Sale</div>
+                <img src="./images/1.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Helado Artesanal de 1Kg</h5>
+                    <p class="card-text">Helado artesanal de 1 kilo con 4 sabores a elegir.</p>
+                    <div class="precios">
+                        <span class="text-muted text-decoration-line-through">$5.500</span>$4.800
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="./images/huapis.jpeg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title"> Frambuesas Huapis</h5>
+                    <p class="card-text">Frambuesas bañadas en chocolate Huapis 150gr.</p>
+                    <div class="precios">
+                        $2.200
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 id="Tortas">Postres / Helados</h3>
+    <div id="cards" class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.6rem; right: 0.6rem">Sale</div>
+                <img src="./images/chocotorta.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Torta Helada Chocotorta</h5>
+                    <p class="card-text">Base de pionono rellena de dulce de leche, galletitas y helado de
+                        chocotorta.decorada con una fina capa de dulce de leche y galletitas. 2.5kg aprox.</p>
+                    <div class="precios">
+                        <span class="text-muted text-decoration-line-through">$12.000</span>$10.500
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="./images/oreo.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Torta Helada Oreo</h5>
+                    <p class="card-text">Base de pionono, con helado artesanal de crema oreo, veteado de chocolate, crema y
+                        galletitas oreo.</p>
+                    <div class="precios">
+                        $10.500
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.6rem; right: 0.6rem">Sale</div>
+                <img src="./images/patagonia.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Barra Patagónica</h5>
+                    <p class="card-text">Base de pionono con helado de frutos rojos y mascarpone, corazón de frutos del
+                        bosque y veteado de frutos del bosque. crema cereza y frambuesa.</p>
+                    <div class="precios">
+                        <span class="text-muted text-decoration-line-through">$10.500</span>$8.900
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="./images/escoses.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Bombon Escoces</h5>
+                    <p class="card-text">Helado Artesanal de chocolate y crema americana, con corazón de dulce de leche repostero, cubierto con baño de repostería.</p>
+                    <div class="precios">
+                        $5.800
+                    </div>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="text-white text-center text-lg-start" id="footer" style="background-color: #23242a;">
+        <div class="container p-4">
+            <div class="row mt-4">
+                <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">Acerca de Nosotros</h5>
+                    <p>En Helanus, nos enorgullece ofrecer una experiencia única de sabor con nuestros deliciosos
+                        helados artesanales. Cada helado es cuidadosamente elaborado con ingredientes frescos y de la
+                        más alta calidad, para brindarte un auténtico placer helado. Nuestra pasión por la excelencia y
+                        la creatividad se refleja en cada sorbo y cada cucharada. Descubre un mundo de sabores
+                        cautivadores en Helanus y déjate llevar por el auténtico arte de los helados artesanale</p>
+                    <div class="mt-4">
+                        <!-- Facebook -->
+                        <a type="button" class="btn btn-floating btn-warning btn-lg" href="https://www.facebook.com/profile.php?id=100064449494181"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <!-- Dribbble -->
+                        <a type="button" class="btn btn-floating btn-warning btn-lg" href="https://www.instagram.com/_helanus/"><i
+                                class="fab fa-instagram"></i></a>
+                        <!-- Twitter -->
+                        <a type="button" class="btn btn-floating btn-warning btn-lg"><i class="fab fa-whatsapp"></i></a>
+                        <!-- Google + -->
+                        <a type="button" class="btn btn-floating btn-warning btn-lg"><i
+                                class="fab fa-google-plus-g"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4 pb-1">Busqueda:</h5>
+                    <div class="form-outline form-white mb-4">
+                        <form id="searchForm" class="form-inline" action="">
+                            <input id="inputSearch" class="form-control mr-sm-2" type="text" placeholder="Buscar🔎">
+                        </form>
+                        <div class="form-notch">
+                            <div class="form-notch-leading" style="width: 9px;">
+                            </div>
+                            <div class="form-notch-middle" style="width: 48.8px; padding-bottom: 10px;"></div>
+                            <div class="form-notch-trailing"></div>
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52477.55091401215!2d-58.440362878320286!3d-34.709040499999986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a3334895a4969f%3A0xe057700be49d351b!2sHELANUS%20S.A!5e0!3m2!1ses-419!2sar!4v1698412417527!5m2!1ses-419!2sar"
+                                width="350" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                    <ul class="fa-ul" style="margin-left: 1.65em;">
+                        <li class="mb-3">
+                            <span class="fa-li"><i class="fas fa-home"></i></span><span class="ms-2">Buenos Aires,
+                                Lanus, ARG</span>
+                        </li>
+                        <li class="mb-3">
+                            <span class="fa-li"><i class="fas fa-envelope"></i></span><span
+                                class="ms-2">helanus_heladeria@example.com</span>
+                        </li>
+                        <li class="mb-3">
+                            <span class="fa-li"><i class="fas fa-phone"></i></span><span class="ms-2">011
+                                5027-0500</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">HORARIOS:</h5>
+                    <table class="table text-center text-white">
+                        <tbody class="font-weight-normal">
+                            <tr>
+                                <td>Lunes</td>
+                                <td>9hs - 22hs</td>
+                            </tr>
+                            <tr>
+                                <td>Martes</td>
+                                <td>9hs - 24hs</td>
+                            </tr>
+                            <tr>
+                                <td>Miercoles</td>
+                                <td>9hs - 24hs</td>
+                            </tr>
+                            <tr>
+                                <td>Jueves</td>
+                                <td>9hs - 24hs</td>
+                            </tr>
+                            <tr>
+                                <td>Viernes</td>
+                                <td>9hs - 24hs</td>
+                            </tr>
+                            <tr>
+                                <td>Sabado</td>
+                                <td>9hs - 24hs</td>
+                            </tr>
+                            <tr>
+                                <td>Domingos</td>
+                                <td>9hs - 23hs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">© 2023 Copyright ~ Helanus®</div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+</body>
+</html>
