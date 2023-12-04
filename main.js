@@ -5,7 +5,7 @@ class ProductManager{
         this.path = "./productos.json";
         this.loadProductsFromFile();
     }
-
+    
     createFileIfNotExists(){
         if(!fs.existsSync(this.path)){
             fs.writeFileSync(this.path, "[]", "utf8");
