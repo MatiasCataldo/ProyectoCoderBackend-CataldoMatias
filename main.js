@@ -17,27 +17,29 @@ class ProductManager{
         const data = fs.readFileSync(this.path, "utf8");
         if(data){
             this.products = JSON.parse(data);
-            this.nextProductId = this.getNextProductId();
+            this.nextProductCode = this.nextProductCode();
         } else{
             this.products = [];
-            this.nextProductId = 1;
+            this.nextProductCode = 1;
         }
     }
 
-    getNextProductId() {
+    nextProductCode() {
         const lastProduct = this.products[this.products.length - 1];
         return lastProduct ? lastProduct.code + 1 : 1;
     }
 
+
     addProduct(product) {
-        if(Object.values(product).some(value => value === "")){
+        if (Object.values(product).some(value => value === "")) {
             console.error("Error al cargar producto! Campos incompletos");
-        } else{
-            product.code = this.nextProductId++;
+        } else {
+            product.code = this.nextProductCode++;
             this.products.push(product);
             fs.writeFileSync(this.path, JSON.stringify(this.products), "utf8");
         }
     }
+    
 
     getProducts(){
         const data = fs.readFileSync(this.path, "utf8");
@@ -114,7 +116,6 @@ class Product{
         this.stock = stock;
         this.category = category;
         this.status = true;
-        this.code = null;
     }
 }
 

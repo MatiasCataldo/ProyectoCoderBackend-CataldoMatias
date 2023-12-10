@@ -3,10 +3,8 @@ const socketClient = io();
 const createProductForm = document.querySelector('#createProductForm');
 
 createProductForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
   const newProduct = {
-    id: Date.now(),
+    id: document.getElementById('id').value,
     title: document.getElementById('title').value,
     description: document.getElementById('description').value,
     price: parseFloat(document.getElementById('price').value),
@@ -21,10 +19,8 @@ createProductForm.addEventListener('submit', (event) => {
 const deleteProductForm = document.querySelector('#deleteProductForm');
 
 deleteProductForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const productId = parseInt(document.getElementById('productId').value);
-  socketClient.emit('deleteProduct', productId);
+  const productCode = parseInt(document.getElementById('productCode').value);
+  socketClient.emit('deleteProduct', productCode);
 });
 
 socketClient.on('productListUpdated', (updatedProductList) => {
