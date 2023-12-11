@@ -18,10 +18,11 @@ createProductForm.addEventListener('submit', (event) => {
   socketClient.emit('createProduct', newProduct);
 });
 
-const deleteProductForm = document.querySelector('#');
+const deleteProductForm = document.querySelector('#deleteProductForm');
 
 deleteProductForm.addEventListener('submit', (event) => {
   const productCode = parseInt(document.getElementById('productCode').value);
+  console.log('Código de producto a eliminar:', productCode);
   socketClient.emit('deleteProduct', productCode);
 });
 

@@ -78,19 +78,17 @@ class ProductManager{
         }
     }
 
-    deleteProduct(CodeProduct) {
-        const productToDelete = this.getProductById(CodeProduct);
-        if (productToDelete) {
-            const index = this.products.indexOf(productToDelete);
-            if (index !== -1) {
-                this.products.splice(index, 1);
-                console.log(`Producto ${CodeProduct} eliminado.`);
-                fs.writeFileSync(this.path, JSON.stringify(this.products), "utf8");
-            }
+    deleteProduct(codeProduct) {
+        const index = this.products.findIndex(product => product.code === codeProduct);
+        if (index !== -1) {
+            this.products.splice(index, 1);
+            console.log(`Producto ${codeProduct} eliminado.`);
+            fs.writeFileSync(this.path, JSON.stringify(this.products), "utf8");
         } else {
             console.log("Producto no encontrado. No se pudo eliminar.");
         }
     }
+    
 }
 
 class Product{
