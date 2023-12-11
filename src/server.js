@@ -39,15 +39,15 @@ socketServer.on("connection", (socketClient) => {
   console.log("Nuevo cliente conectado");
 
   socketClient.on("createProduct", (newProduct) => {
-    const product = new Product(
-      newProduct.id,
-      newProduct.title,
-      newProduct.description,
-      newProduct.price,
-      newProduct.thumbnail,
-      newProduct.stock,
-      newProduct.category
-    );
+    const product = {
+      id: newProduct.id,
+      title: newProduct.title,
+      description: newProduct.description,
+      price: newProduct.price,
+      thumbnail: newProduct.thumbnail,
+      stock: newProduct.stock,
+      category: newProduct.category 
+    };
     console.log('Nuevo producto server :', product);
     manejadorProductos.addProduct(product);
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
