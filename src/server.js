@@ -48,12 +48,13 @@ socketServer.on("connection", (socketClient) => {
       newProduct.stock,
       newProduct.category
     );
+    console.log('Nuevo producto server :', product);
     manejadorProductos.addProduct(product);
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
 
-  socketClient.on("deleteProduct", (productId) => {
-    manejadorProductos.deleteProduct(productId);
+  socketClient.on("deleteProduct", (productCode) => {
+    manejadorProductos.deleteProduct(productCode);
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
 });

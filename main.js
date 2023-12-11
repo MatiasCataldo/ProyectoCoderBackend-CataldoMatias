@@ -12,44 +12,38 @@ class ProductManager{
         }
     }
 
+    nextProductCode() {
+        const lastProduct = this.products[this.products.length - 1];
+        return lastProduct ? lastProduct.code + 1 : 1;
+    }
+    
+
     loadProductsFromFile(){
         this.createFileIfNotExists();
         const data = fs.readFileSync(this.path, "utf8");
         if(data){
             this.products = JSON.parse(data);
-            this.nextProductCode = this.nextProductCode();
-        } else{
+            this.nextProductCode = this.nextProductCode.bind(this);
+        } else {
             this.products = [];
-            this.nextProductCode = 1;
+            this.nextProductCode = this.nextProductCode.bind(this);
         }
     }
-
-    nextProductCode() {
-        const lastProduct = this.products[this.products.length - 1];
-        return lastProduct ? lastProduct.code + 1 : 1;
-    }
-
 
     addProduct(product) {
         if (Object.values(product).some(value => value === "")) {
             console.error("Error al cargar producto! Campos incompletos");
         } else {
-            product.code = this.nextProductCode++;
+            product.code = this.nextProductCode();
             this.products.push(product);
             fs.writeFileSync(this.path, JSON.stringify(this.products), "utf8");
         }
     }
     
-
-    getProducts(){
-        const data = fs.readFileSync(this.path, "utf8");
-        if(data){
-            const products = JSON.parse(data);
-            return products;
-        } else{
-            return [];
-        }
+    getProducts() {
+        return this.products;
     }
+    
 
     getProductById(idProduct){
         const data = fs.readFileSync(this.path, "utf8");
@@ -84,16 +78,16 @@ class ProductManager{
         }
     }
 
-    deleteProduct(idProduct){
-        const productToDelete = this.getProductById(idProduct);
-        if(productToDelete){
+    deleteProduct(CodeProduct) {
+        const productToDelete = this.getProductById(CodeProduct);
+        if (productToDelete) {
             const index = this.products.indexOf(productToDelete);
-            if(index !== -1){
+            if (index !== -1) {
                 this.products.splice(index, 1);
-                console.log(`Producto ${idProduct} eliminado.`);
+                console.log(`Producto ${CodeProduct} eliminado.`);
                 fs.writeFileSync(this.path, JSON.stringify(this.products), "utf8");
             }
-        } else{
+        } else {
             console.log("Producto no encontrado. No se pudo eliminar.");
         }
     }

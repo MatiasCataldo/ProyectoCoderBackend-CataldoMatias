@@ -1,8 +1,10 @@
+
 const socketClient = io();
 
 const createProductForm = document.querySelector('#createProductForm');
 
 createProductForm.addEventListener('submit', (event) => {
+  console.log('Formulario de creación de producto enviado');
   const newProduct = {
     id: document.getElementById('id').value,
     title: document.getElementById('title').value,
@@ -12,11 +14,11 @@ createProductForm.addEventListener('submit', (event) => {
     stock: parseInt(document.getElementById('stock').value),
     category: document.getElementById('category').value,
   };
-
+  console.log('Nuevo producto:', newProduct);
   socketClient.emit('createProduct', newProduct);
 });
 
-const deleteProductForm = document.querySelector('#deleteProductForm');
+const deleteProductForm = document.querySelector('#');
 
 deleteProductForm.addEventListener('submit', (event) => {
   const productCode = parseInt(document.getElementById('productCode').value);
