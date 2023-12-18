@@ -37,3 +37,22 @@ socketClient.on('productListUpdated', (updatedProductList) => {
     productList.appendChild(listItem);
   });
 });
+
+const chatForm = document.getElementById('chatForm');
+const messagesContainer = document.getElementById('messages');
+
+chatForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const user = document.getElementById('user').value;
+  const message = document.getElementById('message').value;
+  if (user && message) {
+    socketClient.emit('chatMessage', { user, message });
+    document.getElementById('message').value = '';
+  }
+});
+
+socketClient.on('chatMessage', (message) => {
+  const messageElement = document.createElement('p');
+  messageElement.innerHTML = `<strong>${message.user}:</strong> ${message.message}`;
+  messagesContainer.appendChild(messageElement);
+});

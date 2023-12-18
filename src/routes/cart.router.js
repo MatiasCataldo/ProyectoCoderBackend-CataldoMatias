@@ -1,73 +1,94 @@
-import { Router } from 'express';
-import fs from 'fs';
+import { Router } from "express";
+import cartDao from "../dao/cartDao.js";
 
 const router = Router();
 
-router.get('/:cid', (req, res) => {
+router.get("/:userId", async (req, res) => {
     try {
-        const { cid } = req.params;
-        const carts = getCarts();
-        const cart = carts.find((cart) => cart.id === cid);
-        if (cart) {
-            res.json(cart.products);
-        } else {
-            res.json({ error: 'Cart not found' });
-        }
+        const { userId } = req.params;
+        const cart = await cartDao.findCartByUserId(userId);
+        if (!cart) return res.json({ message: "Cart not found" });
+        res.json({
+            cart,
+            message: "Cart found",
+        });
     } catch (error) {
-        res.json({ error: 'Error al obtener productos del carrito' });
+        console.log(error);
+        res.json({
+            error,
+            message: "Error",
+        });
     }
 });
 
-router.post('/', (req, res) => {
+router.post("/:userId/addItem", async (req, res) => {
     try {
-        const carts = getCarts();
-        const newCart = {
-            id: generateUniqueId(),
-            products: [],
-        };
-        carts.push(newCart);
-        saveCarts(carts);
-        res.json(newCart);
+        const { userId } = req.params;
+        const cartItem = req.body;
+        const updatedCart = await cartDao.createCartItem(userId, cartItem);
+        res.json({
+            cart: updatedCart,
+            message: "Item added to cart",
+        });
     } catch (error) {
-        res.json({ error: 'Error al crear el carrito' });
+        console.log(error);
+        res.json({
+            error,
+            message: "Error",
+        });
     }
 });
 
-router.post('/:cid/product/:pid', (req, res) => {
+router.put("/:userId/updateItem/:productId", async (req, res) => {
     try {
-        const { cid, pid } = req.params;
+        const { userId, productId } = req.params;
         const { quantity } = req.body;
-        const carts = getCarts();
-        const cart = carts.find((cart) => cart.id === cid);
-        if (!cart) {
-            res.json({ error: 'Carrito no encontrado' });
-            return;
-        }
-        const products = cart.products;
-        const existingProduct = products.find((product) => product.product === pid);
-        if (existingProduct) {
-            existingProduct.quantity += quantity;
-        } else {
-            products.push({ product: pid, quantity });
-        }
-        saveCarts(carts);
-        res.json({ status: 'Producto agregado al carrito' });
+        const updatedCart = await cartDao.updateCartItem(userId, productId, quantity);
+        res.json({
+            cart: updatedCart,
+            message: "Item quantity updated in cart",
+        });
     } catch (error) {
-        res.json({ error: 'Error al agregar producto al carrito' });
+        console.log(error);
+        res.json({
+            error,
+            message: "Error",
+        });
     }
 });
 
-function getCarts() {
-    const data = fs.readFileSync('./carrito.json', 'utf8');
-    return data ? JSON.parse(data) : [];
-}
+router.delete("/:userId/deleteItem/:productId", async (req, res) => {
+    try {
+        const { userId, productId } = req.params;
+        const updatedCart = await cartDao.deleteCartItem(userId, productId);
+        res.json({
+            cart: updatedCart,
+            message: "Item deleted from cart",
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error,
+            message: "Error",
+        });
+    }
+});
 
-function saveCarts(carts) {
-    fs.writeFileSync('./carrito.json', JSON.stringify(carts), 'utf8');
-}
-
-function generateUniqueId() {
-    return (Date.now().toString(36) + Math.random().toString(36)).substring(0, 5);
-}
+router.delete("/:userId/clearCart", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const updatedCart = await cartDao.clearCart(userId);
+        res.json({
+            cart: updatedCart,
+            message: "Cart cleared",
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error,
+            message: "Error",
+        });
+    }
+});
 
 export default router;

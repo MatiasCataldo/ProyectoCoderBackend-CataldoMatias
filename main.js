@@ -39,7 +39,7 @@ class ProductManager{
             fs.writeFileSync(this.path, JSON.stringify(this.products), "utf8");
         }
     }
-    
+
     getProducts() {
         return this.products;
     }
