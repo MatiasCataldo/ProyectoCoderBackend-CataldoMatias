@@ -4,35 +4,46 @@ import http from "http";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import path from "path";
-import productsRouter from "./routes/products.router.js";
+import mongoose from "mongoose";
 import ProductManager from "../main.js";
-import Product from "../main.js";
+import productsRouter from "./routes/product.router.js";
 
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(`${__dirname}/public`))
+app.use(express.static(`${__dirname}/public`));
 
-
-app.engine(
-  "hbs",handlebars.engine({
+app.engine("hbs",handlebars.engine({
     extname: "hbs",
     defaultLayout: "main",
     layoutsDir: path.join(__dirname, "views/layouts"),
   })
 );
 
+mongoose.connect("mongodb://localhost:27017/ecommerce").then(() => {
+    console.log("Connected DB");
+  })
+  .catch((error) => {
+    console.log(error);
+    console.log("Error connecting db");
+  });
+
+
+const db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "Error de conexión a MongoDB:"));
+db.once("open", () => {
+  console.log("Conexión exitosa a MongoDB");
+});
+
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 const manejadorProductos = new ProductManager();
 
-const httpServer = app.listen(PORT, () =>
-  console.log(`Server listening on port ${PORT}`)
-);
-
+const httpServer = http.createServer(app);
 const socketServer = new Server(httpServer);
 
 socketServer.on("connection", (socketClient) => {
@@ -46,9 +57,9 @@ socketServer.on("connection", (socketClient) => {
       price: newProduct.price,
       thumbnail: newProduct.thumbnail,
       stock: newProduct.stock,
-      category: newProduct.category 
+      category: newProduct.category,
     };
-    console.log('Nuevo producto server :', product);
+    console.log("Nuevo producto server :", product);
     manejadorProductos.addProduct(product);
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
@@ -59,6 +70,9 @@ socketServer.on("connection", (socketClient) => {
   });
 });
 
+// Rutas para productos
+app.use("/api/products", productsRouter);
+
 app.get("/", (req, res) => {
   res.render("home", { products: manejadorProductos.getProducts() });
 });
@@ -66,3 +80,7 @@ app.get("/", (req, res) => {
 app.get("/realtimeproducts", (req, res) => {
   res.render("realtimeproducts", { products: manejadorProductos.getProducts() });
 });
+
+httpServer.listen(PORT, () =>
+  console.log(`Server listening on port ${PORT}`)
+);

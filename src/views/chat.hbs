@@ -1,0 +1,17 @@
+<div> 
+    <h1>Chat</h1>
+    <div id="messages">
+        {{#each messages}}
+            <p><strong>{{this.user}}:</strong> {{this.message}}</p>
+        {{/each}}
+    </div>
+    <form id="chatForm">
+        <label for="user">User:</label>
+        <input type="text" id="user" required>
+        <label for="message">Message:</label>
+        <input type="text" id="message" required>
+        <button type="submit">Send</button>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="../public/js/main.js"></script>
+</div>
