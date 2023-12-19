@@ -1,5 +1,5 @@
 import { Router } from "express";
-import messageDao from "../dao/messageDao.js";
+import messageDao from "../dao/message.dao.js";
 
 const router = Router();
 
