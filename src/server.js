@@ -7,6 +7,7 @@ import path from "path";
 import mongoose from "mongoose";
 import ProductManager from "../main.js";
 import productsRouter from "./routes/product.router.js";
+import messagesRouter from "./routes/messages.routes.js"
 
 const app = express();
 const PORT = 8080;
@@ -70,8 +71,8 @@ socketServer.on("connection", (socketClient) => {
   });
 });
 
-// Rutas para productos
 app.use("/api/products", productsRouter);
+app.use("/api/messages", messagesRouter);
 
 app.get("/", (req, res) => {
   res.render("home", { products: manejadorProductos.getProducts() });

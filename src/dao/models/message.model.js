@@ -1,11 +1,10 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
-const postSchema = new Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-});
+const messageSchema = new Schema({
+  user: { type: String, required: true },
+  message: { type: String, required: true },
+}, { timestamps: true });
 
-const postModel = model("posts", postSchema);
+const MessageModel = model('Message', messageSchema);
 
-export { postModel };
+export default MessageModel;
