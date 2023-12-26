@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import ProductManager from "../main.js";
 import productsRouter from "./routes/product.router.js";
 import messagesRouter from "./routes/messages.routes.js"
+import messageDao from "./dao/message.dao.js";
+import cartDao from "./dao/cart.dao.js";
 
 const app = express();
 const PORT = 8080;
@@ -80,6 +82,15 @@ app.get("/", (req, res) => {
 
 app.get("/realtimeproducts", (req, res) => {
   res.render("realtimeproducts", { products: manejadorProductos.getProducts() });
+});
+
+
+app.get("/messages", (req, res) => {
+  res.render("chat", { messages: messageDao.getAllMessages() });
+});
+
+app.get("/cart", (req, res) => {
+  res.render("cart", {cartItems: cartDao.getAllCartItems() });
 });
 
 httpServer.listen(PORT, () =>
