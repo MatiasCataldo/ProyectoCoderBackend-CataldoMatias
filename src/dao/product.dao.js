@@ -1,8 +1,11 @@
 import ProductModel from './models/product.model.js';
 
 class ProductDao {
-    async getAllProducts() {
-        return await ProductModel.find();
+    async getAllProducts({ skip = 0, limit = 10, sort = {}, filter = {} }) {
+        return await ProductModel.find(filter)
+            .sort(sort)
+            .skip(skip)
+            .limit(limit);
     }
 
     async getProductById(productId) {
