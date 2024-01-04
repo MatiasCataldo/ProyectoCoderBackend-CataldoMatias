@@ -72,7 +72,7 @@ socketServer.on("connection", (socketClient) => {
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
 
-  socket.on('addToCart', async ({ userId, productId, quantity }) => {
+  socketClient.on('addToCart', async ({ userId, productId, quantity }) => {
     try {
         const cart = await cartDao.findCartByUserId(userId);
         const existingItem = cart.items.find(item => item.productId === productId);
