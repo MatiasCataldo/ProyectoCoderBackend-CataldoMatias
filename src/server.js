@@ -71,6 +71,24 @@ socketServer.on("connection", (socketClient) => {
     manejadorProductos.deleteProduct(productCode);
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
+
+  socket.on('addToCart', async ({ userId, productId, quantity }) => {
+    try {
+        const cart = await cartDao.findCartByUserId(userId);
+        const existingItem = cart.items.find(item => item.productId === productId);
+        if (existingItem) {
+            const updatedCart = await cartDao.updateCartItem(userId, productId, existingItem.quantity + quantity);
+            io.emit('cartUpdated', updatedCart);
+        } else {
+            const newCartItem = { productId, quantity };
+            const updatedCart = await cartDao.createCartItem(userId, newCartItem);
+            io.emit('cartUpdated', updatedCart);
+        }
+    } catch (error) {
+        console.error('Error al agregar producto al carrito:', error);
+    }
+  });
+  
 });
 
 app.use("/api/products", productsRouter);
@@ -92,6 +110,7 @@ app.get("/messages", (req, res) => {
 app.get("/cart", (req, res) => {
   res.render("cart", {cartItems: cartDao.getAllCartItems() });
 });
+
 
 httpServer.listen(PORT, () =>
   console.log(`Server listening on port ${PORT}`)
