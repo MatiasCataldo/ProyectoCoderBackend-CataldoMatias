@@ -111,6 +111,7 @@ class Product{
     }
 }
 
+
 export default ProductManager
 
 // Pruebas

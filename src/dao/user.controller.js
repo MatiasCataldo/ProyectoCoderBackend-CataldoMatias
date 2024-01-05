@@ -3,40 +3,32 @@ import userDao from './user.dao.js';
 class UserController {
     async newUser(req, res) {
         try {
-            const { username } = req.body;
-            const user = await userDao.createUser(username);
+            const { userId, username } = req.body;
+            const user = await userDao.createUser(userId, username);
             await userDao.createNewCart(user._id);
-            res.json({
+            res.status(201).json({
                 status: 'success',
                 user,
                 message: 'Usuario creado!',
             });
         } catch (error) {
-            console.log(error);
-            res.json({
-                status: 'error',
-                error,
-                message: 'Error al crear usuario!',
-            });
+            console.error('Error al crear el primer usuario:', error);
+            res.status(500).json({ error, message: 'Error al crear el primer usuario.' });
         }
     }
 
     async getUserId(req, res) {
         try {
-            const { username } = req.params;
-            const userId = await userDao.getUserId(username);
-            res.json({
+            const { userId } = req.params;
+            const user = await userDao.getUserId(userId);
+            res.status(200).json({
                 status: 'success',
-                userId,
+                user,
                 message: 'ID del usuario obtenido!',
             });
         } catch (error) {
-            console.log(error);
-            res.json({
-                status: 'error',
-                error,
-                message: 'Error al obtener el ID del usuario!',
-            });
+            console.error('Error al obtener usuario por ID:', error);
+            res.status(500).json({ error, message: 'Error al obtener usuario por ID.' });
         }
     }
 }

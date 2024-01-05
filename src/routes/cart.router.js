@@ -1,5 +1,5 @@
 import { Router } from "express";
-import cartDao from "../dao/cartDao.js";
+import cartDao from "../dao/cart.dao.js";
 
 const router = Router();
 
@@ -7,10 +7,10 @@ router.get("/:userId", async (req, res) => {
     try {
         const { userId } = req.params;
         const cart = await cartDao.findCartByUserId(userId);
-        if (!cart) return res.json({ message: "Cart not found" });
+        if (!cart) return res.json({ message: "Carrito no encontrado." });
         res.json({
             cart,
-            message: "Cart found",
+            message: "Carrito encontrado.",
         });
     } catch (error) {
         console.log(error);
@@ -28,7 +28,7 @@ router.post("/:userId/addItem", async (req, res) => {
         const updatedCart = await cartDao.createCartItem(userId, cartItem);
         res.json({
             cart: updatedCart,
-            message: "Item added to cart",
+            message: "Item agregado al carrito",
         });
     } catch (error) {
         console.log(error);
@@ -46,7 +46,7 @@ router.put("/:userId/updateItem/:productId", async (req, res) => {
         const updatedCart = await cartDao.updateCartItem(userId, productId, quantity);
         res.json({
             cart: updatedCart,
-            message: "Item quantity updated in cart",
+            message: "La cantidad del item fue actualizada",
         });
     } catch (error) {
         console.log(error);
@@ -63,7 +63,7 @@ router.delete("/:userId/deleteItem/:productId", async (req, res) => {
         const updatedCart = await cartDao.deleteCartItem(userId, productId);
         res.json({
             cart: updatedCart,
-            message: "Item deleted from cart",
+            message: "Item eliminado del carrito",
         });
     } catch (error) {
         console.log(error);
@@ -80,7 +80,7 @@ router.delete("/:userId/clearCart", async (req, res) => {
         const updatedCart = await cartDao.clearCart(userId);
         res.json({
             cart: updatedCart,
-            message: "Cart cleared",
+            message: "Carrito vaciado",
         });
     } catch (error) {
         console.log(error);

@@ -10,6 +10,9 @@ import productsRouter from "./routes/product.router.js";
 import messagesRouter from "./routes/messages.routes.js"
 import messageDao from "./dao/message.dao.js";
 import cartDao from "./dao/cart.dao.js";
+import cartsRouter from "./routes/cart.router.js";
+import userRouter from "./routes/user.router.js"
+
 
 const app = express();
 const PORT = 8080;
@@ -72,17 +75,17 @@ socketServer.on("connection", (socketClient) => {
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
 
-  socket.on('addToCart', async ({ userId, productId, quantity }) => {
+  socketClient.on('addToCart', async ({ userId, productId, quantity }) => {
     try {
         const cart = await cartDao.findCartByUserId(userId);
         const existingItem = cart.items.find(item => item.productId === productId);
         if (existingItem) {
             const updatedCart = await cartDao.updateCartItem(userId, productId, existingItem.quantity + quantity);
-            io.emit('cartUpdated', updatedCart);
+            socketClient.emit('cartUpdated', updatedCart);
         } else {
             const newCartItem = { productId, quantity };
             const updatedCart = await cartDao.createCartItem(userId, newCartItem);
-            io.emit('cartUpdated', updatedCart);
+            socketClient.emit('cartUpdated', updatedCart);
         }
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);
@@ -93,6 +96,9 @@ socketServer.on("connection", (socketClient) => {
 
 app.use("/api/products", productsRouter);
 app.use("/api/messages", messagesRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/users", userRouter);
+
 
 app.get("/", (req, res) => {
   res.render("home", { products: manejadorProductos.getProducts() });
