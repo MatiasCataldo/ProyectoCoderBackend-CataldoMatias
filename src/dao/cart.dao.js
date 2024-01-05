@@ -1,17 +1,11 @@
 import CartModel from './models/cart.model.js';
 
 class CartDao {
-    async getAllCartItems(userId) {
-        const cart = await CartModel.findOne({ userId });
-        return cart ? cart.items : [];
+    async findCartByUserId(userId) {
+        return await CartModel.findOne({ userId }).populate('items.product');
     }
-    
-    async createCartItem(userId, productId, quantity) {
-        const cartItem = {
-            product: productId,
-            quantity: quantity,
-        };
 
+    async createCartItem(userId, cartItem) {
         const cart = await CartModel.findOneAndUpdate(
             { userId },
             { $push: { items: cartItem } },

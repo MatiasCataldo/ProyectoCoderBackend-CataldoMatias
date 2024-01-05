@@ -43,18 +43,13 @@ router.get("/", async (req, res) => {
   router.get("/search", async (req, res) => {
     try {
       const { limit = 10, page = 1, sort, category, availability } = req.query;
-  
-      // Lógica para búsqueda avanzada, paginación y ordenamiento
       const skip = (page - 1) * limit;
       const sortOption = sort ? { price: sort === 'asc' ? 1 : -1 } : {};
-  
       const filter = {};
       if (category) filter.category = category;
       if (availability) filter.availability = availability;
   
       const products = await productDao.getAllProducts({ skip, limit, sort: sortOption, filter });
-  
-      // Construir la respuesta
       const response = {
         data: products,
         message: "Products list",
