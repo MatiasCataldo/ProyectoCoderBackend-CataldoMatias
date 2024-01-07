@@ -10,11 +10,11 @@ router.post('/createFirstUser', async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: 'El usuario ya existe.' });
         }
-        const newUser = await UserController.newUser({ userId, username });
+        const newUser = await UserController.newUser({ username });
         res.status(201).json({ user: newUser, message: 'Primer usuario creado exitosamente.' });
     } catch (error) {
-        console.error('Error al crear el primer usuario:', error);
-        res.status(500).json({ error, message: 'Error al crear el primer usuario.' });
+        console.error('Error al crear el primer usuario1:', error);
+        res.status(500).json({ error, message: 'Error al crear el primer usuario1.' });
     }
 });
 
