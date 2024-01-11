@@ -34,7 +34,7 @@ router.post("/:userId/addItem", async (req, res) => {
         console.log(error);
         res.json({
             error,
-            message: "Error",
+            message: "Error al agregar el item",
         });
     }
 });
