@@ -5,22 +5,18 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    // Obtener parámetros de consulta
     const { limit = 10, page = 1, sort, query } = req.query;
-
-    // Lógica para búsqueda, paginación y ordenamiento
     const skip = (page - 1) * limit;
     const sortOption = sort ? { price: sort === 'asc' ? 1 : -1 } : {};
-
     const filter = query ? { category: query } : {};
     const products = await productDao.getAllProducts({ skip, limit, sort: sortOption, filter });
-
-    // Construir la respuesta
+    const totalProductsCount = await productDao.getTotalProductsCount(filter); // Agrega esta línea
+    const totalPages = Math.ceil(totalProductsCount / limit); // Calcula totalPages
     const response = {
       data: products,
       message: "Products list",
       pageInfo: {
-        totalPages: Math.ceil(products.length / limit),
+        totalPages: totalPages,
         prevPage: page > 1 ? page - 1 : null,
         nextPage: page < totalPages ? page + 1 : null,
         page: Number(page),
@@ -31,14 +27,15 @@ router.get("/", async (req, res) => {
       },
     };
     res.json(response);
-    } catch (error) {
-      console.log(error);
-      res.json({
-        error,
-        message: "Error",
-      });
-    }
-  });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      error,
+      message: "Error",
+    });
+  }
+});
+
 
   router.get("/search", async (req, res) => {
     try {

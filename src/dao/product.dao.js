@@ -8,6 +8,10 @@ class ProductDao {
             .limit(limit);
     }
 
+    async getTotalProductsCount(filter) {
+        return await ProductModel.countDocuments(filter);
+    }
+
     async getProductById(productId) {
         return await ProductModel.findOne({ id: productId });
     }

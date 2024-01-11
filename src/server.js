@@ -28,14 +28,13 @@ app.engine("hbs",handlebars.engine({
   })
 );
 
-mongoose.connect("mongodb://localhost:27017/ecommerce").then(() => {
+mongoose.connect("mongodb://127.0.0.1/ecommerce").then(() => {
     console.log("Connected DB");
   })
   .catch((error) => {
     console.log(error);
     console.log("Error connecting db");
   });
-
 
 const db = mongoose.connection;
 
