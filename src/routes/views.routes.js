@@ -1,10 +1,14 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import ProductManager from '../../main.js';
+
 
 const router = express.Router();
+const manejadorProductos = new ProductManager();
 
 router.get("/", (req, res) => {
   res.render('home', {
+      products: manejadorProductos.getProducts(),
       user: req.session.user
   })
 })
