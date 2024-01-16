@@ -29,7 +29,6 @@ app.use(session(
   {
       store: MongoStore.create({
             mongoUrl: MONGO_URL,
-            mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
             ttl: 10 * 60  
         }),
         secret: "coderS3cr3t",
