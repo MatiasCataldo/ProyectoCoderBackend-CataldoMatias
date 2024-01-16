@@ -5,21 +5,38 @@ import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import path from "path";
 import mongoose from "mongoose";
+import MongoStore from 'connect-mongo'
 import ProductManager from "../main.js";
 import productsRouter from "./routes/product.router.js";
 import messagesRouter from "./routes/messages.routes.js"
 import messageDao from "./dao/message.dao.js";
 import cartDao from "./dao/cart.dao.js";
 import cartsRouter from "./routes/cart.router.js";
-import userRouter from "./routes/user.router.js"
+import userRouter from "./routes/user.router.js";
+import usersViewRouter from './routes/users.views.router.js';
+import viewRouter from "./routes/views.routes.js";
+import session from "express-session";
+import FileStore from "session-file-store"
 
-
+const  MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
+app.use(session(
+  {
+      store: MongoStore.create({
+            mongoUrl: MONGO_URL,
+            mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+            ttl: 10 * 60  
+        }),
+        secret: "coderS3cr3t",
+        resave: false, 
+        saveUninitialized: true 
+    }
+))
 
 app.engine("hbs",handlebars.engine({
     extname: "hbs",
@@ -28,7 +45,7 @@ app.engine("hbs",handlebars.engine({
   })
 );
 
-mongoose.connect("mongodb://127.0.0.1/ecommerce").then(() => {
+mongoose.connect(MONGO_URL).then(() => {
     console.log("Connected DB");
   })
   .catch((error) => {
@@ -97,10 +114,15 @@ app.use("/api/products", productsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
+app.use("/", viewRouter);
+app.use('/users', usersViewRouter);
 
 
 app.get("/", (req, res) => {
-  res.render("home", { products: manejadorProductos.getProducts() });
+  res.render("home", { 
+    products: manejadorProductos.getProducts(),
+    user: req.session.user
+   });
 });
 
 app.get("/realtimeproducts", (req, res) => {

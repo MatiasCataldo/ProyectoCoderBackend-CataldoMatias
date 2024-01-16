@@ -1,8 +1,15 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-  username: { type: String, required: true },
-  cart: { type: Schema.Types.ObjectId, ref: "Cart" },
+  first_name: { type: String, required: true },
+  last_name: { type: String, required: true },
+  email: {
+    type: String,
+    unique: true
+  },
+  age: {type: Number},
+  password: {type: String},
+  cart: { type: Schema.Types.ObjectId, ref: "Cart" }
 });
 
 const userModel = model('User', userSchema);

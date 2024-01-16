@@ -1,4 +1,11 @@
-<h1 style="text-align: center;" ;";">Home Page</h1>
+<div>
+     {{#if user}}
+        <h1 style="text-align: center;" ;";">Bienvenido, {{ user.name }}!</h1>
+        <form action="api/users/logout" method="GET">
+            <button style="align-items: center";  type="submit">Cerrar Sesión</button>
+        </form>
+    {{/if}}
+</div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="#!">
@@ -179,3 +186,4 @@
     </div>
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">© 2023 Copyright ~ Helanus®</div>
 </footer>
+<script src="/js/login.js"></script>
