@@ -119,7 +119,7 @@ app.use('/users', usersViewRouter);
 
 
 app.get("/", (req, res) => {
-  res.render("home", { 
+  res.render("home", {
     products: manejadorProductos.getProducts(),
     user: req.session.user
    });
