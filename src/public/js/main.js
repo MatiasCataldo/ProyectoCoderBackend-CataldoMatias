@@ -1,4 +1,3 @@
-
 const socketClient = io();
 
 const createProductForm = document.querySelector('#createProductForm');

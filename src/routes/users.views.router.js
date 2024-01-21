@@ -10,6 +10,10 @@ router.get("/register", (req, res) => {
     res.render('register')
 })
 
+router.get('/updatePassword', (req, res) => {
+    res.render('updatePassword');
+});
+
 router.get("/", (req, res) => {
     res.render('home', {
         user: req.session.user
