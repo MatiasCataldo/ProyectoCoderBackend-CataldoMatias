@@ -1,39 +1,68 @@
 import { Router } from 'express';
 import userModel from '../dao/models/user.model.js';
+import { createHash, isValidPassword } from '../utils.js';
+import  passport  from 'passport';
 
 const router = Router();
 
-router.post('/register', async (req, res) => {
-    const { first_name, last_name, email, age, password } = req.body;
-    console.log("Registrando usuario:");
-    console.log(req.body);
-    const exist = await userModel.findOne({ email });
-    if (exist) {
-        return res.status(400).send({ status: 'error', message: "Usuario ya existe!" })
-    }
-    const user = {
-        first_name,
-        last_name,
-        email,
-        age,
-        password
-    }
-    const result = await userModel.create(user);
-    res.send({ status: "success", message: "Usuario creado con extito con ID: " + result.id });
+router.get("/github", passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {
+    { }
 })
 
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const user = await userModel.findOne({ email, password });
-    if (!user) return res.status(401).send({ status: 'error', error: "Campos Incorrectos" });
+router.get("/githubcallback", passport.authenticate('github', { failureRedirect: '/github/error' }), 
+async (req, res) => {
+    const user = req.user;
     req.session.user = {
         name: `${user.first_name} ${user.last_name}`,
         email: user.email,
-        age: user.age,
-        role: (user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123') ? 'admin' : 'usuario'
+        age: user.age
     };
-    console.log("Sesión del usuario después del inicio de sesión:", req.session.user);
-    res.send({ status: "success", payload: req.session.user, message: "¡Primer logueo realizado! :)" });
+    req.session.admin = true;
+    res.redirect("/")
+})
+
+router.post('/register', passport.authenticate('register', {
+    failureRedirect: 'api/session/fail-register'
+}), async (req, res) => {
+    console.log("Registrando usuario:");
+    res.redirect('/users/login');
+})
+
+router.post('/login', passport.authenticate('login',{failureRedirect: '/api/session/fail-login'}
+), async (req, res) => {
+console.log("Usuario encontrado");
+const user = req.user;
+console.log(user);
+req.session.user = {
+    name: `${user.first_name} ${user.last_name}`,
+    email: user.email,
+    age: user.age
+}
+res.send({ status: "success", payload: req.session.user, message: "¡Primer logueo realizado! :)" });
+})
+
+router.post('/updatePassword', async (req, res) => {
+    const { email, newPassword } = req.body;
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) return res.status(401).send({ status: 'error', error: "Usuario no encontrado" });
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+        console.log("Contraseña Modificada", req.session.user);
+        res.send({ status: "success", payload: req.session.user, message: "Contraseña Modificada con Éxito" });
+    } catch (error) {
+        console.error("Error al actualizar la contraseña:", error);
+        res.status(500).send({ status: 'error', error: "Error interno del servidor" });
+    }
+});
+
+router.get("/fail-register", (req, res) => {
+    res.status(401).send({ error: "Failed to process register!" });
+});
+
+router.get("/fail-login", (req, res) => {
+    res.status(401).send({ error: "Failed to process login!" });
 });
 
 router.get('/logout', (req, res) => {
@@ -41,7 +70,7 @@ router.get('/logout', (req, res) => {
         if (err) {
             return res.status(500).send('Error al cerrar sesión');
         }
-        res.redirect('/users/login');
+        res.redirect('/');
     });
 });
 

@@ -10,8 +10,8 @@ router.get("/", async (req, res) => {
     const sortOption = sort ? { price: sort === 'asc' ? 1 : -1 } : {};
     const filter = query ? { category: query } : {};
     const products = await productDao.getAllProducts({ skip, limit, sort: sortOption, filter });
-    const totalProductsCount = await productDao.getTotalProductsCount(filter); // Agrega esta línea
-    const totalPages = Math.ceil(totalProductsCount / limit); // Calcula totalPages
+    const totalProductsCount = await productDao.getTotalProductsCount(filter);
+    const totalPages = Math.ceil(totalProductsCount / limit); 
     const response = {
       data: products,
       message: "Products list",
