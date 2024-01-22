@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch('/users/updatePassword', {
-                method: 'PUT',
+                method: 'POST',
+                body: JSON.stringify({ email, newPassword }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, newPassword }),
             });
 
             const data = await response.json();
