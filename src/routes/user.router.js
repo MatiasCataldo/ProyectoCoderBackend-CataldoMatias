@@ -57,13 +57,13 @@ router.post('/updatePassword', async (req, res) => {
     }
 });
 
-router.get("/fail-register", (req, res) => {
-    res.status(401).send({ error: "Failed to process register!" });
-});
-
-router.get("/fail-login", (req, res) => {
-    res.status(401).send({ error: "Failed to process login!" });
-});
+    router.get("/fail-register", (req, res) => {
+        res.status(401).send({ error: "Failed to process register!" });
+    });
+    
+    router.get("/fail-login", (req, res) => {
+        res.status(401).send({ error: "Failed to process login!" });
+    });
 
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
