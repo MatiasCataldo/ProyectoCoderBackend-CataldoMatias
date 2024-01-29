@@ -10,6 +10,11 @@ const userSchema = new Schema({
   age: {type: Number},
   password: {type: String},
   loggedBy: {type: String},
+  role: {
+    type: String,
+    default: 'user',
+    enum: ['user', 'admin', 'premium'],
+  },
   cart: { type: Schema.Types.ObjectId, ref: "Cart" }
 });
 

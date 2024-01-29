@@ -9,7 +9,7 @@ const manejadorProductos = new ProductManager();
 router.get("/", (req, res) => {
   res.render('home', {
       products: manejadorProductos.getProducts(),
-      user: req.session.user
+      user: req.user
   })
 })
 
