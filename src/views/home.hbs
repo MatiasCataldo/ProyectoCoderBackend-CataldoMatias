@@ -1,129 +1,139 @@
-<div>
-     {{#if user}}
-        <header>
-        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-            <h1 style="padding: 5px;" class="navbar-brand" href="./index.html">Bienvenido, {{ user.name }}!</h1>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                </ul>
-            </div>
-            <form action="/api/users/logout" method="GET">
-                <button style="margin-right: 10px;" type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+<div style="background-image: linear-gradient(45deg, #7c9885, #b5b682);">
+    <div>
+        {{#if user}}
+            <header>
+            <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+                <h1 style="padding: 5px;" class="navbar-brand" href="./index.html">Bienvenido, {{ user.name }}!</h1>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-            </form>
-        </nav>
-        <span id="productosEnCarrito"></span>
-    </header>
-    {{/if}}
-</div>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#!">
-            <img src="../../images/logo-removebg-preview.png" class="logoHeader" alt="logo pagina">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="./index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
-                <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!"></a></li>
-                        <li>
-                            <hr class="dropdown-divider" />
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"></a>
                         </li>
-                        <li><a class="dropdown-item" href="#Helados">Helados Artesanales</a></li>
-                        <li><a class="dropdown-item" href="#Tortas">Bombones/Tortas</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"></a>
+                        </li>
                     </ul>
-                </li>
-            </ul>
-            <form class="d-flex">
-                <a href="./pages/checkout.html" class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </a>
-            </form>
-            {{#unless user}}
-                <form action="/users/login" method="GET">
-                    <button style="margin: 10px;" type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Iniciar Sesión
+                </div>
+                <form action="/api/users/logout" method="GET">
+                    <button style="margin-right: 10px;     background-color: darkred; border-color: darkred;" type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
                     </button>
                 </form>
-            {{/unless}}
-        </div>
+            </nav>
+            <span id="productosEnCarrito"></span>
+        </header>
+        {{/if}}
     </div>
-</nav>
-<main>
-    <div class="container" id="container"></div>
-    <header class="bg-dark py-5">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <h1>Helanus<img src="./images/icon.png" class="logoPrincipal" alt="logo pagina"></h1>
-                <p class="lead fw-normal text-50 mb-0">Fabrica de Helados Premium con ingredientes de calidad Gourmet.
-                </p>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/">
+                <img src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png" class="logoHeader" alt="logo pagina">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!"></a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item" href="#Helados">Helados Artesanales</a></li>
+                            <li><a class="dropdown-item" href="#Tortas">Bombones/Tortas</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <a href="/users/cart" class="btn btn-outline-dark" type="submit">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </a>
+                </form>
+                {{#unless user}}
+                    <form action="/users/login" method="GET">
+                        <button style="margin: 10px; background-color: darkred; border-color: darkred;" type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Iniciar Sesión
+                        </button>
+                    </form>
+                {{/unless}}
             </div>
         </div>
-    </header>
-</main>
-<main style="margin: 10px;">
-    <div class="container" id="container">
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-            {{#each products}}
-            <div class="col">
-                <div class="card h-100">
-                    <img src={{this.thumbnail}} class="card-img-top" alt="imagen producto">
-                    <div class="card-body">
-                        <h5 class="card-title">{{this.title}}</h5>
-                        <p class="card-text">{{this.description}}</p>
-                        <div class="precios">
-                            {{this.price}}
-                        </div>
-                        <a href="#" class="btn btn-primary buy-button" data-product-id="{{this._id}}">Comprar</a>
-                    </div>
+    </nav>
+    <main>
+        <div class="container" id="container"></div>
+        <header class="bg-dark py-5" style="
+        background-image: url(https://res.cloudinary.com/dbff77zsg/image/upload/v1705924566/Captura_de_pantalla_2023-10-31_090121_xg7ifr.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        opacity: 0.8;
+        margin: 15px;
+        border-radius: 10px;
+    }">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <img src="https://res.cloudinary.com/dbff77zsg/image/upload/v1706187041/logo-banner_gpoqt9.png">
+                    <p style="color: black;" class="lead fw-normal text-50 mb-0">Fabrica de Helados Premium con ingredientes de calidad Gourmet.
+                    </p>
                 </div>
             </div>
-            {{/each}}
+        </header>
+    </main>
+    <main style="padding: 10px;">
+        <div class="container" id="container">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                {{#each products}}
+                    <div class="col">
+                        <div style="border-radius: 20px" class="card h-100">
+                            <img src={{this.thumbnail}} style="height: 180px; padding: 5px !important; border-radius: 20px !important;" class="card-img-top" alt="imagen producto">
+                            <div style="flex: 1 1 auto; padding: 1rem 1rem; display: grid; text-align: center;" class="card-body">
+                                <h5 class="card-title">{{this.title}}</h5>
+                                <p class="card-text">{{this.description}}</p>
+                                <div style="font-weight: 800;" class="precios">
+                                    ${{this.price}}
+                                </div>
+                                <a style="margin: 10px; margin-inline: auto; background-color: darkred; border-color: darkred;" class="buy-button btn btn-primary buy-button" data-product-id="{{this._id}}">Comprar</a>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
         </div>
-    </div>
 
-    <div class="position-relative m-4">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                {{#if products.hasPrevPage}}
-                <li class="page-item"><a class="page-link"
-                        href="/products?page={{products.prevPage}}&&limit=10">Previous</a></li>
-                {{/if}}
-                {{#if products.hasNextPage}}
-                <li class="page-item"><a class="page-link"
-                        href="/products?page={{products.nextPage}}&&limit=10">Next</a></li>
-                {{/if}}
-            </ul>
-        </nav>
-        <p class="btn btn-primary">
-            Current Page:
-            {{products.page}}
-        </p>
-    </div>
-</main>
+        <div class="position-relative ">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {{#if products.hasPrevPage}}
+                    <li class="page-item"><a class="page-link"
+                            href="/products?page={{products.prevPage}}&&limit=10">Previous</a></li>
+                    {{/if}}
+                    {{#if products.hasNextPage}}
+                    <li class="page-item"><a class="page-link"
+                            href="/products?page={{products.nextPage}}&&limit=10">Next</a></li>
+                    {{/if}}
+                </ul>
+            </nav>
+            <p class="btn btn-primary">
+                Current Page:
+                {{products.page}}
+            </p>
+        </div>
+    </main>
+</div>
 <footer class="text-white text-center text-lg-start" id="footer" style="background-color: #23242a;">
     <div class="container p-4">
         <div class="row mt-4">
@@ -221,3 +231,4 @@
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">© 2023 Copyright ~ Helanus®</div>
 </footer>
 <script src="/js/login.js"></script>
+<script src="/js/main.js"></script>

@@ -1,24 +1,33 @@
+//Librerias
 import express from "express";
 import handlebars from "express-handlebars";
 import http from "http";
 import { Server } from "socket.io";
-import __dirname from "./utils.js";
 import path from "path";
 import mongoose from "mongoose";
 import MongoStore from 'connect-mongo'
-import ProductManager from "../main.js";
+import session from "express-session";
+import passport from "passport";
+
+//Routers
 import productsRouter from "./routes/product.router.js";
-import messagesRouter from "./routes/messages.routes.js"
-import messageDao from "./dao/message.dao.js";
-import cartDao from "./dao/cart.dao.js";
+import messagesRouter from "./routes/messages.router.js";
 import cartsRouter from "./routes/cart.router.js";
 import userRouter from "./routes/user.router.js";
+import jwtRouter from './routes/jwt.router.js';
+
+//Daos
+import messageDao from "./dao/message.dao.js";
+import cartDao from "./dao/cart.dao.js";
+
+//Vistas
 import usersViewRouter from './routes/users.views.router.js';
 import viewRouter from "./routes/views.routes.js";
 import githubLoginViewRouter from "./routes/github-login.views.router.js"
-import session from "express-session";
 
-import passport from "passport";
+//Importciones
+import ProductManager from "../main.js";
+import __dirname from "./utils.js";
 import initializePassport from "./config/passport.config.js";
 
 const  MONGO_URL = "mongodb://127.0.0.1/ecommerce";
@@ -27,7 +36,9 @@ const PORT = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(`${__dirname}/public`));
+//app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
+
 app.use(session(
   {
       store: MongoStore.create({
@@ -60,6 +71,14 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Error de conexión a MongoDB:"));
 db.once("open", () => {
   console.log("Conexión exitosa a MongoDB");
+});
+
+const hbs = handlebars.create({
+  helpers: {
+    eq: function (a, b, options) {
+      return a === b ? options.fn(this) : options.inverse(this);
+    }
+  }
 });
 
 app.set("view engine", "hbs");
@@ -116,34 +135,15 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use("/api/products", productsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
+app.use("/api/jwt", jwtRouter);
 app.use("/", viewRouter);
 app.use('/users', usersViewRouter);
 app.use("/github", githubLoginViewRouter)
-
-
-app.get("/", (req, res) => {
-  res.render("home", {
-    products: manejadorProductos.getProducts(),
-    user: req.session.user
-   });
-});
-
-app.get("/realtimeproducts", (req, res) => {
-  res.render("realtimeproducts", { products: manejadorProductos.getProducts() });
-});
-
-
-app.get("/messages", (req, res) => {
-  res.render("chat", { messages: messageDao.getAllMessages() });
-});
-
-app.get("/cart", (req, res) => {
-  res.render("cart", {cartItems: cartDao.getAllCartItems() });
-});
 
 
 httpServer.listen(PORT, () =>
