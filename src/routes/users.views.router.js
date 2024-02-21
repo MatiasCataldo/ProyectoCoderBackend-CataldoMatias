@@ -15,6 +15,15 @@ router.get("/register", (req, res) => {
     res.render("register");
 });
 
+router.get("/cart", (req, res) => {
+    res.render("cart");
+});
+
+
+router.get('/updatePassword', (req, res) => {
+    res.render('updatePassword');
+});
+
 // Endpoint que renderiza la vista del perfil de usuario
 router.get("/",
     passportCall('jwt'),
@@ -27,6 +36,9 @@ router.get("/",
     }
 );
 
+router.get("*", (req, res) => {
+    res.render("error");
+});
 
 router.get("/error", (req, res) => {
     res.render("error");

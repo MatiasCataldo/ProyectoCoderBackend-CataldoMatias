@@ -2,6 +2,7 @@ import passport from 'passport';
 import userModel from '../dao/models/user.model.js';
 import jwtStrategy from 'passport-jwt';
 import passportLocal from 'passport-local';
+import GitHubStrategy from 'passport-github2';
 import { PRIVATE_KEY, createHash } from '../utils.js';
 
 const localStrategy = passportLocal.Strategy;
@@ -39,6 +40,41 @@ const initializePassport = () => {
         }
     ));
 
+    passport.use('github', new GitHubStrategy(
+        {
+            clientID: 'Iv1.d5c999d373ffc26d',
+            clientSecret: 'a3abff217d34f6cf6f56137c07249f5d70aabafa',
+            callbackUrl: 'http://localhost:9090/api/sessions/githubcallback'
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            console.log("Profile obtenido del usuario de GitHub: ");
+            console.log(profile);
+            try {
+                //Validamos si el user existe en la DB
+                const user = await userModel.findOne({ email: profile._json.email });
+                console.log("Usuario encontrado para login:");
+                console.log(user);
+                if (!user) {
+                    console.warn("User doesn't exists with username: " + profile._json.email);
+                    let newUser = {
+                        first_name: profile._json.name,
+                        last_name: '',
+                        age: 28,
+                        email: profile._json.email,
+                        password: '',
+                        loggedBy: "GitHub"
+                    }
+                    const result = await userModel.create(newUser);
+                    return done(null, result)
+                } else {
+                    // Si entramos por aca significa que el user ya existe en la DB
+                    return done(null, user)
+                }
+            } catch (error) {
+                return done(error)
+            }
+        }
+        ))    
 
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' },

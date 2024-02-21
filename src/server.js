@@ -29,16 +29,19 @@ import githubLoginViewRouter from "./routes/github-login.views.router.js"
 import ProductManager from "../main.js";
 import __dirname from "./utils.js";
 import initializePassport from "./config/passport.config.js";
+import config from './config/config.js';
+import MongoSingleton from './config/mongodb-singleton.js';
+
+//Custom - Extended
+import UsersExtendRouter from './routes/custom/users.extend.router.js'
 
 const  MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
-const PORT = 8080;
+const SERVER_PORT = config.port;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use(express.static(`${__dirname}/public`));
 app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
-
 app.use(session(
   {
       store: MongoStore.create({
@@ -51,27 +54,23 @@ app.use(session(
     }
 ))
 
+//MONGO-SINGLETON
+const mongoInstance = async () => {
+  try {
+      await MongoSingleton.getInstance()
+  } catch (error) {
+      console.log(error);
+  }
+}
+mongoInstance()
+
+//HANDLEBARS
 app.engine("hbs",handlebars.engine({
-    extname: "hbs",
-    defaultLayout: "main",
-    layoutsDir: path.join(__dirname, "views/layouts"),
-  })
+  extname: "hbs",
+  defaultLayout: "main",
+  layoutsDir: path.join(__dirname, "views/layouts"),
+})
 );
-
-mongoose.connect(MONGO_URL).then(() => {
-    console.log("Connected DB");
-  })
-  .catch((error) => {
-    console.log(error);
-    console.log("Error connecting db");
-  });
-
-const db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "Error de conexión a MongoDB:"));
-db.once("open", () => {
-  console.log("Conexión exitosa a MongoDB");
-});
 
 const hbs = handlebars.create({
   helpers: {
@@ -85,7 +84,6 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 const manejadorProductos = new ProductManager();
-
 const httpServer = http.createServer(app);
 const socketServer = new Server(httpServer);
 
@@ -135,7 +133,7 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+//ROUTERS
 app.use("/api/products", productsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/carts", cartsRouter);
@@ -145,7 +143,10 @@ app.use("/", viewRouter);
 app.use('/users', usersViewRouter);
 app.use("/github", githubLoginViewRouter)
 
+const usersExtendRouter = new UsersExtendRouter();
+app.use("/api/extend/users", usersExtendRouter.getRouter());
 
-httpServer.listen(PORT, () =>
-  console.log(`Server listening on port ${PORT}`)
+
+httpServer.listen(SERVER_PORT, () =>
+  console.log(`Server listening on port ${SERVER_PORT}`)
 );
