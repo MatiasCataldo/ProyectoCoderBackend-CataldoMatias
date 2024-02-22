@@ -42,9 +42,9 @@ const initializePassport = () => {
 
     passport.use('github', new GitHubStrategy(
         {
-            clientID: 'Iv1.d5c999d373ffc26d',
-            clientSecret: 'a3abff217d34f6cf6f56137c07249f5d70aabafa',
-            callbackUrl: 'http://localhost:9090/api/sessions/githubcallback'
+            clientID: 'Iv1.3809f01a7b3c6013',
+            clientSecret: '680cc4c10f7b5b25b3f88d8664976302d26f49a4',
+            callbackUrl: 'http://localhost:8080/api/users/githubcallback'
         },
         async (accessToken, refreshToken, profile, done) => {
             console.log("Profile obtenido del usuario de GitHub: ");
