@@ -65,7 +65,7 @@ router.get("/githubcallback", passport.authenticate('github', { session: false, 
             name: `${user.first_name} ${user.last_name}`,
             email: user.email,
             age: user.age,
-            role: (user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123') ? 'admin' : 'usuario',
+            role: (user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123') ? 'admin' : 'user',
             age: user.age
         };
         console.log("Sesión del usuario github");
@@ -79,7 +79,6 @@ router.get("/githubcallback", passport.authenticate('github', { session: false, 
                 //httpOnly: false //Si se expone la cookie
             }
         )
-        res.send({ message: "Login success!!" })
     } catch (error) {
         console.error(error);
         return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
