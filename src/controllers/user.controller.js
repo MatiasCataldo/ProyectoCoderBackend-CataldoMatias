@@ -1,4 +1,5 @@
 import userModel from '../dao/models/user.model.js';
+import { userService } from '../';
 
 export const createUser = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;

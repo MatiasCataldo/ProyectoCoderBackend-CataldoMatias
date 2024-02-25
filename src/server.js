@@ -64,6 +64,7 @@ const mongoInstance = async () => {
 }
 mongoInstance()
 
+
 //HANDLEBARS
 app.engine("hbs",handlebars.engine({
   extname: "hbs",
@@ -129,6 +130,7 @@ socketServer.on("connection", (socketClient) => {
   
 });
 
+//PASSPORT
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());

@@ -1,4 +1,4 @@
-import { obtenerDatos, crearDato, deleteServices } from '../services/product.service.js'
+import { obtenerDatos, crearDato, deleteServices } from '../services/products.services.js'
 
 export const getDatosControllers = async (req, res) => {
     let datos = await obtenerDatos();

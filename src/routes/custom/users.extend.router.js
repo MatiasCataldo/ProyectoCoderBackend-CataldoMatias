@@ -1,5 +1,5 @@
 import CustomRouter from './custom.router.js';
-import UserService from '../../services/users.service.js';
+import UserService from '../../services/users.services.js';
 import { createHash, isValidPassword, generateJWToken } from '../../utils.js';
 
 

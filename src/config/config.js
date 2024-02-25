@@ -7,6 +7,7 @@ const environment = program.opts().mode;
 program
     .option('-d', 'Variable para debug', false)
     .option('-p <port>', 'Puerto del servidor', 8080)
+    .option('--persist <persist>', 'Modo de persistencia', "mongodb")
     .option('--mode <mode>', 'Modo de trabajo', 'dev')
 program.parse();
 
@@ -20,6 +21,7 @@ dotenv.config({
 export default {
     port: process.env.PORT,
     urlMongo: process.env.MONGO_URL,
+    persistence: program.opts().persist,
     adminName: process.env.ADMIN_NAME,
     adminPassword: process.env.ADMIN_PASSWORD,
 }
