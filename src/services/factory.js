@@ -14,37 +14,37 @@ async function initializeMongoService() {
     }
 }
 
+async function initializeServices() {
+    switch (config.persistence) {
+        case 'mongodb':
+            await initializeMongoService();
+            const { default: UserServiceMongo } = await import('./dao/mongo/users.service.js');
+            userService = new UserServiceMongo();
+            console.log("Servicio de usuarios cargado:", UserServiceMongo);
 
-switch (config.persistence) {
-    case 'mongodb':
-        initializeMongoService();
-        const { default: UserServiceMongo } = await import('./dao/mongo/users.service.js')
-        userService = new UserServiceMongo
-        console.log("Servicio de usuarios cargado:");
-        console.log(UserServiceMongo);
+            const { default: ProductsServiceMongo } = await import('./dao/mongo/products.service.js');
+            productService = new ProductsServiceMongo();
+            console.log("Servicio de productos cargado:", ProductsServiceMongo);
+            break;
 
-        const { default: ProductsServiceMongo } = await import('./dao/mongo/products.service.js')
-        productService = new ProductsServiceMongo
-        console.log("Servicio de productos cargado:");
-        console.log(ProductsServiceMongo);
-        break;
+        case 'file':
+            const { default: UserServiceFileSystem } = await import('./dao/filesystem/users.service.js');
+            userService = new UserServiceFileSystem();
+            console.log("Servicio de estudiantes cargado:", UserServiceFileSystem);
 
-    case 'file':
-        const { default: UserServiceFileSystem } = await import('./dao/filesystem/users.service.js')
-        userService = new UserServiceFileSystem
-        console.log("Servicio de estudiantes cargado:");s
-        console.log(UserServiceFileSystem);
+            const { default: ProductsServiceFileSystem } = await import('./dao/filesystem/produtcs.service.js');
+            productService = new ProductsServiceFileSystem();
+            console.log("Servicio de estudiantes cargado:", ProductsServiceFileSystem);
+            break;
 
-        const { default: ProductsServiceFileSystem } = await import('./dao/filesystem/produtcs.service.js')
-        coursesService = new ProductsServiceFileSystem
-        console.log("Servicio de estudiantes cargado:");
-        console.log(ProductsServiceFileSystem);
-        break;
-
-    default:
-        console.error("Persistencia no válida en la configuración:", config.persistence);
-        process.exit(1);
-        break;
+        default:
+            console.error("Persistencia no válida en la configuración:", config.persistence);
+            process.exit(1);
+            break;
+    }
 }
 
-export { studentService, coursesService };
+export async function initializeAndExportServices() {
+    await initializeServices();
+    return { userService, productService };
+}
