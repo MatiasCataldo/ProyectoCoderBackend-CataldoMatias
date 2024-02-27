@@ -1,4 +1,4 @@
-import {ProductsModel} from "../../../dao/models/product.model.js";
+import ProductsModel from "../../../dao/models/product.model.js";
 
 export default class ProductService {
     constructor() { 

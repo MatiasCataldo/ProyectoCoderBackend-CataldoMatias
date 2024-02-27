@@ -31,6 +31,7 @@ import __dirname from "./utils.js";
 import initializePassport from "./config/passport.config.js";
 import config from './config/config.js';
 import MongoSingleton from './config/mongodb-singleton.js';
+import { initializeAndExportServices } from './services/factory.js';
 
 //Custom - Extended
 import UsersExtendRouter from './routes/custom/users.extend.router.js'
@@ -55,16 +56,15 @@ app.use(session(
 ))
 
 //MONGO-SINGLETON
-const mongoInstance = async () => {
+/*const mongoInstance = async () => {
   try {
       await MongoSingleton.getInstance()
   } catch (error) {
       console.log(error);
   }
 }
-mongoInstance()
-
-
+mongoInstance()*/
+const { userService, productService } = await initializeAndExportServices();
 //HANDLEBARS
 app.engine("hbs",handlebars.engine({
   extname: "hbs",
