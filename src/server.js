@@ -15,6 +15,8 @@ import messagesRouter from "./routes/messages.router.js";
 import cartsRouter from "./routes/cart.router.js";
 import userRouter from "./routes/user.router.js";
 import jwtRouter from './routes/jwt.router.js';
+import emailRouter from './routes/email.router.js';
+import smsRouter from './routes/sms.router.js';
 
 //Daos
 import messageDao from "./dao/message.dao.js";
@@ -144,6 +146,8 @@ app.use("/api/jwt", jwtRouter);
 app.use("/", viewRouter);
 app.use('/users', usersViewRouter);
 app.use("/github", githubLoginViewRouter)
+app.use("/api/email", emailRouter);
+app.use("/api/sms", smsRouter);
 
 const usersExtendRouter = new UsersExtendRouter();
 app.use("/api/extend/users", usersExtendRouter.getRouter());

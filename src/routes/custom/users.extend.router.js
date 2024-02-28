@@ -5,24 +5,16 @@ import { createHash, isValidPassword, generateJWToken } from '../../utils.js';
 
 export default class UsersExtendRouter extends CustomRouter {
     init() {
-
         const userService = new UserService();
-
-        /*====================================================
-                    EJEMPLO de como se conecta con el CustomRouter
-                    --> this.verboHTTP(path, policies, ...callbacks);                   
-        =====================================================*/
 
         this.get('/', ["PUBLIC"], (req, res) => {
             console.log("TEST");
             res.send("Hola coders!!")
         })
 
-
         this.get('/currentUser', ["USER", "USER_PREMIUM"], (req, res) => {
             res.sendSuccess(req.user)
         })
-
 
         this.get('/premiumUser', ["USER_PREMIUM"], (req, res) => {
             res.sendSuccess(req.user)
@@ -31,7 +23,6 @@ export default class UsersExtendRouter extends CustomRouter {
         this.get('/adminUser', ["ADMIN"], (req, res) => {
             res.sendSuccess(req.user)
         })
-
 
         this.post('/login', ["PUBLIC"], async (req, res) => {
             const { email, password } = req.body;
@@ -85,7 +76,6 @@ export default class UsersExtendRouter extends CustomRouter {
             const result = await userService.save(user);
             res.status(201).send({ status: "success", message: "Usuario creado con extito con ID: " + result.id });
         });
-
     }
 
 }
