@@ -4,6 +4,7 @@ import jwtStrategy from 'passport-jwt';
 import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import { PRIVATE_KEY, createHash } from '../utils.js';
+import cartDao from '../dao/cart.dao.js';
 
 const localStrategy = passportLocal.Strategy;
 
@@ -56,13 +57,19 @@ const initializePassport = () => {
                 console.log(user);
                 if (!user) {
                     console.warn("User doesn't exists with username: " + profile._json.email);
+
+                    const cartItem = { productId: '', quantity: 0 };
+                    const createdCart = await cartDao.createCartItem(userId, cartItem);
+                    console.log("Carrito creado:", createdCart);
+
                     let newUser = {
                         first_name: profile._json.name,
                         last_name: '',
                         age: 28,
                         email: profile._json.email,
                         password: '',
-                        loggedBy: "GitHub"
+                        loggedBy: "GitHub",
+                        cartId: createdCart._id
                     }
                     const result = await userModel.create(newUser);
                     return done(null, result)
@@ -87,13 +94,20 @@ const initializePassport = () => {
                     done(null, false)
                 }
 
+                const cartItem = { productId: '', quantity: 0 };
+                const createdCart = await cartDao.createCartItem();
+                console.log("Carrito creado:", createdCart);
+
+                const cartId = createdCart._id;
+
                 const user = {
                     first_name,
                     last_name,
                     email,
                     age,
                     password: createHash(password),
-                    loggedBy: 'form'
+                    loggedBy: 'form',
+                    cartId: cartId
                 }
                 const result = await userModel.create(user);
                 console.log(result);

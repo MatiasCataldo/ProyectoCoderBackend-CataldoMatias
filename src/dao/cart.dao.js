@@ -1,8 +1,8 @@
 import CartModel from './models/cart.model.js';
 
 class CartDao {
-    async findCartByUserId(cartId) {
-        return await CartModel.findOne({cartId});
+    async findCartByUserId(userId) {
+        return await CartModel.findById(userId);
     }
 
     async createCartItem(userId, cartItem) {
