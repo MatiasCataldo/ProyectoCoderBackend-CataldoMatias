@@ -1,7 +1,10 @@
 import { Router } from "express";
 import cartDao from "../dao/cart.dao.js";
+import ProductDao from "../dao/product.dao.js"
+import UserDao from "../dao/user.dao.js"
 import ticketService from "../services/ticket.services.js";
 import { generateUniqueCode } from '../utils.js';
+import { sendEmail } from "../controllers/email.controller.js"
 
 const router = Router();
 
@@ -22,14 +25,18 @@ router.post("/:userId/:cid/purchase", async (req, res) => {
 
         const productsNotPurchased = [];
         for (const item of cart.items) {
-            const product = await productService.getProductById(item.productId);
+            const product = await ProductDao.getProductById(item.productId);
+            console.log("producto for: ", product);
             if (!product || product.stock < item.quantity) {
                 productsNotPurchased.push(item.productId);
+                console.log("producto purchased: ", product);
             }
         }
 
         if (productsNotPurchased.length > 0) {
-            await cartDao.removeItemsFromCart(cid, productsNotPurchased);
+            for (const item of productsNotPurchased) {
+                await cartDao.deleteCartItem( cid, item._id )
+            }
             return res.status(400).json({ message: "Algunos productos no están disponibles." });
         }
 
@@ -39,9 +46,22 @@ router.post("/:userId/:cid/purchase", async (req, res) => {
             amount: calculateTotalAmount(cart.items),
             purchaser: userId
         };
-        const ticket = await ticketService.createTicket(ticketData);
-        await cartDao.removeItemsFromCart(cid, cart.items.map(item => item.productId));
+        const userEmail = await UserDao.getUserEmailById(userId);
+        console.log("id para email de ticket: ", userId);
+        console.log("email ticket: ", userEmail);
+        /*if (!userEmail || !userEmail.email) {
+            return res.status(404).json({ error: "Correo electrónico del usuario no encontrado." });
+        }*/
+        const ticket = await ticketService.generateTicket(cart, userEmail.email);
+        await cartDao.clearCart(userId);
+        await sendEmail(null, null, {
+            code: ticket.code,
+            purchase_datetime: ticket.purchase_datetime,
+            amount: ticket.amount,
+            purchaser: ticket.purchaser
+        });
         res.json({ ticket, message: "Compra realizada con éxito." });
+
     } catch (error) {
         console.error("Error al procesar la compra:", error);
         res.status(500).json({ error: "Error al procesar la compra." });
