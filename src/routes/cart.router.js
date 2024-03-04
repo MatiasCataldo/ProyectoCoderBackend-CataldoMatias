@@ -1,7 +1,52 @@
 import { Router } from "express";
 import cartDao from "../dao/cart.dao.js";
+import ticketService from "../services/ticket.services.js";
+import { generateUniqueCode } from '../utils.js';
 
 const router = Router();
+
+// Función para calcular el monto total de la compra
+function calculateTotalAmount(items) {
+    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+}
+
+router.post("/:userId/:cid/purchase", async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const { userId } = req.params;
+        const cart = await cartDao.findCartByUserId(cid);
+
+        if (!cart) {
+            return res.status(404).json({ message: "Carrito no encontrado." });
+        }
+
+        const productsNotPurchased = [];
+        for (const item of cart.items) {
+            const product = await productService.getProductById(item.productId);
+            if (!product || product.stock < item.quantity) {
+                productsNotPurchased.push(item.productId);
+            }
+        }
+
+        if (productsNotPurchased.length > 0) {
+            await cartDao.removeItemsFromCart(cid, productsNotPurchased);
+            return res.status(400).json({ message: "Algunos productos no están disponibles." });
+        }
+
+        const ticketData = {
+            code: generateUniqueCode(),
+            purchase_datetime: new Date(),
+            amount: calculateTotalAmount(cart.items),
+            purchaser: userId
+        };
+        const ticket = await ticketService.createTicket(ticketData);
+        await cartDao.removeItemsFromCart(cid, cart.items.map(item => item.productId));
+        res.json({ ticket, message: "Compra realizada con éxito." });
+    } catch (error) {
+        console.error("Error al procesar la compra:", error);
+        res.status(500).json({ error: "Error al procesar la compra." });
+    }
+});
 
 router.get("/:userId", async (req, res) => {
     try {

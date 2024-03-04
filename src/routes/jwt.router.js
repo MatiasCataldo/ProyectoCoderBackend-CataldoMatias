@@ -49,8 +49,10 @@ router.post("/login", async (req, res) => {
 
 // Register PassportLocal
 router.post('/register', passport.authenticate('register', { session: false }), async (req, res) => {
-    console.log("Registrando usuario:");
-    res.status(201).send({ status: "success", message: "Usuario creado con extito." });
+    console.log("Registrando usuario...");
+    res.redirect("/users/login");
+    
+
 })
 
 router.get("/github", passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {});

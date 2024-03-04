@@ -15,7 +15,7 @@ const userSchema = new Schema({
     default: 'user',
     enum: ['user', 'admin', 'premium'],
   },
-  cart: { type: Schema.Types.ObjectId, ref: "Cart" }
+  cartId: { type: Schema.Types.ObjectId, ref: "Cart" }
 });
 
 const userModel = model('User', userSchema);
