@@ -53,12 +53,20 @@ router.post("/:userId/:cid/purchase", async (req, res) => {
             return res.status(404).json({ error: "Correo electrónico del usuario no encontrado." });
         }*/
         const ticket = await ticketService.generateTicket(cart, userEmail.email);
+        for (const item of cart.items) {
+            await ticketService.updateProductStock(item.productId, item.quantity);
+        }
+        
         await cartDao.clearCart(userId);
+
+        const userTiket = await UserDao.getUserById(userId)
+        const nameUser = userTiket.last_name + userTiket.first_name
+
         await sendEmail(null, null, {
             code: ticket.code,
             purchase_datetime: ticket.purchase_datetime,
             amount: ticket.amount,
-            purchaser: ticket.purchaser
+            purchaser: nameUser
         });
         res.json({ ticket, message: "Compra realizada con éxito." });
 

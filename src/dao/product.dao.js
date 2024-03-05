@@ -20,8 +20,14 @@ class ProductDao {
         return await ProductModel.create(product);
     }
 
-    async updateProduct(productId, updatedProduct) {
-        return await ProductModel.findOneAndUpdate({ id: productId }, updatedProduct, { new: true });
+    async updateProductStock(productId, quantity) {
+        const product = await ProductModel.findById(productId);
+        if (!product) {
+            throw new Error('Producto no encontrado');
+        }
+        product.stock -= quantity;
+        await product.save();
+        return product;
     }
 
     async deleteProduct(productId) {
