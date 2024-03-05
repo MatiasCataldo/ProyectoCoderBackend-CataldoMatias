@@ -6,6 +6,10 @@ import { generateUniqueCode } from '../utils.js';
 
 class TicketService {
 
+    async updateProductStock(productId, quantity) {
+        await ProductDao.updateProductStock(productId, quantity);
+    }
+
     async calculateTotalAmount(cart) {
         const totalAmount = await Promise.all(cart.items.map(async (item) => {
             const product = await ProductDao.getProductById(item.productId);
