@@ -1,37 +1,34 @@
 import userModel from '../dao/models/user.model.js';
-import { userService } from '../';
+import bcrypt from "bcrypt";
 
-export const createUser = async (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
-    try {
-        const user = await userModel.create({ firstName, lastName, email, password });
-        res.status(201).json({ user });
-    } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
-export const getAllUsers = async (req, res) => {
-    try {
-        const users = await userModel.find();
-        res.status(200).json({ users });
-    } catch (error) {
-        console.error('Error getting users:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
+// OBTENER USUARIO POR ID
 export const getUserById = async (req, res) => {
-    const { userId } = req.params;
+    const userId = req.params.userId;
     try {
         const user = await userModel.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(202).json({ message: "User not found with ID: " + userId });
         }
-        res.status(200).json({ user });
+        res.json(user);
     } catch (error) {
-        console.error('Error getting user by ID:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error consultando el usuario con ID: " + userId);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+// ACTUALIZAR CONTRASEÑA DEL USUARIO
+export const updatePassword = async (req, res) => {
+    const { email, newPassword } = req.body;
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) return res.status(401).json({ status: 'error', error: "Usuario no encontrado" });
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+        console.log("Contraseña Modificada", req.session.user);
+        res.json({ status: "success", payload: req.session.user, message: "Contraseña Modificada con Éxito" });
+    } catch (error) {
+        console.error("Error al actualizar la contraseña:", error);
+        res.status(500).json({ status: 'error', error: "Error interno del servidor" });
     }
 };
