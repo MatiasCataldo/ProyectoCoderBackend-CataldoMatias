@@ -23,9 +23,9 @@ import messageDao from "./dao/message.dao.js";
 import cartDao from "./dao/cart.dao.js";
 
 //Vistas
-import usersViewRouter from './routes/users.views.router.js';
-import viewRouter from "./routes/views.routes.js";
-import githubLoginViewRouter from "./routes/github-login.views.router.js"
+//import usersViewRouter from './routes/users.views.router.js';
+import viewsRouter from "./routes/views.routes.js";
+//import githubLoginViewRouter from "./routes/github-login.views.router.js"
 
 //Importciones
 import ProductManager from "../main.js";
@@ -130,6 +130,34 @@ socketServer.on("connection", (socketClient) => {
     }
   });
   
+  socketClient.on('cartUpdated', (updatedCart) => {
+    // Actualizar la cantidad de elementos en el carrito
+    const cartItemCountElement = document.getElementById('cartItemCount');
+    if (cartItemCountElement) {
+      cartItemCountElement.textContent = updatedCart.items.length;
+    }
+  
+    // Actualizar la lista de productos en el carrito
+    const cartItemListElement = document.getElementById('cartItemList');
+    if (cartItemListElement) {
+      // Limpiar la lista antes de agregar los nuevos elementos
+      cartItemListElement.innerHTML = '';
+  
+      // Recorrer los elementos del carrito y agregarlos a la lista
+      updatedCart.items.forEach((item) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.product.title} - Cantidad: ${item.quantity}`;
+        cartItemListElement.appendChild(listItem);
+      });
+    }
+  
+    // Actualizar el precio total del carrito
+    const cartTotalPriceElement = document.getElementById('cartTotalPrice');
+    if (cartTotalPriceElement) {
+      cartTotalPriceElement.textContent = `$${updatedCart.totalPrice}`;
+    }
+  });  
+
 });
 
 //PASSPORT
@@ -137,17 +165,17 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-//ROUTERS
+// ROUTER APIS
 app.use("/api/products", productsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/jwt", jwtRouter);
-app.use("/", viewRouter);
-app.use('/users', usersViewRouter);
-app.use("/github", githubLoginViewRouter)
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);
+
+// ROUTER VISTAS
+app.use("/", viewsRouter);
 
 const usersExtendRouter = new UsersExtendRouter();
 app.use("/api/extend/users", usersExtendRouter.getRouter());

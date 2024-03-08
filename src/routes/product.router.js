@@ -3,13 +3,10 @@ import { getDatosControllers, postDatosControllers, deleteDatosControllers } fro
 
 const router = express.Router();
 
-// GET
 router.get('/', getDatosControllers);
 
-// POST
 router.post('/', postDatosControllers);
 
-// DELETE
 router.delete('/', deleteDatosControllers);
 
 export default router;

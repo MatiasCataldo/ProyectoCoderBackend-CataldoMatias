@@ -1,6 +1,7 @@
 const socketClient = io();
 
 const createProductForm = document.querySelector('#createProductForm');
+const addToCart = document.getElementById('#products');
 
 createProductForm.addEventListener('submit', (event) => {
   event.preventDefault();

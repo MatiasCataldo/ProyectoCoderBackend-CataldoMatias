@@ -20,7 +20,7 @@
                         </li>
                     </ul>
                 </div>
-                <form action="/" method="GET">
+                <form action="/home" method="GET">
                     <button style="margin-right: 10px;     background-color: darkred; border-color: darkred;" type="submit" class="btn btn-primary">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
                     </button>
@@ -32,7 +32,7 @@
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="/home">
                 <img src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png" class="logoHeader" alt="logo pagina">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -40,7 +40,7 @@
                     class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
                     <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
                     <li class="nav-item dropdown">
@@ -57,14 +57,14 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-                    <a href="/users/cart" class="btn btn-outline-dark" type="submit">
+                    <a href="/cart" class="btn btn-outline-dark" type="submit">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                     </a>
                 </form>
                 {{#unless user}}
-                    <form action="/users/login" method="GET">
+                    <form action="/login" method="GET">
                         <button style="margin: 10px; background-color: darkred; border-color: darkred;" type="submit" class="btn btn-primary">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i> Iniciar Sesión
                         </button>
@@ -93,7 +93,7 @@
             </div>
         </header>
     </main>
-    <main style="padding: 10px;">
+    <main style="padding: 10px;" id="products">
         <div class="container" id="container">
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 {{#each products}}
