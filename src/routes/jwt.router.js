@@ -8,7 +8,7 @@ router.post("/login", login);
 
 router.post('/register', register);
 
-router.get("/github", passport.authenticate('github', { scope: ['user:email'] }));
+router.get("/github", passport.authenticate('github', { scope: ['user:email'] }), githubLogin);
 
 router.get("/githubcallback", passport.authenticate('github', { session: false, failureRedirect: '/github/error' }), githubCallback);
 

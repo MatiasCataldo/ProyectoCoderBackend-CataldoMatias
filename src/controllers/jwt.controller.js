@@ -7,7 +7,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await userModel.findOne({ email: email });
-        console.log("Usuario encontrado para login: (jwt.controller)");
+        console.log("Usuario encontrado para login:");
         console.log(user);
         if (!user) {
             console.warn("User doesn't exists with username: " + email);
@@ -24,14 +24,14 @@ export const login = async (req, res) => {
             role: user.role
         };
         const access_token = generateJWToken(tokenUser);
-        console.log("Access_token:", access_token);
+        console.log(access_token);
 
         // 2do con Cookies
         res.cookie('jwtCookieToken', access_token,
             {
                 maxAge: 60000,
                 // httpOnly: true //No se expone la cookie
-                // httpOnly: false //Si se expone la cookie
+                 httpOnly: false //Si se expone la cookie
 
             }
 

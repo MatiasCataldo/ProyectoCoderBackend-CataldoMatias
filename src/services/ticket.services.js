@@ -17,15 +17,21 @@ class TicketService {
         }));
         return totalAmount.reduce((total, amount) => total + amount, 0);
     }
+
+    formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
     
     async generateTicket(cart, purchaserEmail) {
         try {
             const amount = await this.calculateTotalAmount(cart);
+            const formattedAmount = this.formatPrice(amount);
             const ticket = new TicketModel({
                 code: generateUniqueCode(),
+                purchaser: purchaserEmail,
                 purchase_datetime: new Date().toLocaleString('es-ES'),
                 amount: amount,
-                purchaser: purchaserEmail
+                items: cart.items 
             });
             
             await ticket.save();
