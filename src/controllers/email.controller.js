@@ -49,7 +49,7 @@ const mailOptionsWithAttachments = {
 
 export const sendEmail = (req, res, ticketData) => {
     try {
-        const { code, purchase_datetime, amount, purchaser } = ticketData;
+        const { code, purchase_datetime, amount, purchaser, items } = ticketData;
 
         const mailOptionsWithTicket = {
             ...mailOptions,
@@ -58,9 +58,20 @@ export const sendEmail = (req, res, ticketData) => {
                     <h1>GRACIAS POR SU COMPRA!</h1>
                     <h2>Ticket generado</h2>
                     <p><strong>Código:</strong> ${code}</p>
-                    <p><strong>Fecha de compra:</strong> ${purchase_datetime}</p>
-                    <p><strong>Monto:</strong> ${amount}</p>
                     <p><strong>Comprador:</strong> ${purchaser}</p>
+                    <p><strong>Fecha de compra:</strong> ${purchase_datetime}</p>
+                    <p><strong>Monto:</strong> $${amount}</p>
+                    <p><strong>Detalles de la compra:</strong></p>
+                    <br>
+                    <ul>
+                        ${items.map(item => `
+                            <li>
+                                <p><strong>Producto:</strong> ${item.productName}</p>
+                                <p><strong>Precio:</strong> $${item.productPrice}</p>
+                                <p><strong>Cantidad:</strong> ${item.quantity}</p>
+                            </li>
+                        `).join('')}
+                    </ul>
                 </div>
             `
         };

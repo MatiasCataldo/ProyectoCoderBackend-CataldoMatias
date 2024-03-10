@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const buyButtons = document.querySelectorAll('.buy-button');
   buyButtons.forEach((button) => {
       button.addEventListener('click', (event) => {
-          event.preventDefault();
+          event.preventDefault(); 
           const productId = button.getAttribute('data-product-id');
           socketClient.emit('addToCart', { productId });
           button.style.backgroundColor = 'green';

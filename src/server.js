@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import MongoStore from 'connect-mongo'
 import session from "express-session";
 import passport from "passport";
+import cookieParser from "cookie-parser";
+import dotenv from 'dotenv'; // Importa dotenv
 
 //Routers
 import productsRouter from "./routes/product.router.js";
@@ -30,6 +32,7 @@ import viewsRouter from "./routes/views.routes.js";
 //Importciones
 import ProductManager from "../main.js";
 import __dirname from "./utils.js";
+import { authorize } from './utils.js';
 import initializePassport from "./config/passport.config.js";
 import config from './config/config.js';
 import MongoSingleton from './config/mongodb-singleton.js';
@@ -38,13 +41,18 @@ import { initializeAndExportServices } from './services/factory.js';
 //Custom - Extended
 import UsersExtendRouter from './routes/custom/users.extend.router.js'
 
+dotenv.config();
+
+const COOKIE_SECRET = process.env.COOKIE_SECRET;
 const  MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
 const SERVER_PORT = config.port;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
+app.use(cookieParser("unSecreto"));
 app.use(session(
   {
       store: MongoStore.create({
@@ -166,10 +174,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ROUTER APIS
-app.use("/api/products", productsRouter);
-app.use("/api/messages", messagesRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/api/users", userRouter);
+app.use("/api/products", authorize(['admin']), productsRouter);
+app.use("/api/messages", authorize(['user']), messagesRouter);
+app.use("/api/carts", authorize(['user']), cartsRouter);
+app.use("/api/users", authorize(['user']), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);

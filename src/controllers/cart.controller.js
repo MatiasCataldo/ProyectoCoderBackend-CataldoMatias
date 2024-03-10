@@ -1,4 +1,9 @@
 import cartDao from "../dao/cart.dao.js";
+import ProductDao from "../dao/product.dao.js"
+import UserDao from "../dao/user.dao.js"
+import ticketService from "../services/ticket.services.js"
+import { generateUniqueCode } from '../utils.js';
+import { sendEmail } from "../controllers/email.controller.js"
 
 // BUSCAR CARRITO POR ID
 export const getCartByUserId = async (req, res) => {
@@ -31,9 +36,9 @@ export const addItemToCart = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        res.json({
             error,
-            message: "Error al agregar el item al carrito",
+            message: "Error al agregar el item",
         });
     }
 };
@@ -90,5 +95,61 @@ export const clearCart = async (req, res) => {
             error,
             message: "Error al vaciar el carrito",
         });
+    }
+};
+
+// GENERAR TICKET
+export const purchase = async (req, res) => {
+    try {
+        const { cid, userId } = req.params;
+        const cart = await cartDao.findCartByUserId(cid);
+
+        if (!cart) {
+            return res.status(404).json({ message: "Carrito no encontrado." });
+        }
+
+        const productsNotPurchased = [];
+        for (const item of cart.items) {
+            const product = await ProductDao.getProductById(item.productId);
+            if (!product || product.stock < item.quantity) {
+                productsNotPurchased.push(item.productId);
+            }
+        }
+
+        if (productsNotPurchased.length > 0) {
+            for (const itemNotPurchased of productsNotPurchased){
+                await cartDao.deleteCartItem(cid, itemNotPurchased._id);
+            }
+            return res.status(400).json({ message: "Algunos productos no están disponibles." });
+        }
+
+        const userEmail = await UserDao.getUserEmailById(userId);
+        console.log("id para email de ticket: ", userId);
+        console.log("email ticket: ", userEmail);
+        if (!userEmail) {
+            return res.status(404).json({ error: "Correo electrónico del usuario no encontrado." });
+        }
+        const ticket = await ticketService.generateTicket(cart, userEmail.email);
+        for (const item of cart.items) {
+            await ticketService.updateProductStock(item.productId, item.quantity);
+        }
+
+        await cartDao.clearCart(userId);
+
+        const userTiket = await UserDao.getUserById(userId)
+        const nameUser = userTiket.last_name + userTiket.first_name
+
+        await sendEmail(null, null, {
+            code: ticket.code,
+            purchaser: nameUser,
+            purchase_datetime: ticket.purchase_datetime,
+            amount: ticket.amount,
+            items: cart.items 
+        });
+        res.json({ ticket, message: "Compra realizada con éxito." });
+
+    } catch (error) {
+        console.error("Error al procesar la compra:", error);
+        res.status(500).json({ error: "Error al procesar la compra." });
     }
 };

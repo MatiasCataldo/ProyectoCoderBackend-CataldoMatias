@@ -6,23 +6,27 @@ import { passportCall, authorization } from "../utils.js";
 const router = express.Router();
 const manejadorProductos = new ProductManager();
 
-// Rutas relacionadas con el usuario
+// LOGIN
 router.get("/login", (req, res) => {
     res.render("login");
 });
 
+// REGISTER
 router.get("/register", (req, res) => {
     res.render("register");
 });
 
+// CART
 router.get("/cart", (req, res) => {
     res.render("cart");
 });
 
+// UPDATE PASSWORD
 router.get('/updatePassword', (req, res) => {
     res.render('updatePassword');
 });
 
+// HOME
 router.get('/home', (req, res) => {
     res.render('home', {
         products: manejadorProductos.getProducts(),
@@ -30,6 +34,7 @@ router.get('/home', (req, res) => {
     });
 });
 
+// HOME USER
 router.get("/home/user",
     passportCall('jwt'),
     authorization('user'),
@@ -41,22 +46,17 @@ router.get("/home/user",
     }
 );
 
-/*router.get("*", (req, res) => {
-    res.render("error");
-});
-
-router.get("/error", (req, res) => {
-    res.render("error");
-});*/
-
+// REALTIMEPRODUCTS
 router.get("/realTimeProducts", (req, res) => {
     res.render("realTimeProducts");
 });
 
+//CHAT
 router.get('/chat', (req, res) => {
     res.render("chat");
 });
 
+// CART ID
 router.get("/carts/:cid", async (req, res) => {
     try {
         const { cid } = req.params;
