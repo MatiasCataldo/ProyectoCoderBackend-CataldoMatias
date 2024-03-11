@@ -48,8 +48,6 @@ export const passportCall = (strategy) => {
                 return next(err);
             }
             if (!user) {
-                console.log("salio por if(!user)")
-                console.log(info)
                 return res.status(401).send({ error: info.messages ? info.messages : info.toString() });
             }
             console.log("Usuario obtenido del strategy: ");
@@ -63,26 +61,13 @@ export const passportCall = (strategy) => {
 // para manejo de Auth
 export const authorization = (role) => {
     return async (req, res, next) => {
-        if (!req.user) return res.status(401).send("Unauthorized: User not found in JWT")
+        if (!req.user) return res.status(401).send("No Autorizado: Usuario no encontrado en JWT")
         if (req.user.role !== role) {
             return res.status(403).send("Forbidden: El usuario no tiene permisos con este rol.");
         }
         next()
     }
 };
-
-export const authorize = (roles) => {
-    return (req, res, next) => {
-      // Verifica si el usuario está autenticado y si su rol está permitido para acceder a la ruta
-      if (req.isAuthenticated() && roles.includes(req.user.role)) {
-        // Si el usuario tiene permiso, permite el acceso a la siguiente ruta
-        return next();
-      } else {
-        // Si el usuario no tiene permiso, redirige a una página de error o muestra un mensaje de error
-        return res.status(403).send("No tienes permiso para acceder a esta página.");
-      }
-    };
-  };
 
 export function generateUniqueCode() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
