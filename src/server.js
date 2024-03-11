@@ -32,7 +32,7 @@ import viewsRouter from "./routes/views.routes.js";
 //Importciones
 import ProductManager from "../main.js";
 import __dirname from "./utils.js";
-import { authorize } from './utils.js';
+import { passportCall, authorization } from './utils.js';
 import initializePassport from "./config/passport.config.js";
 import config from './config/config.js';
 import MongoSingleton from './config/mongodb-singleton.js';
@@ -174,10 +174,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ROUTER APIS
-app.use("/api/products", authorize(['admin']), productsRouter);
-app.use("/api/messages", authorize(['user']), messagesRouter);
-app.use("/api/carts", authorize(['user']), cartsRouter);
-app.use("/api/users", authorize(['user']), userRouter);
+app.use("/api/products", passportCall('jwt'), authorization('admin'), productsRouter);
+app.use("/api/messages", passportCall('jwt'), authorization('user'), messagesRouter);
+app.use("/api/carts", passportCall('jwt'), authorization('user'), cartsRouter);
+app.use("/api/users", passportCall('jwt'), authorization('user'), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);
