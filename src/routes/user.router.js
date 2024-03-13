@@ -4,7 +4,9 @@ import { getUserById, updatePassword } from '../controllers/user.controller.js';
 
 const router = Router();
 
-router.get("/:userId", authToken, getUserById);
+//router.get("/", getUsers);
+
+router.get("/:userId", getUserById);
 
 router.post('/updatePassword', updatePassword);
 

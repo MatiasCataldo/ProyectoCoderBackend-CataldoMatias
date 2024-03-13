@@ -47,14 +47,20 @@ router.get("/home/user",
 );
 
 // REALTIMEPRODUCTS
-router.get("/realTimeProducts", (req, res) => {
-    res.render("realTimeProducts");
+router.get("/realTimeProducts", 
+    passportCall('jwt'),
+    authorization('admin'),
+    (req, res) => {
+        res.render("realTimeProducts");
 });
 
 //CHAT
-router.get('/chat', (req, res) => {
-    res.render("chat");
-});
+router.get('/chat',
+    passportCall('jwt'),
+    authorization('user'), 
+    (req, res) => {
+        res.render("chat");
+    });
 
 // CART ID
 router.get("/carts/:cid", async (req, res) => {

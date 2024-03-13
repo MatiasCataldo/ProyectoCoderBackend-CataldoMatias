@@ -1,12 +1,15 @@
 import express from 'express';
-import { getDatosControllers, postDatosControllers, deleteDatosControllers } from '../controllers/product.controller.js';
+import { saveProduct, getDatosControllers, deleteDatosControllers } from '../controllers/product.controller.js';
+import errorHandler from '../services/middlewares/index.js';
 
 const router = express.Router();
 
 router.get('/', getDatosControllers);
 
-router.post('/', postDatosControllers);
+router.post("/", saveProduct);
 
 router.delete('/', deleteDatosControllers);
+
+router.use(errorHandler);
 
 export default router;

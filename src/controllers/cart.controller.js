@@ -4,6 +4,9 @@ import UserDao from "../dao/user.dao.js"
 import ticketService from "../services/ticket.services.js"
 import { generateUniqueCode } from '../utils.js';
 import { sendEmail } from "../controllers/email.controller.js"
+import CustomProductError from "../services/error/CustomError.js";
+import { CartErrors } from "../services/error/errors-enum.js";
+import { generateCartErrorInfo } from "../services/messages/cart-add-error.message.js";
 
 // BUSCAR CARRITO POR ID
 export const getCartByUserId = async (req, res) => {
@@ -28,8 +31,17 @@ export const getCartByUserId = async (req, res) => {
 export const addItemToCart = async (req, res) => {
     try {
         const { userId } = req.params;
-        const cartItem = req.body;
-        const updatedCart = await cartDao.createCartItem(userId, cartItem);
+        const { productId, quantity } = req.body;
+
+        if (!productId || !quantity) {
+            CustomProductError.createError({
+                name: "Product Create Error",
+                cause: generateCartErrorInfo({ productId, quantity}),
+                message: "Error al intentar agregar item al carrito",
+                code: CartErrors.MISSING_REQUIRED_FIELDS
+            });
+        }
+        const updatedCart = await cartDao.createCartItem(userId, { productId, quantity });
         res.json({
             cart: updatedCart,
             message: "Item agregado al carrito",

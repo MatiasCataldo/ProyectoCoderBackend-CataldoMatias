@@ -12,6 +12,7 @@ import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'; // Importa dotenv
 
 //Routers
+import mockingRouter from "./routes/mocking.router.js"
 import productsRouter from "./routes/product.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import cartsRouter from "./routes/cart.router.js";
@@ -181,6 +182,7 @@ app.use("/api/users", passportCall('jwt'), authorization('user'), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);
+app.use("/mockingproducts", mockingRouter);
 
 // ROUTER VISTAS
 app.use("/", viewsRouter);
