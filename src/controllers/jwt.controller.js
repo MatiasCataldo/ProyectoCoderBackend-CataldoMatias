@@ -29,7 +29,7 @@ export const login = async (req, res) => {
         // 2do con Cookies
         res.cookie('jwtCookieToken', access_token,
             {
-                maxAge: 60000,
+                maxAge: 600000,
                 // httpOnly: true //No se expone la cookie
                  httpOnly: false //Si se expone la cookie
 
@@ -71,7 +71,7 @@ export const githubCallback = async (req, res) => {
 
         // Se establece la cookie con el token JWT
         res.cookie('jwtCookieToken', access_token, {
-            maxAge: 60000,
+            maxAge: 600000,
         });
     } catch (error) {
         console.error(error);

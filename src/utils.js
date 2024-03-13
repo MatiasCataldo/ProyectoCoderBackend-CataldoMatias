@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import { faker } from '@faker-js/faker';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -64,7 +65,7 @@ export const authorization = (role) => {
         if (!req.user) return res.status(401).send("No Autorizado: Usuario no encontrado en JWT")
         if (req.user.role !== role) {
             return res.status(403).send("Forbidden: El usuario no tiene permisos con este rol.");
-        }
+        } 
         next()
     }
 };
@@ -79,5 +80,22 @@ export function generateUniqueCode() {
     }
     return code;
 }
+
+// FAKER
+export const generateProduct = () => {
+    const categorys = ['Helado', 'Bombones/Tortas'];
+    const status = ['true', 'false'];
+    return {
+        id: faker.database.mongodbObjectId(),
+        title: faker.commerce.productName(),
+        description: faker.commerce.description,
+        price: faker.commerce.price(),
+        image: faker.image.url,
+        stock: faker.string.numeric(),
+        category: categorys[Math.floor(Math.random() * categorys.length)],
+        status: status[Math.floor(Math.random() * status.length)]
+    }
+};
+
 
 export default __dirname;
