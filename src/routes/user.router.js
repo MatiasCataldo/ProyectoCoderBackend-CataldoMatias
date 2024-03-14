@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { authToken } from '../utils.js';
-import { getUserById, updatePassword } from '../controllers/user.controller.js';
+import { fakeUser, getUsers, getUserById, updatePassword } from '../controllers/user.controller.js';
 
 const router = Router();
 
-//router.get("/", getUsers);
+router.get("/test", fakeUser);
+
+router.get("/", getUsers);
 
 router.get("/:userId", getUserById);
 

@@ -1,5 +1,27 @@
 import userModel from '../dao/models/user.model.js';
 import bcrypt from "bcrypt";
+import {faker} from '@faker-js/faker'; 
+
+// CREAR USUARIO TEST
+export const fakeUser = async (req, res) => {
+    let first_name = faker.name.firstName();
+    let last_name = faker.name.lastName();
+    let email = faker.internet.email();
+    let age = faker.random.numeric(2);
+    let password = faker.internet.password();
+    res.send({first_name, last_name, email, age, password});
+}
+
+// OBTENER USUARIOS
+export const getUsers = async (req, res) => {
+    try {
+        const users = await userModel.find();
+        res.json(users);
+    } catch (error) {
+        console.error("Error al obtener los usuarios:", error);
+        res.status(500).json({ error: "Error interno del servidor al obtener los usuarios" });
+    }
+};
 
 // OBTENER USUARIO POR ID
 export const getUserById = async (req, res) => {
