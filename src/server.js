@@ -22,21 +22,18 @@ import emailRouter from './routes/email.router.js';
 import smsRouter from './routes/sms.router.js';
 
 //Daos
-import messageDao from "./dao/message.dao.js";
 import cartDao from "./dao/cart.dao.js";
 
 //Vistas
-//import usersViewRouter from './routes/users.views.router.js';
 import viewsRouter from "./routes/views.routes.js";
-//import githubLoginViewRouter from "./routes/github-login.views.router.js"
 
 //Importciones
+import {addLogger } from "./config/logger_CUSTOM.js";
 import ProductManager from "../main.js";
 import __dirname from "./utils.js";
 import { passportCall, authorization } from './utils.js';
 import initializePassport from "./config/passport.config.js";
 import config from './config/config.js';
-import MongoSingleton from './config/mongodb-singleton.js';
 import { initializeAndExportServices } from './services/factory.js';
 
 //Custom - Extended
@@ -52,6 +49,7 @@ const SERVER_PORT = config.port;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(COOKIE_SECRET));
+app.use(addLogger);
 app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
 app.use(cookieParser("unSecreto"));
 app.use(session(
@@ -66,15 +64,6 @@ app.use(session(
     }
 ))
 
-//MONGO-SINGLETON
-/*const mongoInstance = async () => {
-  try {
-      await MongoSingleton.getInstance()
-  } catch (error) {
-      console.log(error);
-  }
-}
-mongoInstance()*/
 const { userService, productService } = await initializeAndExportServices();
 //HANDLEBARS
 app.engine("hbs",handlebars.engine({
@@ -190,6 +179,11 @@ app.use("/", viewsRouter);
 const usersExtendRouter = new UsersExtendRouter();
 app.use("/api/extend/users", usersExtendRouter.getRouter());
 
+// CUSTOM LOGGER
+app.get("/logger", (req, res) => {
+  req.logger.warning("Prueba de log level warning --> en Endpoint");
+  res.send("Prueba de logger!");
+});
 
 httpServer.listen(SERVER_PORT, () =>
   console.log(`Server listening on port ${SERVER_PORT}`)
