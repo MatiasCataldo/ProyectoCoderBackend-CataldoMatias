@@ -8,7 +8,12 @@ const productSchema = new Schema({
     price: { type: Number, required: true, index: true, },
     thumbnail: { type: String, required: true },
     stock: { type: Number, required: true },
-    category: { type: String, required: true, index: true,},
+    category: { type: String, required: true, index: true },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    }
 });
 
 productSchema.plugin(mongoosePaginate);

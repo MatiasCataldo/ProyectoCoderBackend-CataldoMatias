@@ -1,15 +1,14 @@
-import { obtenerDatos, crearDato, deleteServices } from '../services/products.services.js'
+import { obtenerDatos, crearDato, deleteProduct } from '../services/products.services.js'
 import { generateProduct } from '../utils.js';
 import CustomProductError from "../services/error/CustomError.js";
 import { ProductErrors } from "../services/error/errors-enum.js";
 import { generateProductErrorInfo } from "../services/messages/product-creation-error.message.js";
+import productDao from "../dao/product.dao.js"
 
 // GUARDAR PRODUCTO
-export const saveProduct = (req, res) => {
+export const saveProduct = async (req, res) => {
     try {
-        console.log(req.body);
-        const { id, title, description, price, thumbnail, stock, category } = req.body;
-
+        const { id, title, description, price, thumbnail, stock, category, owner } = req.body;
         if (!id || !title || !description || !price || !thumbnail || !stock || !category) {
             CustomProductError.createError({
                 name: "Product Create Error",
@@ -19,7 +18,13 @@ export const saveProduct = (req, res) => {
             });
         }
 
-        // Lógica para guardar el producto (aquí puedes conectar con la base de datos u otro sistema de almacenamiento)
+        let ownerToSet;
+        if (!owner) {
+            ownerToSet = 'admin';
+        }else{
+            ownerToSet = req.user._id;
+        }
+
         const productDto = {
             id,
             title,
@@ -27,8 +32,11 @@ export const saveProduct = (req, res) => {
             price,
             thumbnail,
             stock,
-            category
+            category,
+            owner: ownerToSet
         };
+
+        await productDao.createProduct(productDto);
         res.status(201).send({ status: "success", payload: productDto });
 
     } catch (error) {
@@ -61,8 +69,9 @@ export const postDatosControllers = async (req, res) => {
     res.json({ dato })
 }
 
-export const deleteDatosControllers = async (req, res) => {
-    let { id } = req.params;
-    await deleteServices(id);
-    res.json({ msj: "delete product" })
-}
+export const DeleteProduct = async (req, res) => {
+    const { productId } = req.params;
+    const userRole = req.user.role;
+    const result = await deleteProduct(productId, userRole);
+    res.status(result.status).json({ message: result.message });
+};

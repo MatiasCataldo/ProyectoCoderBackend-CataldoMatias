@@ -6,7 +6,7 @@ const router = Router();
 
 router.post("/login", login);
 
-router.post('/register', register);
+router.post('/register', passport.authenticate('register', { session: false }), register);
 
 router.get("/github", passport.authenticate('github', { scope: ['user:email'] }), githubLogin);
 

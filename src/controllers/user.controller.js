@@ -54,3 +54,26 @@ export const updatePassword = async (req, res) => {
         res.status(500).json({ status: 'error', error: "Error interno del servidor" });
     }
 };
+
+// CAMBIAR ROL
+export const changeUserRole = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        if ( user.role === 'admin'){
+            user.role = 'premium';
+        }else{
+            user.role = 'admin';
+        }
+
+        await user.save();
+        res.json({ message: `Rol de usuario ${userId} actualizado a ${user.role}` });
+    } catch (error) {
+        console.error('Error al cambiar el rol de usuario:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};

@@ -31,16 +31,20 @@ export const crearDato = async (dato) => {
     }
 };
 
-export const deleteServices = async (id) => {
+export const deleteProduct = async (productId, userRole) => {
     try {
-        const productos = await productDao.getProductById();
-        const productoExistente = productos.find(producto => producto.id === id);
-        if (!productoExistente) {
-            throw new Error('El producto no existe');
+        const product = await productDao.getProductById(productId);
+        if (!product) {
+            return { status: 404, message: 'Producto no encontrado' };
         }
-        return await productDao.deleteProduct(id);
+        
+        if (userRole === 'premium' && product.owner === 'admin') {
+            return { status: 403, message: 'No tienes permiso para eliminar este producto' };
+        }
+
+        await productDao.deleteProduct(productId);
+        return { status: 200, message: 'Producto eliminado correctamente' };
     } catch (error) {
-        console.error('Error al eliminar dato:', error);
-        throw new Error('Error al eliminar dato');
+        return { status: 500, message: error.message };
     }
 };

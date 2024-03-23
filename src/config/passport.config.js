@@ -5,23 +5,19 @@ import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import { PRIVATE_KEY, createHash } from '../utils.js';
 import cartDao from '../dao/cart.dao.js';
+import { addLogger } from "./logger_CUSTOM.js";
 
 const localStrategy = passportLocal.Strategy;
-
 const JwtStrategy = jwtStrategy.Strategy;
 const ExtractJWT = jwtStrategy.ExtractJwt;
+const logger = addLogger;
 
 const cookieExtractor = req => {
     let token = null;
-    console.log("Entrando a Cookie Extractor");
     if (req && req.cookies) {
-        console.log("Cookies presentes: ");
-        console.log(req.cookies);
         token = req.cookies['jwtCookieToken'];
-        console.log("Token obtenido desde Cookie:");
-        console.log(token);
     } else{
-        console.log("Error -> cookieExtractor: ", req.cookies);
+        
     }
     return token;
 };
@@ -32,10 +28,7 @@ const initializePassport = () => {
             jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
             secretOrKey: PRIVATE_KEY
         }, async (jwt_payload, done) => {
-            console.log("Entrando a passport Strategy con JWT.");
             try {
-                console.log("JWT obtenido del Payload");
-                console.log(jwt_payload);
                 return done(null, jwt_payload.user)
             } catch (error) {
                 return done(error)
@@ -50,23 +43,15 @@ const initializePassport = () => {
             callbackUrl: 'http://localhost:8080/api/jwt/githubcallback'
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log("Profile obtenido del usuario de GitHub: ");
-            console.log(profile);
             try {
-                //Validamos si el user existe en la DB
                 const user = await userModel.findOne({ email: profile._json.email });
-                console.log("Usuario encontrado para login:");
-                console.log(user);
                 if (!user) {
-                    console.warn("User doesn't exists with username: " + profile._json.email);
-
-                    const cartItem = { productId: '', quantity: 0 };
-                    const createdCart = await cartDao.createCartItem(userId, cartItem);
-                    console.log("Carrito creado:", createdCart);
-
+                    const cartItem = {};
+                    const createdCart = await cartDao.createCartItem(user, cartItem);
+                    
                     let newUser = {
                         first_name: profile._json.name,
-                        last_name: '',
+                        last_name: 'Usuario GitHub',
                         age: 28,
                         email: profile._json.email,
                         password: '',
@@ -76,7 +61,6 @@ const initializePassport = () => {
                     const result = await userModel.create(newUser);
                     return done(null, result)
                 } else {
-                    // Si entramos por aca significa que el user ya existe en la DB
                     return done(null, user)
                 }
             } catch (error) {
@@ -84,7 +68,7 @@ const initializePassport = () => {
             }
         }
         ))    
-
+        
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' },
         async (req, username, password, done) => {
@@ -92,16 +76,11 @@ const initializePassport = () => {
             try {
                 const exist = await userModel.findOne({ email });
                 if (exist) {
-                    console.log("El user ya existe!!");
                     done(null, false)
                 }
 
-                const cartItem = { productId: '', quantity: 0 };
                 const createdCart = await cartDao.createCartItem();
-                console.log("Carrito creado:", createdCart);
-
                 const cartId = createdCart._id;
-
                 const user = {
                     first_name,
                     last_name,
@@ -112,7 +91,6 @@ const initializePassport = () => {
                     cartId: cartId
                 }
                 const result = await userModel.create(user);
-                console.log(result);
                 return done(null, result)
             } catch (error) {
                 return done(error)
@@ -120,7 +98,7 @@ const initializePassport = () => {
         }
     ));
 
-    //Funciones de Serializacion y Desserializacion
+    //SERIALIZACION Y DESERIALIZACION
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });

@@ -26,6 +26,10 @@ router.get('/updatePassword', (req, res) => {
     res.render('updatePassword');
 });
 
+router.get('/reset-password/:token', (req, res) => {
+    res.render('updatePassword-email');
+});
+
 // HOME
 router.get('/home', (req, res) => {
     res.render('home', {
