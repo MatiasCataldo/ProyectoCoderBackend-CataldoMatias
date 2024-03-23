@@ -2,7 +2,6 @@ import cartDao from "../dao/cart.dao.js";
 import ProductDao from "../dao/product.dao.js"
 import UserDao from "../dao/user.dao.js"
 import ticketService from "../services/ticket.services.js"
-import { generateUniqueCode } from '../utils.js';
 import { sendEmail } from "../controllers/email.controller.js"
 import CustomProductError from "../services/error/CustomError.js";
 import { CartErrors } from "../services/error/errors-enum.js";
@@ -19,7 +18,6 @@ export const getCartByUserId = async (req, res) => {
             message: "Carrito encontrado.",
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error,
             message: "Error al obtener el carrito del usuario",
@@ -31,23 +29,33 @@ export const getCartByUserId = async (req, res) => {
 export const addItemToCart = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { productId, quantity } = req.body;
+        const { productName, productId, quantity, productPrice } = req.body;
+        const user = await userModel.findById(userId);
+        const product = await productModel.findById(productId);
 
-        if (!productId || !quantity) {
+        if (!productId || !quantity || !productName || !productPrice) {
             CustomProductError.createError({
                 name: "Product Create Error",
-                cause: generateCartErrorInfo({ productId, quantity}),
+                cause: generateCartErrorInfo({ productName, productId, quantity, productPrice}),
                 message: "Error al intentar agregar item al carrito",
                 code: CartErrors.MISSING_REQUIRED_FIELDS
             });
         }
-        const updatedCart = await cartDao.createCartItem(userId, { productId, quantity });
+        
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado." });
+        }
+
+        if (user.role === 'premium' && product.owner === 'premium') {
+                return res.status(403).json({ message: "No puedes agregar un producto que te pertenece a tu carrito." });
+        }
+
+        const updatedCart = await cartDao.createCartItem(userId, { productName, productId, quantity, productPrice });
         res.json({
             cart: updatedCart,
             message: "Item agregado al carrito",
         });
     } catch (error) {
-        console.log(error);
         res.json({
             error,
             message: "Error al agregar el item",
@@ -66,7 +74,6 @@ export const updateCartItem = async (req, res) => {
             message: "La cantidad del item fue actualizada",
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error,
             message: "Error al actualizar la cantidad del item en el carrito",
@@ -84,7 +91,6 @@ export const deleteCartItem = async (req, res) => {
             message: "Item eliminado del carrito",
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error,
             message: "Error al eliminar el item del carrito",
@@ -102,7 +108,6 @@ export const clearCart = async (req, res) => {
             message: "Carrito vaciado",
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error,
             message: "Error al vaciar el carrito",
@@ -141,12 +146,10 @@ export const purchase = async (req, res) => {
         if (!userEmail) {
             return res.status(404).json({ error: "Correo electrónico del usuario no encontrado." });
         }
-        const ticket = await ticketService.generateTicket(cart, userEmail.email);
+        const ticket = await ticketService.generateTicket(cart, userEmail);
         for (const item of cart.items) {
             await ticketService.updateProductStock(item.productId, item.quantity);
         }
-
-        await cartDao.clearCart(userId);
 
         const userTiket = await UserDao.getUserById(userId)
         const nameUser = userTiket.last_name + userTiket.first_name
@@ -159,6 +162,7 @@ export const purchase = async (req, res) => {
             items: cart.items 
         });
         res.json({ ticket, message: "Compra realizada con éxito." });
+        await cartDao.clearCart(userId);
 
     } catch (error) {
         console.error("Error al procesar la compra:", error);

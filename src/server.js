@@ -1,17 +1,16 @@
-//Librerias
+//IMPORT LIBRARYS
 import express from "express";
 import handlebars from "express-handlebars";
 import http from "http";
 import { Server } from "socket.io";
 import path from "path";
-import mongoose from "mongoose";
 import MongoStore from 'connect-mongo'
 import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'; // Importa dotenv
 
-//Routers
+//IMPORT ROUTERS
 import mockingRouter from "./routes/mocking.router.js"
 import productsRouter from "./routes/product.router.js";
 import messagesRouter from "./routes/messages.router.js";
@@ -21,31 +20,35 @@ import jwtRouter from './routes/jwt.router.js';
 import emailRouter from './routes/email.router.js';
 import smsRouter from './routes/sms.router.js';
 
-//Daos
+//IMPORT DAO
 import cartDao from "./dao/cart.dao.js";
 
-//Vistas
+//IMPORT VIEWS
 import viewsRouter from "./routes/views.routes.js";
 
-//Importciones
-import {addLogger } from "./config/logger_CUSTOM.js";
+//IMPORTS
 import ProductManager from "../main.js";
 import __dirname from "./utils.js";
 import { passportCall, authorization } from './utils.js';
 import initializePassport from "./config/passport.config.js";
 import config from './config/config.js';
-import { initializeAndExportServices } from './services/factory.js';
+import { initializeAndExportServices } from "./services/factory.js";
+import { addLogger } from "./config/logger_CUSTOM.js";
 
-//Custom - Extended
-import UsersExtendRouter from './routes/custom/users.extend.router.js'
-
-dotenv.config();
-
+// CONSTANTES DE ENTORNO
 const COOKIE_SECRET = process.env.COOKIE_SECRET;
-const  MONGO_URL = "mongodb://127.0.0.1/ecommerce";
+const MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
 const SERVER_PORT = config.port;
+const manejadorProductos = new ProductManager();
+const httpServer = http.createServer(app);
+const socketServer = new Server(httpServer);
+const { userService, productService } = await initializeAndExportServices();
 
+//APP SETTINGS
+dotenv.config();
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(COOKIE_SECRET));
@@ -64,7 +67,11 @@ app.use(session(
     }
 ))
 
-const { userService, productService } = await initializeAndExportServices();
+//PASSPORT
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 //HANDLEBARS
 app.engine("hbs",handlebars.engine({
   extname: "hbs",
@@ -73,24 +80,8 @@ app.engine("hbs",handlebars.engine({
 })
 );
 
-const hbs = handlebars.create({
-  helpers: {
-    eq: function (a, b, options) {
-      return a === b ? options.fn(this) : options.inverse(this);
-    }
-  }
-});
-
-app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "views"));
-
-const manejadorProductos = new ProductManager();
-const httpServer = http.createServer(app);
-const socketServer = new Server(httpServer);
-
+// SOCKET
 socketServer.on("connection", (socketClient) => {
-  console.log("Nuevo cliente conectado");
-
   socketClient.on("createProduct", (newProduct) => {
     const product = {
       id: newProduct.id,
@@ -101,7 +92,6 @@ socketServer.on("connection", (socketClient) => {
       stock: newProduct.stock,
       category: newProduct.category,
     };
-    console.log("Nuevo producto server :", product);
     manejadorProductos.addProduct(product);
     socketServer.emit("productListUpdated", manejadorProductos.getProducts());
   });
@@ -129,27 +119,21 @@ socketServer.on("connection", (socketClient) => {
   });
   
   socketClient.on('cartUpdated', (updatedCart) => {
-    // Actualizar la cantidad de elementos en el carrito
     const cartItemCountElement = document.getElementById('cartItemCount');
     if (cartItemCountElement) {
       cartItemCountElement.textContent = updatedCart.items.length;
     }
   
-    // Actualizar la lista de productos en el carrito
     const cartItemListElement = document.getElementById('cartItemList');
     if (cartItemListElement) {
-      // Limpiar la lista antes de agregar los nuevos elementos
       cartItemListElement.innerHTML = '';
-  
-      // Recorrer los elementos del carrito y agregarlos a la lista
       updatedCart.items.forEach((item) => {
         const listItem = document.createElement('li');
         listItem.textContent = `${item.product.title} - Cantidad: ${item.quantity}`;
         cartItemListElement.appendChild(listItem);
       });
     }
-  
-    // Actualizar el precio total del carrito
+
     const cartTotalPriceElement = document.getElementById('cartTotalPrice');
     if (cartTotalPriceElement) {
       cartTotalPriceElement.textContent = `$${updatedCart.totalPrice}`;
@@ -158,16 +142,11 @@ socketServer.on("connection", (socketClient) => {
 
 });
 
-//PASSPORT
-initializePassport();
-app.use(passport.initialize());
-app.use(passport.session());
-
 // ROUTER APIS
-app.use("/api/products", passportCall('jwt'), authorization('admin'), productsRouter);
+app.use("/api/products", passportCall('jwt'), authorization(['admin', 'premium']), productsRouter);
 app.use("/api/messages", passportCall('jwt'), authorization('user'), messagesRouter);
-app.use("/api/carts", passportCall('jwt'), authorization('user'), cartsRouter);
-app.use("/api/users", passportCall('jwt'), authorization('user'), userRouter);
+app.use("/api/carts", passportCall('jwt'), authorization('admin', 'premium'), cartsRouter);
+app.use("/api/users", passportCall('jwt'), authorization('admin', 'premium'), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);
@@ -176,15 +155,7 @@ app.use("/mockingproducts", mockingRouter);
 // ROUTER VISTAS
 app.use("/", viewsRouter);
 
-const usersExtendRouter = new UsersExtendRouter();
-app.use("/api/extend/users", usersExtendRouter.getRouter());
-
-// CUSTOM LOGGER
-app.get("/logger", (req, res) => {
-  req.logger.warning("Prueba de log level warning --> en Endpoint");
-  res.send("Prueba de logger!");
-});
-
+//  SERVER LISTENING
 httpServer.listen(SERVER_PORT, () =>
   console.log(`Server listening on port ${SERVER_PORT}`)
 );

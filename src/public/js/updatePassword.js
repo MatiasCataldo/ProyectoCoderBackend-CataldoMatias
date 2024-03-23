@@ -1,22 +1,17 @@
+console.log("El DOM ha sido cargado");
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('updateForm');
-
-    form.addEventListener('submit', async (e) => {
+    
+    form.addEventListener('submit', async (e) =>  {
         e.preventDefault();
-
         const email = form.querySelector('[name="email"]').value;
-        const newPassword = form.querySelector('#newPassword').value;
-        const repeatPassword = form.querySelector('#repiteNewPassword').value;
-
-        if (newPassword !== repeatPassword) {
-            alert('Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
-            return;
-        }
-
+        console.log("email para rest: ", email);
+        
         try {
-            const response = await fetch('/api/users/updatePassword', {
+            const response = await fetch('/api/email/send-email-to-reset', {
                 method: 'POST',
-                body: JSON.stringify({ email, newPassword }),
+                body: JSON.stringify({ email }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -25,10 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Contraseña actualizada con éxito.');
-                window.location.href = '/users/login';
+                alert('Email enviado! Por favor revise su correo.');
             } else {
-                alert(`Error al actualizar la contraseña: ${data.error}`);
+                alert(`Error al enviar el correo: ${data.error}`);
             }
         } catch (error) {
             console.error('Error de red:', error);

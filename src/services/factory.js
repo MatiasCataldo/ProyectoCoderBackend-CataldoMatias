@@ -20,11 +20,9 @@ async function initializeServices() {
             await initializeMongoService();
             const { default: UserServiceMongo } = await import('./dao/mongo/users.service.js');
             userService = new UserServiceMongo();
-            console.log("Servicio de usuarios cargado:", UserServiceMongo);
 
             const { default: ProductsServiceMongo } = await import('./dao/mongo/products.service.js');
             productService = new ProductsServiceMongo();
-            console.log("Servicio de productos cargado:", ProductsServiceMongo);
             break;
 
         case 'file':

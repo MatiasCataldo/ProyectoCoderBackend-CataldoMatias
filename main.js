@@ -126,4 +126,4 @@ const manejadorProductos = new ProductManager();
 //manejadorProductos.addProduct(new Product("BT3", "Barra Patagónica", "Base de pionono con helado de frutos rojos y mascarpone, corazón de frutos del bosque y veteado de frutos del bosque. Crema cereza y frambuesa.", 8900, "url", 50, "Bombones/Tortas", true));
 //manejadorProductos.addProduct(new Product("BT4", "Bombon Escoces", "Helado Artesanal de chocolate y crema americana, con corazón de dulce de leche repostero, cubierto con baño de repostería.", 5800, "url", 50, "Bombones/Tortas", true));
 
-console.log(manejadorProductos.getProducts());
+//console.log(manejadorProductos.getProducts());

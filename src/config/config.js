@@ -11,7 +11,7 @@ program
     .option('--mode <mode>', 'Modo de trabajo', 'dev')
 program.parse();
 
-console.log("Mode Option: ", program.opts().mode);
+console.log("MODE OPTION: ", program.opts().mode);
 
 dotenv.config({
     path: environment === "prod" ? "./src/config/.env.production" : "./src/config/.env.development"

@@ -8,14 +8,13 @@ import { faker } from '@faker-js/faker';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-//Crypto functions
+// CRYPTO FUNCTIONS
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 export const isValidPassword = (user, password) => {
-    console.log(`Datos a validar: user-password: ${user.password}, password: ${password}`);
     return bcrypt.compareSync(password, user.password);
 }
 
-//JSON Web Tokens JWT functinos:
+//JSON WEB Tokens FUNCTIONS
 export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
 
 export const generateJWToken = (user) => {
@@ -24,8 +23,7 @@ export const generateJWToken = (user) => {
 
 export const authToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    console.log("Token present in header auth:");
-    console.log(authHeader);
+
     if (!authHeader) {
         return res.status(401).send({ error: "User not authenticated or missing token." });
     }
@@ -33,17 +31,13 @@ export const authToken = (req, res, next) => {
     jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
         if (error) return res.status(403).send({ error: "Token invalid, Unauthorized!" });
         req.user = credentials.user;
-        console.log("Se extrae la informacion del Token:");
-        console.log(req.user);
         next();
     });
 };
 
-// para manejo de errores
+// ERRORS
 export const passportCall = (strategy) => {
     return async (req, res, next) => {
-        console.log("Entrando a llamar strategy: ");
-        console.log(strategy);
         passport.authenticate(strategy, function (err, user, info) {
             if (err) {
                 return next(err);
@@ -51,25 +45,26 @@ export const passportCall = (strategy) => {
             if (!user) {
                 return res.status(401).send({ error: info.messages ? info.messages : info.toString() });
             }
-            console.log("Usuario obtenido del strategy: ");
-            console.log(user);
             req.user = user;
             next();
         })(req, res, next);
     }
 };
 
-// para manejo de Auth
-export const authorization = (role) => {
+ // AUTH
+export const authorization = (allowedRoles) => {
     return async (req, res, next) => {
         if (!req.user) return res.status(401).send("No Autorizado: Usuario no encontrado en JWT")
-        if (req.user.role !== role) {
+        const userRole = req.user.role;
+        if (!allowedRoles.includes(userRole)) {
             return res.status(403).send("Forbidden: El usuario no tiene permisos con este rol.");
-        } 
-        next()
-    }
+        }
+        next();
+    };
 };
 
+
+// GENERATE CODE
 export function generateUniqueCode() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const codeLength = 8;

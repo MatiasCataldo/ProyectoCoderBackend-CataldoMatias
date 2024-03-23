@@ -21,15 +21,13 @@ class TicketService {
     formatPrice(price) {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-    
     async generateTicket(cart, purchaserEmail) {
         try {
             const amount = await this.calculateTotalAmount(cart);
-            const formattedAmount = this.formatPrice(amount);
             const ticket = new TicketModel({
                 code: generateUniqueCode(),
                 purchaser: purchaserEmail,
-                purchase_datetime: new Date().toLocaleString('es-ES'),
+                purchase_datetime: new Date("2024-03-16T15:14:55"),
                 amount: amount,
                 items: cart.items 
             });

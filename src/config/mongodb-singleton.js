@@ -4,12 +4,11 @@ import config from "./config.js";
 export default class MongoSingleton {
     static #instance;
 
-
     constructor() {
         this.#connectMongoDB();
     }
 
-    // Implementacon Singleton
+    // SINGLETON
     static getInstance() {
         if (this.#instance) {
             console.log("Ya se ha abierto una conexion a MongoDB.");

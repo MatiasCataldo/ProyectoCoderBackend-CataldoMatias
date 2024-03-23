@@ -13,7 +13,10 @@ form.addEventListener('submit', e => {
         }
     }).then(result => {
         if (result.status === 200) {
-            window.location.replace('/users/login')
+            console.log("Usuario Registrado")
+            alert("Register realizado con exito!");
+            //window.location.replace('/login')
+            window.location.href = '/login';
         }
     })
 })

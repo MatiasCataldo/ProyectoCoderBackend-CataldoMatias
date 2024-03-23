@@ -1,5 +1,6 @@
 import userModel from '../dao/models/user.model.js';
 import passport from 'passport';
+import bcrypt from "bcrypt";
 import { isValidPassword, generateJWToken } from '../utils.js';
 
 // LOGING
@@ -44,9 +45,50 @@ export const login = async (req, res) => {
 };
 
 // REGISTER
+
 export const register = async (req, res) => {
-    console.log("Registrando usuario...");
-    res.redirect("/login");
+    try {
+        const { first_name, last_name, email, age, password } = req.body;
+        if (!first_name || !last_name || !email || !password || !age) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+
+        // Verificar si el usuario ya existe
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: "El correo electrónico ya está registrado" });
+        }
+
+        // Hash de la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crear un nuevo usuario
+        const newUser = new userModel({
+            first_name,
+            last_name,
+            email,
+            age,
+            password: hashedPassword
+        });
+
+        // Guardar el nuevo usuario en la base de datos
+        await newUser.save();
+
+        // Crear un carrito para el nuevo usuario
+        const newCart = new cartModel({
+            user: newUser._id, // Asignar el ID del nuevo usuario al campo 'user' del carrito
+            items: [] // Puedes inicializar el carrito con una lista vacía de elementos
+        });
+
+        // Guardar el carrito en la base de datos
+        await newCart.save();
+
+        // Responder con un mensaje de éxito
+        res.status(201).json({ message: "Usuario registrado con éxito" });
+    } catch (error) {
+        console.error("Error al registrar al usuario:", error);
+        res.status(500).json({ error: "Error interno del servidor al registrar al usuario" });
+    }
 };
 
 // GITHUB

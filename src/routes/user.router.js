@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fakeUser, getUsers, getUserById, updatePassword } from '../controllers/user.controller.js';
+import { fakeUser, getUsers, getUserById, updatePassword, changeUserRole } from '../controllers/user.controller.js';
 
 const router = Router();
 
@@ -9,6 +9,6 @@ router.get("/", getUsers);
 
 router.get("/:userId", getUserById);
 
-router.post('/updatePassword', updatePassword);
+router.put('/premium/:userId', changeUserRole);
 
 export default router;

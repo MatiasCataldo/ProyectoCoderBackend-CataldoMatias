@@ -6,8 +6,6 @@ class CartDao {
     }
 
     async createCartItem(userId, cartItem) {
-        console.log('userId:', userId);
-        console.log('cartItem:', cartItem);
         const cart = await CartModel.findOneAndUpdate(
             { userId },
             { $push: { items: cartItem } },
