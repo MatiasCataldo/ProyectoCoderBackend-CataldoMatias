@@ -8,7 +8,9 @@ import MongoStore from 'connect-mongo'
 import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import dotenv from 'dotenv'; // Importa dotenv
+import dotenv from 'dotenv';
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUIExpress from "swagger-ui-express";
 
 //IMPORT ROUTERS
 import mockingRouter from "./routes/mocking.router.js"
@@ -139,8 +141,22 @@ socketServer.on("connection", (socketClient) => {
       cartTotalPriceElement.textContent = `$${updatedCart.totalPrice}`;
     }
   });  
-
 });
+
+// SWAGGER
+const swaggerOptions = {
+  definition: { 
+      openapi: "3.0.1",
+      info: {
+          title: "Documentacion API Adopme",
+          description: "Documentacion para uso de swagger"
+      }
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 
 // ROUTER APIS
 app.use("/api/products", passportCall('jwt'), authorization(['admin', 'premium']), productsRouter);
