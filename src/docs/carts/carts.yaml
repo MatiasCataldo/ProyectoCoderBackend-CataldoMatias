@@ -1,0 +1,81 @@
+paths:
+  /api/carts:
+    get:
+      summary: Obtiene todos los carritos de la App.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Respuesta exitosa. Se retorna un arreglo con los carritos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        "400":
+          description: Se envió un dato no válido.
+        "500":
+          description: Error inesperado en el servidor. No se pudo manejar el proceso.
+
+  /api/carts/{uid}:
+    get:
+      summary: Obtiene un carrito de la App buscando por uid.
+      tags: 
+        - Carts
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: id del carrito que se desea solicitar.
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: respuesta exitosa! se retorna un arreglo con el carrito del usuario.
+          content:  
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Cart'
+        "400":
+          description: Se envio un dato no valido.
+        "500":
+          description: Error inesperado en el servidor, no se pudo manejar el proceso.
+
+
+components:
+  schemas:
+    cartItemSchema:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Id autogenerado de Mongo.
+        productName:
+          type: string
+          description: Nombre del producto.
+        productPrice:
+          type: number
+          description: Precio del producto.
+        quantity:
+          type: number
+          description: Cantidad del producto.
+    Cart:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: Id autogenerado de Mongo.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/cartItemSchema'
+      example:
+        userId: ObjectId("655eacde18d63f2d8e18f8c5")
+        items:
+          - productId: "id de prueba."
+            productName: "nombre de prueba."
+            productPrice: 1234
+            quantity: 2
