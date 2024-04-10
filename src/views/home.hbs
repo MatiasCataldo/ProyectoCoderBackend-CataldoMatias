@@ -93,46 +93,53 @@
             </div>
         </header>
     </main>
-    <main style="padding: 10px;" id="products">
-        <div class="container" id="container">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                {{#each products}}
-                    <div class="col">
-                        <div style="border-radius: 20px" class="card h-100">
-                            <img src={{this.thumbnail}} style="height: 180px; padding: 5px !important; border-radius: 20px !important;" class="card-img-top" alt="imagen producto">
-                            <div style="flex: 1 1 auto; padding: 1rem 1rem; display: grid; text-align: center;" class="card-body">
-                                <h5 class="card-title">{{this.title}}</h5>
-                                <p class="card-text">{{this.description}}</p>
-                                <div style="font-weight: 800;" class="precios">
-                                    ${{this.price}}
-                                </div>
-                                <a style="margin: 10px; margin-inline: auto; background-color: darkred; border-color: darkred;" class="buy-button btn btn-primary buy-button" data-product-id="{{this._id}}">Comprar</a>
+   <main style="padding: 10px;" id="products">
+    <div class="container" id="container">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {{#each products}}
+                <div class="col">
+                    <div style="border-radius: 20px" class="card h-100">
+                        <img src={{this.thumbnail}} style="height: 180px; padding: 5px !important; border-radius: 20px !important;" class="card-img-top" alt="imagen producto">
+                        <div style="flex: 1 1 auto; padding: 1rem 1rem; display: grid; text-align: center;" class="card-body">
+                            <h5 class="card-title">{{this.title}}</h5>
+                            <p class="card-text">{{this.description}}</p>
+                            <div style="font-weight: 800;" class="precios">
+                                ${{this.price}}
                             </div>
+                            <a style="margin: 10px; margin-inline: auto; background-color: darkred; border-color: darkred;" class="buy-button btn btn-primary buy-button" data-product-id="{{this._id}}">Comprar</a>
                         </div>
                     </div>
-                {{/each}}
-            </div>
+                </div>
+            {{/each}}
         </div>
+    </div>
 
-        <div class="position-relative ">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    {{#if products.hasPrevPage}}
-                    <li class="page-item"><a class="page-link"
-                            href="/products?page={{products.prevPage}}&&limit=10">Previous</a></li>
-                    {{/if}}
-                    {{#if products.hasNextPage}}
-                    <li class="page-item"><a class="page-link"
-                            href="/products?page={{products.nextPage}}&&limit=10">Next</a></li>
-                    {{/if}}
-                </ul>
-            </nav>
-            <p class="btn btn-primary">
-                Current Page:
-                {{products.page}}
-            </p>
+    <div class="position-relative ">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {{#if products.hasPrevPage}}
+                <li class="page-item"><a class="page-link"
+                        href="/products?page={{products.prevPage}}&&limit=10">Previous</a></li>
+                {{/if}}
+                {{#if products.hasNextPage}}
+                <li class="page-item"><a class="page-link"
+                        href="/products?page={{products.nextPage}}&&limit=10">Next</a></li>
+                {{/if}}
+            </ul>
+        </nav>
+        <p class="btn btn-primary">
+            Current Page:
+            {{products.page}}
+        </p>
+    </div>
+
+    {{#unless user}}
+        <div class="alert alert-warning" role="alert">
+            Debes iniciar sesión para comprar productos.
         </div>
-    </main>
+    {{/unless}}
+</main>
+
 </div>
 <footer class="text-white text-center text-lg-start" id="footer" style="background-color: #23242a;">
     <div class="container p-4">

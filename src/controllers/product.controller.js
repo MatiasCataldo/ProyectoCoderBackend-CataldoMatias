@@ -71,7 +71,7 @@ export const postDatosControllers = async (req, res) => {
 
 export const DeleteProduct = async (req, res) => {
     const { productId } = req.params;
-    const userRole = req.user.role;
-    const result = await deleteProduct(productId, userRole);
+    const user = req.user;
+    const result = await deleteProduct(productId, user);
     res.status(result.status).json({ message: result.message });
 };

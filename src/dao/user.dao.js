@@ -1,18 +1,21 @@
 import UserModel from './models/user.model.js';
 
-class UserDao {
-    async createUser(username) {
-        const user = await UserModel.create({ username });
-        return user;
+export default class UserDao {
+    createUser = (doc) => {
+        return UserModel.create( doc );
     }
 
-    async getUserById(userId) {
-        return await UserModel.findById(userId);
+    getUsers = (params) => {
+        return UserModel.find(params);
     }
 
-    async getUserEmailById(userId) {
+    getUserById = (userId) => {
+        return UserModel.findById(userId);
+    }
+
+    getUserEmailById = (userId) => {
         try {
-            const user = await UserModel.findById(userId);
+            const user = UserModel.findById(userId);
             if (user && user.email) {
                 return user.email;
             } else {
@@ -24,16 +27,14 @@ class UserDao {
         }
     }
 
-    async createNewCart(userId) {
-        const cart = await CartModel.create({ userId });
-        await UserModel.findByIdAndUpdate(userId, { cart: cart._id });
+    createNewCart = (userId) => {
+        const cart = CartModel.create({ userId });
+        UserModel.findByIdAndUpdate(userId, { cart: cart._id });
         return cart;
     }
 
-    async getUserId(username) {
-        const user = await UserModel.findOne({ username });
+    getUserId = (username) => {
+        const user = UserModel.findOne({ username });
         return user ? user._id : null;
     }
 }
-
-export default new UserDao();

@@ -31,3 +31,8 @@ form.addEventListener('submit', e => {
         }
     })
 })
+
+document.getElementById("googleLogin").addEventListener("click", () => {
+    // Redirige al usuario a la ruta de inicio de sesión de Google
+    window.location.href = "/google";
+});

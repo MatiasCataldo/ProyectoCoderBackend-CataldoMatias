@@ -39,7 +39,8 @@ import { addLogger } from "./config/logger_CUSTOM.js";
 
 // CONSTANTES DE ENTORNO
 const COOKIE_SECRET = process.env.COOKIE_SECRET;
-const MONGO_URL = "mongodb://127.0.0.1/ecommerce";
+//mongodb://127.0.0.1/clase40-adoptme-test - mongodb://127.0.0.1/ecommerce
+const MONGO_URL = "mongodb://127.0.0.1/clase40-adoptme-test";
 const app = express();
 const SERVER_PORT = config.port;
 const manejadorProductos = new ProductManager();

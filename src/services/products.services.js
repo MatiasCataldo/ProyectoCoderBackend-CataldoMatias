@@ -31,14 +31,14 @@ export const crearDato = async (dato) => {
     }
 };
 
-export const deleteProduct = async (productId, userRole) => {
+export const deleteProduct = async (productId, user) => {
     try {
         const product = await productDao.getProductById(productId);
         if (!product) {
             return { status: 404, message: 'Producto no encontrado' };
         }
         
-        if (userRole === 'premium' && product.owner === 'admin') {
+        if (user.role !== 'premium' || product.owner !== user._id) {
             return { status: 403, message: 'No tienes permiso para eliminar este producto' };
         }
 

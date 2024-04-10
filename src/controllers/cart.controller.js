@@ -38,7 +38,7 @@ export const addItemToCart = async (req, res) => {
                 name: "Product Create Error",
                 cause: generateCartErrorInfo({ productName, productId, quantity, productPrice}),
                 message: "Error al intentar agregar item al carrito",
-                code: CartErrors.MISSING_REQUIRED_FIELDS
+                code: CartErrors.MISSING_EQUIRED_FIELDS
             });
         }
         
@@ -46,7 +46,7 @@ export const addItemToCart = async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado." });
         }
 
-        if (user.role === 'premium' && product.owner === 'premium') {
+        if (user.role !== 'premium' && product.owner !== user._id) {
                 return res.status(403).json({ message: "No puedes agregar un producto que te pertenece a tu carrito." });
         }
 

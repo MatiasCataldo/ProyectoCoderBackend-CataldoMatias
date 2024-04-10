@@ -30,14 +30,14 @@ export const login = async (req, res) => {
         // 2do con Cookies
         res.cookie('jwtCookieToken', access_token,
             {
-                maxAge: 600000,
+                maxAge: 6000,
                 // httpOnly: true //No se expone la cookie
                  httpOnly: false //Si se expone la cookie
 
             }
 
         )
-        res.send({ message: "Login success!!" })
+        res.status(201).json({ message: "Login success!!" });
     } catch (error) {
         console.error(error);
         return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
@@ -45,7 +45,6 @@ export const login = async (req, res) => {
 };
 
 // REGISTER
-
 export const register = async (req, res) => {
     try {
         const { first_name, last_name, email, age, password } = req.body;
@@ -90,6 +89,40 @@ export const register = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor al registrar al usuario" });
     }
 };
+
+// GOOGLE LOGIN
+export const googleLogin = passport.authenticate('google', { scope: ['profile', 'email'] });
+
+// GOOGLE CALLBACK
+export const googleCallback = async (req, res) => {
+    const user = req.user;
+    try {
+        console.log("Usuario encontrado para login:");
+        console.log(user);
+        
+        // Si el usuario existe, genera el token JWT
+        const tokenUser = {
+            name: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            age: user.age,
+            role: (user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123') ? 'admin' : 'user',
+            age: user.age
+        };
+        const access_token = generateJWToken(tokenUser);
+
+        // Establece la cookie con el token JWT
+        res.cookie('jwtCookieToken', access_token, {
+            maxAge: 6000,
+        });
+
+        // Redirige al usuario a la página de inicio después de iniciar sesión
+        res.redirect("/home/user");
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ status: "error", error: "Error interno de la aplicación." });
+    }
+};
+
 
 // GITHUB
 export const githubLogin = passport.authenticate('github', { scope: ['user:email'] });
