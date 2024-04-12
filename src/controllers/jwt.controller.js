@@ -2,6 +2,7 @@ import userModel from '../dao/models/user.model.js';
 import passport from 'passport';
 import bcrypt from "bcrypt";
 import { isValidPassword, generateJWToken } from '../utils.js';
+import userDao from "../dao/user.dao.js";
 
 // LOGING
 export const login = async (req, res) => {
@@ -49,12 +50,14 @@ export const register = async (req, res) => {
     try {
         const { first_name, last_name, email, age, password } = req.body;
         if (!first_name || !last_name || !email || !password || !age) {
+            console.log("Todos los campos son obligatorios");
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
 
         // Verificar si el usuario ya existe
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
+            console.log("El correo electrónico ya está registrado");
             return res.status(400).json({ error: "El correo electrónico ya está registrado" });
         }
 
@@ -71,7 +74,7 @@ export const register = async (req, res) => {
         });
 
         // Guardar el nuevo usuario en la base de datos
-        await newUser.save();
+        await userDao.createUser(newUser);
 
         // Crear un carrito para el nuevo usuario
         const newCart = new cartModel({
@@ -80,7 +83,7 @@ export const register = async (req, res) => {
         });
 
         // Guardar el carrito en la base de datos
-        await newCart.save();
+        //await newCart.save();
 
         // Responder con un mensaje de éxito
         res.status(201).json({ message: "Usuario registrado con éxito" });

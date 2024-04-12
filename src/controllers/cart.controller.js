@@ -13,7 +13,7 @@ export const getCartByUserId = async (req, res) => {
         const { userId } = req.params;
         const cart = await cartDao.findCartByUserId(userId);
         if (!cart) return res.json({ message: "Carrito no encontrado." });
-        res.json({
+        res.status(200).json({
             cart,
             message: "Carrito encontrado.",
         });

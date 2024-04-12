@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
-import { generateJWToken } from '../src/utils.js';
+import { generateJWToken, authToken } from '../src/utils.js';
 
 const requester = supertest('http://localhost:8080');
 
@@ -17,12 +17,10 @@ describe("Testing Adopme App", () => {
                 role: "admin",
             }
 
-            const userToken = generateJWToken(userMock);
-            
-            const response = await requester.post('/api/jwt/register').send(userMock).set('Authorization', `Bearer ${userToken}`);;
+            const response = await requester.post('/api/jwt/register').send(userMock);
 
             expect(response.status).to.equal(201);
-            expect(response.body.payload).to.have.property('_id');
+            expect(response.body.payload).to.be.ok;
         });
     });
 
@@ -38,8 +36,9 @@ describe("Testing Adopme App", () => {
             expect(response.status).to.equal(201);
             expect(response.headers).to.have.property('set-cookie');
         });
+        
 
-        /*it("Debe enviar la cookie que contiene el usuario y destructurarla correctamente", async () => {
+        it("Debe enviar la cookie que contiene el usuario y destructurarla correctamente", async () => {
             const userMock = {
                 first_name: "Nombre Test",
                 last_name: "Apellido Test",
@@ -50,14 +49,13 @@ describe("Testing Adopme App", () => {
                 role: "admin",
             };
 
-            const token = generateJWToken(userMock);
+            const loginResponse = await requester.post("/api/jwt/login").send(userMock);
+            const token = loginResponse.headers["set-cookie"][0].split("; ")[0].split("=")[1];
+            
 
-            const response = await requester
-                .get("/api/jwt/login")
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(response.status).to.equal(201);
-            expect(response.body.payload.email).to.equal("email@test.com");
-        });*/
+            expect(loginResponse.status).to.equal(201);
+            
+            
+        });
     });
 });

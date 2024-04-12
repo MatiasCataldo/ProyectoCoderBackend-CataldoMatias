@@ -1,4 +1,5 @@
 import UserModel from './models/user.model.js';
+import CartModel from './models/cart.model.js';
 
 export default class UserDao {
     createUser = (doc) => {
