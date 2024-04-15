@@ -9,7 +9,6 @@ export const getAllMessages = async (req, res) => {
             message: "Messages list",
         });
     } catch (error) {
-        console.log(error);
         res.json({
             error,
             message: "Error",
@@ -27,7 +26,6 @@ export const createMessage = async (req, res) => {
             data: newMessage,
         });
     } catch (error) {
-        console.log(error);
         res.json({
             error,
             message: "Error",

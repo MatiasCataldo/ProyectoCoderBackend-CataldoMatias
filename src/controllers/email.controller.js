@@ -134,7 +134,6 @@ export const sendEmailToResetPassword = (req, res) => {
 
         transporter.sendMail(mailOptionsToReset, (error, info) => {
             if (error) {
-                console.log(error);
                 res.status(500).send({ message: "Error", payload: error });
             }
             res.send({ message: "Success", payload: info })

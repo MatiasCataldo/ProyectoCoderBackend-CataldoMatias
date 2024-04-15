@@ -30,23 +30,22 @@ import viewsRouter from "./routes/views.routes.js";
 
 //IMPORTS
 import ProductManager from "../main.js";
-import __dirname from "./utils.js";
+import __dirname, { authToken } from "./utils.js";
 import { passportCall, authorization } from './utils.js';
 import initializePassport from "./config/passport.config.js";
 import config from './config/config.js';
-import { initializeAndExportServices } from "./services/factory.js";
 import { addLogger } from "./config/logger_CUSTOM.js";
+import MongoSingleton from './config/mongodb-singleton.js';
 
 // CONSTANTES DE ENTORNO
 const COOKIE_SECRET = process.env.COOKIE_SECRET;
 //mongodb://127.0.0.1/clase40-adoptme-test - mongodb://127.0.0.1/ecommerce
-const MONGO_URL = "mongodb://127.0.0.1/clase40-adoptme-test";
+const MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
 const SERVER_PORT = config.port;
 const manejadorProductos = new ProductManager();
 const httpServer = http.createServer(app);
 const socketServer = new Server(httpServer);
-const { userService, productService } = await initializeAndExportServices();
 
 //APP SETTINGS
 dotenv.config();
@@ -57,7 +56,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(COOKIE_SECRET));
 app.use(addLogger);
 app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
-app.use(cookieParser("unSecreto"));
 app.use(session(
   {
       store: MongoStore.create({
@@ -69,6 +67,20 @@ app.use(session(
         saveUninitialized: true 
     }
 ))
+
+//MONGOSINLGETON
+async function initializeMongoService() {
+  console.log("Iniciando Servicio para MongoDB !!");
+  try {
+      await MongoSingleton.getInstance();
+  } catch (error) {
+      console.error("Error al iniciar MongoDB:", error);
+      process.exit(1);
+  }
+}
+
+initializeMongoService()
+
 
 //PASSPORT
 initializePassport();
@@ -163,7 +175,7 @@ app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 app.use("/api/products", passportCall('jwt'), authorization(['admin', 'premium']), productsRouter);
 app.use("/api/messages", passportCall('jwt'), authorization('user'), messagesRouter);
 app.use("/api/carts", passportCall('jwt'), authorization('admin', 'premium'), cartsRouter);
-app.use("/api/users", passportCall('jwt'), authorization('admin', 'premium'), userRouter);
+app.use("/api/users", passportCall('jwt'), authToken, authorization('admin', 'premium'), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);

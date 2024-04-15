@@ -10,11 +10,8 @@ const twilioSMSOptions = {
 
 export const sendSMS = async (req, res) => {
     try {
-        console.log("Enviando SMS usando Twilio.");
-        console.log(twilioClient);
         const result = await twilioClient.messages.create(twilioSMSOptions);
         res.send({ message: "Success!", payload: result });
-        console.log("Mensaje SMS enviado usando Twilio.");
     } catch (error) {
         console.error("Hubo un problema enviando el SMS usando Twilio.");
         res.status(500).send({ error: error });

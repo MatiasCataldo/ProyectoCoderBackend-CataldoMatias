@@ -1,9 +1,8 @@
-import { obtenerDatos, crearDato, deleteProduct } from '../services/products.services.js'
+import {ProductService} from '../services/service.js'
 import { generateProduct } from '../utils.js';
 import CustomProductError from "../services/error/CustomError.js";
 import { ProductErrors } from "../services/error/errors-enum.js";
 import { generateProductErrorInfo } from "../services/messages/product-creation-error.message.js";
-import productDao from "../dao/product.dao.js"
 
 // GUARDAR PRODUCTO
 export const saveProduct = async (req, res) => {
@@ -35,8 +34,7 @@ export const saveProduct = async (req, res) => {
             category,
             owner: ownerToSet
         };
-
-        await productDao.createProduct(productDto);
+        await ProductService.crearDato(productDto);
         res.status(201).send({ status: "success", payload: productDto });
 
     } catch (error) {
@@ -59,19 +57,18 @@ export const getProducts = async (rq, res) => {
 };
 
 export const getDatosControllers = async (req, res) => {
-    let datos = await obtenerDatos();
+    let datos = await ProductService.getProducts();
     res.json(datos);
 }
 
 export const postDatosControllers = async (req, res) => {
     let dato = req.body;
-    await crearDato(dato);
+    await ProductService.createProduct(dato);
     res.json({ dato })
 }
 
 export const DeleteProduct = async (req, res) => {
     const { productId } = req.params;
-    const user = req.user;
-    const result = await deleteProduct(productId, user);
+    const result = await ProductService.deleteProduct(productId);
     res.status(result.status).json({ message: result.message });
 };

@@ -47,7 +47,6 @@ export const updatePassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
         await user.save();
-        console.log("Contraseña Modificada", req.session.user);
         res.json({ status: "success", payload: req.session.user, message: "Contraseña Modificada con Éxito" });
     } catch (error) {
         console.error("Error al actualizar la contraseña:", error);

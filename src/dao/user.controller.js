@@ -1,6 +1,6 @@
 import userDao from './user.dao.js';
 
-class UserController {
+export default class UserController {
     async newUser(username) {
         try {
             const user = await userDao.createUser( username);
@@ -18,5 +18,3 @@ class UserController {
         }
     }
 }
-
-export default new UserController();

@@ -1,16 +1,16 @@
 import userModel from '../dao/models/user.model.js';
+import cartModel from '../dao/models/cart.model.js';
 import passport from 'passport';
 import bcrypt from "bcrypt";
 import { isValidPassword, generateJWToken } from '../utils.js';
-import userDao from "../dao/user.dao.js";
+import { UserService } from '../services/service.js';
+
 
 // LOGING
 export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await userModel.findOne({ email: email });
-        console.log("Usuario encontrado para login:");
-        console.log(user);
         if (!user) {
             console.warn("User doesn't exists with username: " + email);
             return res.status(204).send({ error: "Not found", message: "Usuario no encontrado con username: " + email });
@@ -26,7 +26,6 @@ export const login = async (req, res) => {
             role: user.role
         };
         const access_token = generateJWToken(tokenUser);
-        console.log(access_token);
 
         // 2do con Cookies
         res.cookie('jwtCookieToken', access_token,
@@ -47,50 +46,7 @@ export const login = async (req, res) => {
 
 // REGISTER
 export const register = async (req, res) => {
-    try {
-        const { first_name, last_name, email, age, password } = req.body;
-        if (!first_name || !last_name || !email || !password || !age) {
-            console.log("Todos los campos son obligatorios");
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
-        }
-
-        // Verificar si el usuario ya existe
-        const existingUser = await userModel.findOne({ email });
-        if (existingUser) {
-            console.log("El correo electrónico ya está registrado");
-            return res.status(400).json({ error: "El correo electrónico ya está registrado" });
-        }
-
-        // Hash de la contraseña
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Crear un nuevo usuario
-        const newUser = new userModel({
-            first_name,
-            last_name,
-            email,
-            age,
-            password: hashedPassword
-        });
-
-        // Guardar el nuevo usuario en la base de datos
-        await userDao.createUser(newUser);
-
-        // Crear un carrito para el nuevo usuario
-        const newCart = new cartModel({
-            user: newUser._id, // Asignar el ID del nuevo usuario al campo 'user' del carrito
-            items: [] // Puedes inicializar el carrito con una lista vacía de elementos
-        });
-
-        // Guardar el carrito en la base de datos
-        //await newCart.save();
-
-        // Responder con un mensaje de éxito
-        res.status(201).json({ message: "Usuario registrado con éxito" });
-    } catch (error) {
-        console.error("Error al registrar al usuario:", error);
-        res.status(500).json({ error: "Error interno del servidor al registrar al usuario" });
-    }
+    res.status(201).send({ status: "success", message: "Usuario creado con extito." });
 };
 
 // GOOGLE LOGIN
@@ -99,10 +55,7 @@ export const googleLogin = passport.authenticate('google', { scope: ['profile', 
 // GOOGLE CALLBACK
 export const googleCallback = async (req, res) => {
     const user = req.user;
-    try {
-        console.log("Usuario encontrado para login:");
-        console.log(user);
-        
+    try {        
         // Si el usuario existe, genera el token JWT
         const tokenUser = {
             name: `${user.first_name} ${user.last_name}`,
@@ -134,9 +87,6 @@ export const githubLogin = passport.authenticate('github', { scope: ['user:email
 export const githubCallback = async (req, res) => {
     const user = req.user;
     try {
-        console.log("Usuario encontrado para login:");
-        console.log(user);
-
         const tokenUser = {
             name: `${user.first_name} ${user.last_name}`,
             email: user.email,

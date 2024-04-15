@@ -2,10 +2,7 @@ import TicketModel from '../dao/models/ticket.model.js';
 import ProductDao from '../dao/product.dao.js';
 import { generateUniqueCode } from '../utils.js';
 
-
-
-class TicketService {
-
+export default class TicketService {
     async updateProductStock(productId, quantity) {
         await ProductDao.updateProductStock(productId, quantity);
     }
@@ -21,6 +18,7 @@ class TicketService {
     formatPrice(price) {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
+
     async generateTicket(cart, purchaserEmail) {
         try {
             const amount = await this.calculateTotalAmount(cart);
@@ -33,15 +31,11 @@ class TicketService {
             });
             
             await ticket.save();
-
             return ticket;
         } catch (error) {
             console.error('Error al generar el ticket:', error);
             throw new Error('Error al generar el ticket');
         }
-    }
-
-    
+    }    
 }
 
-export default new TicketService();

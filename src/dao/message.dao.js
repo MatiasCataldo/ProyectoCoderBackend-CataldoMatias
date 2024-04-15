@@ -1,6 +1,6 @@
 import MessageModel from './models/message.model.js';
 
-class MessageDao {
+export default class MessageDao {
     async getAllMessages() {
         return await MessageModel.find();
     }
@@ -9,5 +9,3 @@ class MessageDao {
         return await MessageModel.create({ user, message });
     }
 }
-
-export default new MessageDao();

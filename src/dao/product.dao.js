@@ -1,6 +1,6 @@
 import ProductModel from './models/product.model.js';
 
-class ProductDao {
+export default class ProductDao {
     async getAllProducts({ skip = 0, limit = 10, sort = {}, filter = {} }) {
         return await ProductModel.find(filter)
             .sort(sort)
@@ -35,4 +35,3 @@ class ProductDao {
     }
 }
 
-export default new ProductDao();

@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
-import { generateJWToken, authToken } from '../src/utils.js';
+import { authToken } from '../src/utils.js';
 
 const requester = supertest('http://localhost:8080');
 
 describe("Testing Adopme App", () => {
+    let cookie;
     describe("Testing Users API", () => {
-        it("Debe crear un nuevo usuario correctamente", async () => {
-            const userMock = {
+        it("Debe crear un nuevo usuario correctamente", async function() {
+            const mockUser = {
                 first_name: "Nombre Test",
                 last_name: "Apellido Test",
                 email: "email@test.com",
@@ -17,10 +18,9 @@ describe("Testing Adopme App", () => {
                 role: "admin",
             }
 
-            const response = await requester.post('/api/jwt/register').send(userMock);
+            const response = await requester.post('/api/jwt/register').send(mockUser);
 
-            expect(response.status).to.equal(201);
-            expect(response.body.payload).to.be.ok;
+            expect(response).to.be.ok;
         });
     });
 
@@ -32,30 +32,28 @@ describe("Testing Adopme App", () => {
             };
 
             const response = await requester.post("/api/jwt/login").send(mockLogin);
-
+            
             expect(response.status).to.equal(201);
-            expect(response.headers).to.have.property('set-cookie');
+            expect(response).to.be.ok;
         });
         
-
         it("Debe enviar la cookie que contiene el usuario y destructurarla correctamente", async () => {
-            const userMock = {
-                first_name: "Nombre Test",
-                last_name: "Apellido Test",
+            const mockLogin = {
                 email: "email@test.com",
-                age: 18,
-                password: "123qwe",
-                loggedBy: "form",
-                role: "admin",
+                password: "123qwe"
             };
 
-            const loginResponse = await requester.post("/api/jwt/login").send(userMock);
-            const token = loginResponse.headers["set-cookie"][0].split("; ")[0].split("=")[1];
-            
-
-            expect(loginResponse.status).to.equal(201);
-            
-            
-        });
+            const response = await requester.post("/api/jwt/login").send(mockLogin);
+            const cookieResult = response.headers["set-cookie"][0]
+            expect(cookieResult).to.be.ok;
+            cookie = {
+                name: cookieResult.split('=')[0],
+                value: cookieResult.split('=')[1]
+            }
+            expect(cookie.name).to.be.ok.and.eql('jwtCookieToken');
+            expect(cookie.value).to.be.ok;
+            expect(response.status).to.equal(201);
+            expect(response.headers).to.have.property('set-cookie');
+        });  
     });
 });

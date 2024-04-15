@@ -1,7 +1,7 @@
-import cartDao from "../dao/cart.dao.js";
-import ProductDao from "../dao/product.dao.js"
-import UserDao from "../dao/user.dao.js"
-import ticketService from "../services/ticket.services.js"
+import {CartService} from "../services/service.js";
+import {ProductService} from "../services/service.js"
+import {UserService} from "../services/service.js"
+import {ticketService} from "../services/service.js"
 import { sendEmail } from "../controllers/email.controller.js"
 import CustomProductError from "../services/error/CustomError.js";
 import { CartErrors } from "../services/error/errors-enum.js";
@@ -11,7 +11,7 @@ import { generateCartErrorInfo } from "../services/messages/cart-add-error.messa
 export const getCartByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        const cart = await cartDao.findCartByUserId(userId);
+        const cart = await CartService.findCartByUserId(userId);
         if (!cart) return res.json({ message: "Carrito no encontrado." });
         res.status(200).json({
             cart,
@@ -30,8 +30,8 @@ export const addItemToCart = async (req, res) => {
     try {
         const { userId } = req.params;
         const { productName, productId, quantity, productPrice } = req.body;
-        const user = await userModel.findById(userId);
-        const product = await productModel.findById(productId);
+        const user = await UserService.getUserById(userId);
+        const product = await ProductService.getProductById(productId);
 
         if (!productId || !quantity || !productName || !productPrice) {
             CustomProductError.createError({
@@ -50,7 +50,7 @@ export const addItemToCart = async (req, res) => {
                 return res.status(403).json({ message: "No puedes agregar un producto que te pertenece a tu carrito." });
         }
 
-        const updatedCart = await cartDao.createCartItem(userId, { productName, productId, quantity, productPrice });
+        const updatedCart = await CartService.createCartItem(userId, { productName, productId, quantity, productPrice });
         res.json({
             cart: updatedCart,
             message: "Item agregado al carrito",
@@ -68,7 +68,7 @@ export const updateCartItem = async (req, res) => {
     try {
         const { userId, productId } = req.params;
         const { quantity } = req.body;
-        const updatedCart = await cartDao.updateCartItem(userId, productId, quantity);
+        const updatedCart = await CartService.updateCartItem(userId, productId, quantity);
         res.json({
             cart: updatedCart,
             message: "La cantidad del item fue actualizada",
@@ -85,7 +85,7 @@ export const updateCartItem = async (req, res) => {
 export const deleteCartItem = async (req, res) => {
     try {
         const { userId, productId } = req.params;
-        const updatedCart = await cartDao.deleteCartItem(userId, productId);
+        const updatedCart = await CartService.deleteCartItem(userId, productId);
         res.json({
             cart: updatedCart,
             message: "Item eliminado del carrito",
@@ -102,7 +102,7 @@ export const deleteCartItem = async (req, res) => {
 export const clearCart = async (req, res) => {
     try {
         const { userId } = req.params;
-        const updatedCart = await cartDao.clearCart(userId);
+        const updatedCart = await CartService.clearCart(userId);
         res.json({
             cart: updatedCart,
             message: "Carrito vaciado",
@@ -119,7 +119,7 @@ export const clearCart = async (req, res) => {
 export const purchase = async (req, res) => {
     try {
         const { cid, userId } = req.params;
-        const cart = await cartDao.findCartByUserId(cid);
+        const cart = await CartService.findCartByUserId(cid);
 
         if (!cart) {
             return res.status(404).json({ message: "Carrito no encontrado." });
@@ -127,7 +127,7 @@ export const purchase = async (req, res) => {
 
         const productsNotPurchased = [];
         for (const item of cart.items) {
-            const product = await ProductDao.getProductById(item.productId);
+            const product = await ProductService.getProductById(item.productId);
             if (!product || product.stock < item.quantity) {
                 productsNotPurchased.push(item.productId);
             }
@@ -135,14 +135,12 @@ export const purchase = async (req, res) => {
 
         if (productsNotPurchased.length > 0) {
             for (const itemNotPurchased of productsNotPurchased){
-                await cartDao.deleteCartItem(cid, itemNotPurchased._id);
+                await CartService.deleteCartItem(cid, itemNotPurchased._id);
             }
             return res.status(400).json({ message: "Algunos productos no están disponibles." });
         }
 
-        const userEmail = await UserDao.getUserEmailById(userId);
-        console.log("id para email de ticket: ", userId);
-        console.log("email ticket: ", userEmail);
+        const userEmail = await UserService.getUserEmailById(userId);
         if (!userEmail) {
             return res.status(404).json({ error: "Correo electrónico del usuario no encontrado." });
         }
@@ -151,7 +149,7 @@ export const purchase = async (req, res) => {
             await ticketService.updateProductStock(item.productId, item.quantity);
         }
 
-        const userTiket = await UserDao.getUserById(userId)
+        const userTiket = await UserService.getUserById(userId)
         const nameUser = userTiket.last_name + userTiket.first_name
 
         await sendEmail(null, null, {
@@ -162,7 +160,7 @@ export const purchase = async (req, res) => {
             items: cart.items 
         });
         res.json({ ticket, message: "Compra realizada con éxito." });
-        await cartDao.clearCart(userId);
+        await CartService.clearCart(userId);
 
     } catch (error) {
         console.error("Error al procesar la compra:", error);

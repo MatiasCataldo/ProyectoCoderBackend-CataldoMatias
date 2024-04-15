@@ -10,8 +10,8 @@ describe('Testing Carts API', () => {
     let userId;
     let cartId;
 
-    before(async function() { // Cambio de () => a function()
-        this.timeout(10000); // Aumenta el tiempo de espera a 10 segundos
+    before(async function() {
+        this.timeout(10000); 
         const userMock = {
             first_name: "Nombre Test",
             last_name: "Apellido Test",

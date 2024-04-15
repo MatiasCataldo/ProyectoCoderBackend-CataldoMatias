@@ -1,6 +1,6 @@
 import CartModel from './models/cart.model.js';
 
-class CartDao {
+export default class CartDao {
     async findCartByUserId(userId) {
         return await CartModel.findById(userId);
     }
@@ -42,5 +42,3 @@ class CartDao {
         return cart;
     }
 }
-
-export default new CartDao();
