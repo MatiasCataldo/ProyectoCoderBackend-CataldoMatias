@@ -30,13 +30,9 @@ export const login = async (req, res) => {
         // 2do con Cookies
         res.cookie('jwtCookieToken', access_token,
             {
-                maxAge: 6000,
-                // httpOnly: true //No se expone la cookie
-                 httpOnly: false //Si se expone la cookie
-
-            }
-
-        )
+                maxAge: 3600000,
+                httpOnly: false
+            });
         res.status(201).json({ message: "Login success!!" });
     } catch (error) {
         console.error(error);

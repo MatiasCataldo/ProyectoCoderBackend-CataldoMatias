@@ -1,4 +1,4 @@
-import {ProductService} from '../services/service.js'
+import { ProductService } from '../services/service.js';
 import { generateProduct } from '../utils.js';
 import CustomProductError from "../services/error/CustomError.js";
 import { ProductErrors } from "../services/error/errors-enum.js";
@@ -34,7 +34,7 @@ export const saveProduct = async (req, res) => {
             category,
             owner: ownerToSet
         };
-        await ProductService.crearDato(productDto);
+        await ProductService.create(productDto);
         res.status(201).send({ status: "success", payload: productDto });
 
     } catch (error) {
@@ -57,8 +57,13 @@ export const getProducts = async (rq, res) => {
 };
 
 export const getDatosControllers = async (req, res) => {
-    let datos = await ProductService.getProducts();
-    res.json(datos);
+    try {
+        const datos = await ProductService.getAll();
+        res.status(200).json(datos);
+    } catch (error) {
+        console.error("Error al obtener los productos:", error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
+    }
 }
 
 export const postDatosControllers = async (req, res) => {
@@ -68,7 +73,11 @@ export const postDatosControllers = async (req, res) => {
 }
 
 export const DeleteProduct = async (req, res) => {
-    const { productId } = req.params;
-    const result = await ProductService.deleteProduct(productId);
-    res.status(result.status).json({ message: result.message });
+    const { productId } = req.body;
+    const deletedProduct = await ProductService.delete(productId);
+    if (!deletedProduct) {
+        res.status(404).json({ message: 'Producto no encontrado' });
+    } else {
+        res.status(200).json({ message: 'Producto eliminado correctamente', deletedProduct });
+    }
 };

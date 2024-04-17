@@ -1,33 +1,31 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
-import { authToken } from '../src/utils.js';
 
 const requester = supertest('http://localhost:8080');
 
 describe("Testing Adopme App", () => {
     let cookie;
-    describe("Testing Users API", () => {
+    describe("Testing JWT API", () => {
         it("Debe crear un nuevo usuario correctamente", async function() {
             const mockUser = {
-                first_name: "Nombre Test",
-                last_name: "Apellido Test",
-                email: "email@test.com",
+                first_name: "Nombre SuperTest",
+                last_name: "Apellido SuperTest",
+                email: "SuperTest@test.com",
                 age: 18,
                 password: "123qwe",
-                loggedBy: "form",
                 role: "admin",
             }
 
             const response = await requester.post('/api/jwt/register').send(mockUser);
 
-            expect(response).to.be.ok;
+            expect(response.status).to.equal(201);
         });
     });
 
     describe("Testing Login and Session with Cookies", () => {
         it("Debe poder hacer login correctamente con el usuario registrado previamente", async () => {
             const mockLogin = {
-                email: "email@test.com",
+                email: "SuperTest@test.com",
                 password: "123qwe"
             };
 
@@ -39,7 +37,7 @@ describe("Testing Adopme App", () => {
         
         it("Debe enviar la cookie que contiene el usuario y destructurarla correctamente", async () => {
             const mockLogin = {
-                email: "email@test.com",
+                email: "SuperTest@test.com",
                 password: "123qwe"
             };
 

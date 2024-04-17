@@ -1,27 +1,26 @@
 import CartModel from './models/cart.model.js';
 
 export default class CartDao {
-    async findCartByUserId(userId) {
-        return await CartModel.findById(userId);
+    async getBy(cartId) {
+        return await CartModel.findById(cartId);
     }
 
-    async createCartItem(userId, cartItem) {
-        const cart = await CartModel.findOneAndUpdate(
-            { userId },
-            { $push: { items: cartItem } },
-            { upsert: true, new: true }
-        );
+    async save(doc) {
+        const { userId, cartItem } = doc;
+        let cart = await CartModel.findOne({ userId });
+    
+        if (!cart) {
+            // Si no hay un carrito existente, crea uno nuevo
+            cart = await CartModel.create({ userId, items: [cartItem] });
+        } else {
+            // Si el carrito existe, agrega el nuevo item a la lista de items
+            cart.items.push(cartItem);
+            await cart.save();
+        }
+    
         return cart;
     }
-
-    async updateCartItem(userId, productId, quantity) {
-        console.log("La cantidad del item ", productId, " fue actualizada a: ", quantity);
-        return await CartModel.findOneAndUpdate(
-            { userId, 'items.product': productId },
-            { $set: { 'items.$.quantity': quantity } },
-            { new: true }
-        ).populate('items.product');
-    }
+    
 
     async deleteCartItem(userId, productId) {
         console.log("El item ", productId, " fue eliminado exitosamente.");
@@ -33,12 +32,4 @@ export default class CartDao {
         return cart;
     }
 
-    async clearCart(userId) {
-        const cart = await CartModel.findOneAndUpdate(
-            { userId },
-            { $set: { items: [] } },
-            { new: true }
-        );
-        return cart;
-    }
 }

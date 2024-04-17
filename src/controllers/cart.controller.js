@@ -11,8 +11,12 @@ import { generateCartErrorInfo } from "../services/messages/cart-add-error.messa
 export const getCartByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        const cart = await CartService.findCartByUserId(userId);
-        if (!cart) return res.json({ message: "Carrito no encontrado." });
+        const cart = await CartService.getByUser(userId)
+
+        if (!cart) {
+            return res.status(404).json({ message: "Carrito no encontrado." });
+        }
+
         res.status(200).json({
             cart,
             message: "Carrito encontrado.",
@@ -30,11 +34,12 @@ export const addItemToCart = async (req, res) => {
     try {
         const { userId } = req.params;
         const { productName, productId, quantity, productPrice } = req.body;
-        const user = await UserService.getUserById(userId);
-        const product = await ProductService.getProductById(productId);
-
+        const user = await UserService.getBy(userId);
+        const product = await ProductService.getBy(productId);
+        
         if (!productId || !quantity || !productName || !productPrice) {
-            CustomProductError.createError({
+            // Crear y enviar un error personalizado si faltan campos requeridos
+            throw new CustomProductError({
                 name: "Product Create Error",
                 cause: generateCartErrorInfo({ productName, productId, quantity, productPrice}),
                 message: "Error al intentar agregar item al carrito",
@@ -46,22 +51,23 @@ export const addItemToCart = async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado." });
         }
 
-        if (user.role !== 'premium' && product.owner !== user._id) {
-                return res.status(403).json({ message: "No puedes agregar un producto que te pertenece a tu carrito." });
-        }
+        /*if (user.role !== 'premium' && product.owner !== user._id) {
+            return res.status(403).json({ message: "No puedes agregar un producto que NO te pertenece a tu carrito." });
+        }*/
 
-        const updatedCart = await CartService.createCartItem(userId, { productName, productId, quantity, productPrice });
-        res.json({
+        const updatedCart = await CartService.create({ userId, cartItem: { productName, productId, quantity, productPrice } });
+
+        res.status(201).json({
             cart: updatedCart,
             message: "Item agregado al carrito",
         });
     } catch (error) {
-        res.json({
-            error,
-            message: "Error al agregar el item",
-        });
+        // Manejar el error aquí de manera más específica o enviar un mensaje genérico si no es manejado específicamente
+        console.error("Error al agregar el item:", error);
+        res.status(500).json({ message: "Error al agregar el item" });
     }
 };
+
 
 // ACTUALIZAR
 export const updateCartItem = async (req, res) => {
@@ -74,6 +80,7 @@ export const updateCartItem = async (req, res) => {
             message: "La cantidad del item fue actualizada",
         });
     } catch (error) {
+        console.error("Error al actualizar la cantidad del item en el carrito:", error);
         res.status(500).json({
             error,
             message: "Error al actualizar la cantidad del item en el carrito",
@@ -119,7 +126,7 @@ export const clearCart = async (req, res) => {
 export const purchase = async (req, res) => {
     try {
         const { cid, userId } = req.params;
-        const cart = await CartService.findCartByUserId(cid);
+        const cart = await CartService.getBy(cid);
 
         if (!cart) {
             return res.status(404).json({ message: "Carrito no encontrado." });
@@ -127,7 +134,7 @@ export const purchase = async (req, res) => {
 
         const productsNotPurchased = [];
         for (const item of cart.items) {
-            const product = await ProductService.getProductById(item.productId);
+            const product = await ProductService.getBy(item.productId);
             if (!product || product.stock < item.quantity) {
                 productsNotPurchased.push(item.productId);
             }
@@ -135,7 +142,7 @@ export const purchase = async (req, res) => {
 
         if (productsNotPurchased.length > 0) {
             for (const itemNotPurchased of productsNotPurchased){
-                await CartService.deleteCartItem(cid, itemNotPurchased._id);
+                await CartService.deleteCartItem(userId, itemNotPurchased._id);
             }
             return res.status(400).json({ message: "Algunos productos no están disponibles." });
         }
@@ -144,12 +151,13 @@ export const purchase = async (req, res) => {
         if (!userEmail) {
             return res.status(404).json({ error: "Correo electrónico del usuario no encontrado." });
         }
+
         const ticket = await ticketService.generateTicket(cart, userEmail);
         for (const item of cart.items) {
-            await ticketService.updateProductStock(item.productId, item.quantity);
+            await ticketService.updateProductStock(userId, item.productId, item.quantity);
         }
-
-        const userTiket = await UserService.getUserById(userId)
+    
+        const userTiket = await UserService.getBy(userId)
         const nameUser = userTiket.last_name + userTiket.first_name
 
         await sendEmail(null, null, {

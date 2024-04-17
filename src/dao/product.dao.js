@@ -1,26 +1,23 @@
 import ProductModel from './models/product.model.js';
 
 export default class ProductDao {
-    async getAllProducts({ skip = 0, limit = 10, sort = {}, filter = {} }) {
-        return await ProductModel.find(filter)
-            .sort(sort)
-            .skip(skip)
-            .limit(limit);
+    get = (params) => {
+        return ProductModel.find(params);
     }
 
-    async getTotalProductsCount(filter) {
-        return await ProductModel.countDocuments(filter);
+    getTotalProductsCount(filter) {
+        return ProductModel.countDocuments(filter);
     }
 
-    async getProductById(productId) {
-        return await ProductModel.findById(productId);
+    getBy(productId) {
+        return ProductModel.findById(productId);
     }
 
-    async createProduct(product) {
-        return await ProductModel.create(product);
+    save(product) {
+        return ProductModel.create(product);
     }
 
-    async updateProductStock(productId, quantity) {
+    update = async (productId, quantity) => {
         const product = await ProductModel.findById(productId);
         if (!product) {
             throw new Error('Producto no encontrado');
@@ -29,9 +26,10 @@ export default class ProductDao {
         await product.save();
         return product;
     }
+    
 
-    async deleteProduct(productId) {
-        return await ProductModel.findOneAndDelete({ id: productId });
+    delete(productId) {
+        return ProductModel.findByIdAndDelete(productId);
     }
 }
 

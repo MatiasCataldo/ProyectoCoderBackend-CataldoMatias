@@ -7,11 +7,23 @@ export default class UserRepository extends GenericRepository{
         super(dao);
     }
     
-    getUserByEmail = (email) =>{
-        return this.getBy({email});
+    getUserEmailById = async (userId) => {
+        try {
+            const user = await UserModel.findById(userId); // Aquí esperamos a que se ejecute la consulta
+            if (user && user.email) {
+                return user.email;
+            } else {
+                throw new Error('El usuario no tiene un correo electrónico definido.');
+            }
+        } catch (error) {
+            console.error('Error al obtener el correo electrónico del usuario:', error);
+            throw error;
+        }
     }
-    getUserById = (id) =>{
-        return this.getBy({_id:id})
+    
+
+    getBy = (id) =>{
+        return UserModel.findById(id);
     }
 
     createNewCart = (userId) => {

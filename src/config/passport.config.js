@@ -5,19 +5,22 @@ import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import googleStrategy from "passport-google-oauth20"
 import { PRIVATE_KEY, createHash } from '../utils.js';
-import cartDao from '../dao/cart.dao.js';
 import { addLogger } from "./logger_CUSTOM.js";
+import config from './config.js';
+import { CartService, UserService } from '../services/service.js';
 
 const GoogleStrategy = googleStrategy.Strategy;
 const localStrategy = passportLocal.Strategy;
 const JwtStrategy = jwtStrategy.Strategy;
 const ExtractJWT = jwtStrategy.ExtractJwt;
 const logger = addLogger;
+const COOKIE_SECRET = config.cookieSecret;
+
 
 const cookieExtractor = req => {
     let token = null;
     if (req && req.cookies) {
-        token = req.cookies['jwtCookieToken'];
+        token = req.cookies[COOKIE_SECRET];
     } else{
         
     }
@@ -114,7 +117,7 @@ const initializePassport = () => {
                         done(null, false)
                     }
 
-                    const createdCart = await cartDao.createCartItem();
+                    const createdCart = await CartService.createNewCart();
                     const cartId = createdCart._id;
                     const user = {
                         first_name,
@@ -125,7 +128,7 @@ const initializePassport = () => {
                         loggedBy: 'form',
                         cartId: cartId
                     }
-                    const result = await userModel.create(user);
+                    const result = await UserService.create(user);
                     return done(null, result)
                 } catch (error) {
                     return done(error)

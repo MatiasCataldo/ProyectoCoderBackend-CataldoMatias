@@ -38,7 +38,7 @@ import { addLogger } from "./config/logger_CUSTOM.js";
 import MongoSingleton from './config/mongodb-singleton.js';
 
 // CONSTANTES DE ENTORNO
-const COOKIE_SECRET = process.env.COOKIE_SECRET;
+const COOKIE_SECRET = config.cookieSecret;
 //mongodb://127.0.0.1/clase40-adoptme-test - mongodb://127.0.0.1/ecommerce
 const MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
@@ -174,8 +174,8 @@ app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 // ROUTER APIS
 app.use("/api/products", passportCall('jwt'), authorization(['admin', 'premium']), productsRouter);
 app.use("/api/messages", passportCall('jwt'), authorization('user'), messagesRouter);
-app.use("/api/carts", passportCall('jwt'), authorization('admin', 'premium'), cartsRouter);
-app.use("/api/users", passportCall('jwt'), authToken, authorization('admin', 'premium'), userRouter);
+app.use("/api/carts", passportCall('jwt'), authorization(['user', 'admin', 'premium']), cartsRouter);
+app.use("/api/users", passportCall('jwt'), authorization('admin', 'premium'), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);

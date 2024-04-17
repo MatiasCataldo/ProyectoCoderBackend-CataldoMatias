@@ -17,25 +17,6 @@ export default class TicketService {
 
     formatPrice(price) {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    async generateTicket(cart, purchaserEmail) {
-        try {
-            const amount = await this.calculateTotalAmount(cart);
-            const ticket = new TicketModel({
-                code: generateUniqueCode(),
-                purchaser: purchaserEmail,
-                purchase_datetime: new Date("2024-03-16T15:14:55"),
-                amount: amount,
-                items: cart.items 
-            });
-            
-            await ticket.save();
-            return ticket;
-        } catch (error) {
-            console.error('Error al generar el ticket:', error);
-            throw new Error('Error al generar el ticket');
-        }
-    }    
+    }  
 }
 

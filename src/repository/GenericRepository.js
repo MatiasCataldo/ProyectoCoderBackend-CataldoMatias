@@ -13,11 +13,11 @@ export default class GenericRepository {
     }
 
     create = (doc) =>{
-        return this.dao.createUser(doc);
+        return this.dao.save(doc);
     }
 
-    update = (id,doc) =>{
-        return this.dao.update(id,doc);
+    update = (productId, quantity) =>{
+        return this.dao.update(productId, quantity);
     }
 
     delete = (id) =>{
