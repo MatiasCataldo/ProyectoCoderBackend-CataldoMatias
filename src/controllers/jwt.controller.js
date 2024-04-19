@@ -10,7 +10,7 @@ import { UserService } from '../services/service.js';
 export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await userModel.findOne({ email: email });
+        const user = await UserService.getByEmail({ email: email });
         if (!user) {
             console.warn("User doesn't exists with username: " + email);
             return res.status(204).send({ error: "Not found", message: "Usuario no encontrado con username: " + email });
@@ -27,7 +27,9 @@ export const login = async (req, res) => {
         };
         const access_token = generateJWToken(tokenUser);
 
-        // 2do con Cookies
+        user.last_connection = new Date();
+        await user.save();
+
         res.cookie('jwtCookieToken', access_token,
             {
                 maxAge: 3600000,
@@ -37,6 +39,28 @@ export const login = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
+    }
+};
+
+//LOGOUT
+export const logout = async (req, res) => {
+    const { uid } = req.params;
+
+    try {
+        const user = await UserService.getBy(uid);
+
+        if (!user) {
+            return res.status(404).json({ status: "error", error: "Usuario no encontrado." });
+        }
+
+        user.last_connection = new Date();
+        await user.save();
+
+        res.clearCookie("CookieToken");
+        return res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+        console.error("Error logging out user:", error);
+        return res.status(500).json({ status: "error", error: "Internal server error" });
     }
 };
 

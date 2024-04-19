@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { faker } from '@faker-js/faker';
+import multer from 'multer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -89,6 +90,34 @@ export const generateProduct = () => {
         status: status[Math.floor(Math.random() * status.length)]
     }
 };
+
+// CONFIGURACION MULTER
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        let uploadFolder;
+        if (file.fieldname === 'imgProfile') {
+            uploadFolder = 'profiles';
+        } else if (file.fieldname === 'imgProduct') {
+            uploadFolder = 'products';
+        } else if (file.fieldname === 'documents'){
+            uploadFolder = 'documents';
+        } else {
+            uploadFolder = "img"
+        }
+        cb(null, `${__dirname}/src/public/assets/${uploadFolder}`);
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    }
+});
+
+export const uploader = multer({
+    storage,
+    onError: function (err, next) {
+        console.log(err);
+        next();
+    }
+});
 
 
 export default __dirname;

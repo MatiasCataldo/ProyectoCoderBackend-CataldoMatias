@@ -6,11 +6,11 @@ export default class UserDao {
         return UserModel.create( doc );
     }
 
-    getUsers = (params) => {
+    get = (params) => {
         return UserModel.find(params);
     }
 
-    getUserById = (userId) => {
+    getBy = (userId) => {
         return UserModel.findById(userId);
     }
 
@@ -18,5 +18,9 @@ export default class UserDao {
         const cart = CartModel.create({ userId });
         UserModel.findByIdAndUpdate(userId, { cart: cart._id });
         return cart;
+    }
+
+    delete = (userId) => {
+        return UserModel.findByIdAndDelete(userId);
     }
 }

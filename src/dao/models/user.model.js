@@ -12,7 +12,15 @@ const userSchema = new Schema({
     default: 'user',
     enum: ['user', 'admin', 'premium'],
   },
-  cartId: { type: Schema.Types.ObjectId, ref: "Cart" }
+  cartId: { type: Schema.Types.ObjectId, ref: "Cart" },
+  documents: [{
+    name: String,
+    reference: String
+  }],
+  last_connection: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 const userModel = model('User', userSchema);

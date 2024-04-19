@@ -9,7 +9,7 @@ export default class UserRepository extends GenericRepository{
     
     getUserEmailById = async (userId) => {
         try {
-            const user = await UserModel.findById(userId); // Aquí esperamos a que se ejecute la consulta
+            const user = await UserModel.findById(userId); 
             if (user && user.email) {
                 return user.email;
             } else {
@@ -20,6 +20,10 @@ export default class UserRepository extends GenericRepository{
             throw error;
         }
     }
+
+    getByEmail = (email) => {
+        return UserModel.findOne(email);
+    };
     
 
     getBy = (id) =>{

@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { login, register, githubLogin, githubCallback, googleLogin, googleCallback } from '../controllers/jwt.controller.js';
+import { login, logout, register, githubLogin, githubCallback, googleLogin, googleCallback } from '../controllers/jwt.controller.js';
 
 const router = Router();
 
 router.post("/login", login);
+
+router.post("/logout", logout);
 
 router.post('/register', passport.authenticate('register', { session: false }), register);
 
