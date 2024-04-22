@@ -94,30 +94,27 @@ export const generateProduct = () => {
 // CONFIGURACION MULTER
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        let uploadFolder;
+        let uploadFolder = "img"; 
         if (file.fieldname === 'imgProfile') {
             uploadFolder = 'profiles';
         } else if (file.fieldname === 'imgProduct') {
             uploadFolder = 'products';
         } else if (file.fieldname === 'documents'){
             uploadFolder = 'documents';
-        } else {
-            uploadFolder = "img"
         }
-        cb(null, `${__dirname}/src/public/assets/${uploadFolder}`);
+        cb(null, `${__dirname}/public/${uploadFolder}`);
     },
     filename: function (req, file, cb) {
         cb(null, `${Date.now()}_${file.originalname}`);
     }
 });
 
-export const uploader = multer({
+export const upload = multer({
     storage,
     onError: function (err, next) {
         console.log(err);
         next();
     }
 });
-
 
 export default __dirname;

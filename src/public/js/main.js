@@ -1,7 +1,29 @@
 const socketClient = io();
 
 const createProductForm = document.querySelector('#createProductForm');
-const addToCart = document.getElementById('#products');
+const addToCart = document.getElementById('products');
+
+document.getElementById('logoutForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); 
+
+  try {
+      const response = await fetch('/jwt/logout', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          credentials: 'same-origin'
+        })
+
+      if (response.ok) {
+          window.location.href = '/home';
+      } else {
+          console.error('Error al cerrar sesión:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error al cerrar sesión:', error.message);
+  }
+});
 
 createProductForm.addEventListener('submit', (event) => {
   event.preventDefault();

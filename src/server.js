@@ -95,66 +95,78 @@ app.engine("hbs",handlebars.engine({
 })
 );
 
+/*
 // SOCKET
 socketServer.on("connection", (socketClient) => {
-  socketClient.on("createProduct", (newProduct) => {
-    const product = {
-      id: newProduct.id,
-      title: newProduct.title,
-      description: newProduct.description,
-      price: newProduct.price,
-      thumbnail: newProduct.thumbnail,
-      stock: newProduct.stock,
-      category: newProduct.category,
-    };
-    manejadorProductos.addProduct(product);
-    socketServer.emit("productListUpdated", manejadorProductos.getProducts());
-  });
+  try {
+    const decoded = jwt.verify(token, PRIVATE_KEY);
+    // Realiza acciones adicionales según sea necesario, como buscar el usuario en la base de datos, etc.
 
-  socketClient.on("deleteProduct", (productCode) => {
-    manejadorProductos.deleteProduct(productCode);
-    socketServer.emit("productListUpdated", manejadorProductos.getProducts());
-  });
-
-  socketClient.on('addToCart', async ({ userId, productId, quantity }) => {
-    try {
-        const cart = await cartDao.findCartByUserId(userId);
-        const existingItem = cart.items.find(item => item.productId === productId);
-        if (existingItem) {
-            const updatedCart = await cartDao.updateCartItem(userId, productId, existingItem.quantity + quantity);
-            socketClient.emit('cartUpdated', updatedCart);
-        } else {
-            const newCartItem = { productId, quantity };
-            const updatedCart = await cartDao.createCartItem(userId, newCartItem);
-            socketClient.emit('cartUpdated', updatedCart);
-        }
-    } catch (error) {
-        console.error('Error al agregar producto al carrito:', error);
-    }
-  });
+    console.log('Autenticación exitosa');    
+    socketClient.on("createProduct", (newProduct) => {
+      const product = {
+        id: newProduct.id,
+        title: newProduct.title,
+        description: newProduct.description,
+        price: newProduct.price,
+        thumbnail: newProduct.thumbnail,
+        stock: newProduct.stock,
+        category: newProduct.category,
+      };
+      manejadorProductos.addProduct(product);
+      socketServer.emit("productListUpdated", manejadorProductos.getProducts());
+    });
   
-  socketClient.on('cartUpdated', (updatedCart) => {
-    const cartItemCountElement = document.getElementById('cartItemCount');
-    if (cartItemCountElement) {
-      cartItemCountElement.textContent = updatedCart.items.length;
-    }
+    socketClient.on("deleteProduct", (productCode) => {
+      manejadorProductos.deleteProduct(productCode);
+      socketServer.emit("productListUpdated", manejadorProductos.getProducts());
+    });
   
-    const cartItemListElement = document.getElementById('cartItemList');
-    if (cartItemListElement) {
-      cartItemListElement.innerHTML = '';
-      updatedCart.items.forEach((item) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${item.product.title} - Cantidad: ${item.quantity}`;
-        cartItemListElement.appendChild(listItem);
-      });
-    }
-
-    const cartTotalPriceElement = document.getElementById('cartTotalPrice');
-    if (cartTotalPriceElement) {
-      cartTotalPriceElement.textContent = `$${updatedCart.totalPrice}`;
-    }
-  });  
+    socketClient.on('addToCart', async ({ userId, productId, quantity }) => {
+      try {
+          const cart = await cartDao.findCartByUserId(userId);
+          const existingItem = cart.items.find(item => item.productId === productId);
+          if (existingItem) {
+              const updatedCart = await cartDao.updateCartItem(userId, productId, existingItem.quantity + quantity);
+              socketClient.emit('cartUpdated', updatedCart);
+          } else {
+              const newCartItem = { productId, quantity };
+              const updatedCart = await cartDao.createCartItem(userId, newCartItem);
+              socketClient.emit('cartUpdated', updatedCart);
+          }
+      } catch (error) {
+          console.error('Error al agregar producto al carrito:', error);
+      }
+    });
+    
+    socketClient.on('cartUpdated', (updatedCart) => {
+      const cartItemCountElement = document.getElementById('cartItemCount');
+      if (cartItemCountElement) {
+        cartItemCountElement.textContent = updatedCart.items.length;
+      }
+    
+      const cartItemListElement = document.getElementById('cartItemList');
+      if (cartItemListElement) {
+        cartItemListElement.innerHTML = '';
+        updatedCart.items.forEach((item) => {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${item.product.title} - Cantidad: ${item.quantity}`;
+          cartItemListElement.appendChild(listItem);
+        });
+      }
+  
+      const cartTotalPriceElement = document.getElementById('cartTotalPrice');
+      if (cartTotalPriceElement) {
+        cartTotalPriceElement.textContent = `$${updatedCart.totalPrice}`;
+      }
+    });  
+  } catch (error) {
+    console.error('Error de autenticación:', error);
+    socketClient.emit('authentication_error', { error: 'Authentication failed' });
+    socketClient.disconnect(true);
+  }
 });
+*/
 
 // SWAGGER
 const swaggerOptions = {

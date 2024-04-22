@@ -17,9 +17,10 @@ const userSchema = new Schema({
     name: String,
     reference: String
   }],
-  last_connection: {
-    type: Date,
-    default: Date.now
+  status: { type: String, default: 'offline' }, 
+  last_connection: { 
+    type: Date, 
+    default: null 
   }
 });
 

@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import {faker} from '@faker-js/faker';
 import { UserService } from '../services/service.js';
-import { uploader } from "../utils.js";
 
 // CREAR USUARIO TEST
 export const fakeUser = async (req, res) => {
@@ -89,34 +88,42 @@ export const changeUserRole = async (req, res) => {
 export const uploadDocuments = async (req, res) => {
     try {
         const userId = req.params.uid;
-        
-        if (!documents || documents.length === 0) {
+        const user = await UserService.getBy(userId);
+
+        if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({ message: 'No se han proporcionado archivos para cargar.' });
         }
-        
-        const user = await UserService.getBy(userId);
+
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado.' });
         }
-        uploader.array('avatar')(req, res, async (err) => {
-            if (err) {
-                console.error("Error al subir archivos:", err);
-                return res.status(500).send({ status: "error", error: "Error uploading files" });
+
+        const files = req.files;
+        const documents = [];
+
+        for (const key in files) {
+            const filesArray = files[key];
+        
+            for (let i = 0; i < filesArray.length; i++) {
+                const file = filesArray[i];
+        
+                const document = {
+                    name: file.originalname,
+                    reference: file.path,
+                };
+                
+                documents.push(document);
             }
-    
-            const files = req.files;
-    
-            user.documents = files.map(file => ({
-                name: file.originalname,
-                reference: file.path
-            }));
-            
-            await user.save();
-    
-            return res.status(200).json({ message: "Documentos subidos y usuario actualizado correctamente", user });
-        });
+        }
+
+        user.documents = documents;
+        await user.save();
+
+        return res.status(200).json({ message: "Documentos subidos y usuario actualizado correctamente", user });
     } catch (error) {
         console.error('Error al cargar documentos:', error);
         res.status(500).json({ message: 'Error al cargar documentos.', error: error });
     }
 };
+
+

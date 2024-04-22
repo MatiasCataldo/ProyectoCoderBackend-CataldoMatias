@@ -1,7 +1,4 @@
-import userModel from '../dao/models/user.model.js';
-import cartModel from '../dao/models/cart.model.js';
 import passport from 'passport';
-import bcrypt from "bcrypt";
 import { isValidPassword, generateJWToken } from '../utils.js';
 import { UserService } from '../services/service.js';
 
@@ -27,14 +24,22 @@ export const login = async (req, res) => {
         };
         const access_token = generateJWToken(tokenUser);
 
-        user.last_connection = new Date();
+        user.status = 'online';
+        user.last_connection  = null;
+
         await user.save();
 
         res.cookie('jwtCookieToken', access_token,
             {
                 maxAge: 3600000,
-                httpOnly: false
+                httpOnly: true
             });
+
+        res.cookie('email', user.email, {
+            maxAge: 3600000,
+            httpOnly: true 
+        });
+            
         res.status(201).json({ message: "Login success!!" });
     } catch (error) {
         console.error(error);
@@ -44,19 +49,21 @@ export const login = async (req, res) => {
 
 //LOGOUT
 export const logout = async (req, res) => {
-    const { uid } = req.params;
+    const userEmail = req.cookies.email;
 
     try {
-        const user = await UserService.getBy(uid);
+        const user = await UserService.getByEmail(userEmail);
 
         if (!user) {
             return res.status(404).json({ status: "error", error: "Usuario no encontrado." });
         }
 
+        user.status = 'offline';
         user.last_connection = new Date();
         await user.save();
 
-        res.clearCookie("CookieToken");
+        res.clearCookie("jwtCookieToken");
+        res.clearCookie("email")
         return res.status(200).json({ message: "Logout successful" });
     } catch (error) {
         console.error("Error logging out user:", error);

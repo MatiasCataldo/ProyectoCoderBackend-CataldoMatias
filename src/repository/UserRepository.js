@@ -22,7 +22,7 @@ export default class UserRepository extends GenericRepository{
     }
 
     getByEmail = (email) => {
-        return UserModel.findOne(email);
+        return UserModel.findOne({ email: email });
     };
     
 

@@ -20,8 +20,8 @@
                         </li>
                     </ul>
                 </div>
-                <form action="/home" method="GET">
-                    <button style="margin-right: 10px;     background-color: darkred; border-color: darkred;" type="submit" class="btn btn-primary">
+                <form id="logoutForm" method="POST">
+                    <button style="margin-right: 10px; background-color: darkred; border-color: darkred;" type="submit" class="btn btn-primary">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
                     </button>
                 </form>
@@ -106,7 +106,7 @@
                             <div style="font-weight: 800;" class="precios">
                                 ${{this.price}}
                             </div>
-                            <a style="margin: 10px; margin-inline: auto; background-color: darkred; border-color: darkred;" class="buy-button btn btn-primary buy-button" data-product-id="{{this._id}}">Comprar</a>
+                            <button style="margin: 10px; margin-inline: auto; background-color: darkred; border-color: darkred;" class="buy-button btn btn-primary buy-button" data-product-id="{{this._id}}">Comprar</button>
                         </div>
                     </div>
                 </div>
