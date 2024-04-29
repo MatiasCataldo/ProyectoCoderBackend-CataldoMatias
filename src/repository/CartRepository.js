@@ -20,11 +20,12 @@ export default class CartRepository extends GenericRepository {
     updateCartItem = async (userId, productId, quantity) => {
         const cart = await cartModel.findOneAndUpdate(
             { userId, 'items.productId': productId },
-            { $set: { 'items.$.quantity': quantity } },
+            { $inc: { 'items.$.quantity': quantity } },
             { new: true }
         );
         return cart;
-    }
+    };
+    
 
     async deleteCartItem(userId, productId) {
         const cart = await cartModel.findOneAndUpdate(

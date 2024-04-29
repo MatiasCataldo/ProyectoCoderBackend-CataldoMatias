@@ -13,13 +13,31 @@ form.addEventListener('submit', e => {
         }
     }).then(result => {
         if (result.status === 200) {
+            Toastify({
+                text: `Bienvenido a Helanus🍦`,
+                duration: 1500,
+                gravity: "top", 
+                position: "center", 
+                stopOnFocus: true,
+                style: {
+                    background: "darkred",
+                },
+            }).showToast();
             result.json()
                 .then(json => {
-                    alert("Login realizado con exito!");
                     window.location.replace('/home/user');
                 });
         } else if (result.status === 401) {
-            alert("Login invalido revisa tus credenciales!");
+            Toastify({
+                text: `El email o contraseña son incorrectos⛔`,
+                duration: 1500,
+                gravity: "top", 
+                position: "center",
+                stopOnFocus: true,
+                style: {
+                    background: "rgba(236, 3, 3, 0.945)",
+                }
+            }).showToast();
         }
     })
 })

@@ -1,10 +1,13 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import ProductManager from '../../main.js';
+import {ProductManager} from '../../main.js';
+import { CartManager } from '../../main.js';
 import { passportCall, authorization } from "../utils.js";
+import { UserService } from '../services/service.js';
 
 const router = express.Router();
 const manejadorProductos = new ProductManager();
+const manejadorItemsCart = new CartManager();
 
 // LOGIN
 router.get("/login", (req, res) => {
@@ -17,9 +20,32 @@ router.get("/register", (req, res) => {
 });
 
 // CART
-router.get("/cart", (req, res) => {
-    res.render("cart");
+router.get("/cart", 
+    passportCall('jwt'),
+    authorization(['admin', 'premiun']),
+    async (req, res) => {
+        const cookieToken = req.cookies.jwtCookieToken;
+        let userId;
+        try {
+            const user = await UserService.getByEmail(req.user.email).select('_id').exec();
+            if (user) {
+                userId = user._id;
+            } else {
+                console.log('Usuario no encontrado');
+            }
+        } catch (err) {
+            console.error('Error al buscar usuario:', err);
+        }
+        const cartItems = await manejadorItemsCart.getCartItems(cookieToken, userId);
+        console.log(cartItems.cart.items)
+        res.render("cart", {  
+            cart: cartItems.cart,
+            user: req.user
+        });
+        
 });
+
+
 
 // UPDATE PASSWORD
 router.get('/updatePassword', (req, res) => {
@@ -31,22 +57,33 @@ router.get('/reset-password/:token', (req, res) => {
 });
 
 // HOME
-router.get('/home', (req, res) => {
-    res.render('home', {
-        products: manejadorProductos.getProducts(),
-        user: req.user
-    });
+router.get('/home', async (req, res) => {
+    try {
+        const products = await manejadorProductos.getProducts();
+        res.render('home', {
+            products: products,
+            user: req.user
+        });
+    } catch (error) {
+        res.status(500).render('error');
+    }
 });
+
 
 // HOME USER
 router.get("/home/user",
     passportCall('jwt'),
-    authorization('user'),
-    (req, res) => {
-        res.render("home", {
-            products: manejadorProductos.getProducts(),
-            user: req.user
-        });
+    authorization(['admin' , 'premiun']),
+    async (req, res) => {
+        try {
+            const products = await manejadorProductos.getProducts();
+            res.render('home', {
+                products: products,
+                user: req.user
+            });
+        } catch (error) {
+            res.status(500).render('error');
+        }
     }
 );
 

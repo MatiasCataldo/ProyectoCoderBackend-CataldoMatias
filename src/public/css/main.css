@@ -1,0 +1,48 @@
+/* Estilos para el contenedor principal de los productos */
+.product-container {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilos para la imagen del producto */
+  .product-image {
+    width: 100%;
+    border-radius: 10px;
+  }
+  
+  /* Estilos para el título del producto */
+  .product-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  /* Estilos para la descripción del producto */
+  .product-description {
+    margin-top: 5px;
+  }
+  
+  /* Estilos para el precio del producto */
+  .product-price {
+    font-weight: bold;
+    color: #007bff; /* Color azul */
+    margin-top: 5px;
+  }
+  
+  /* Estilos para el botón de compra */
+  .buy-button {
+    background-color: #28a745; /* Color verde */
+    color: #fff; /* Color blanco */
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .buy-button:hover {
+    background-color: #218838; /* Color verde más oscuro al pasar el mouse */
+  }
+  

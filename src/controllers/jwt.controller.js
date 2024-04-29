@@ -7,13 +7,11 @@ import { UserService } from '../services/service.js';
 export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await UserService.getByEmail({ email: email });
+        const user = await UserService.getByEmail(email);
         if (!user) {
-            console.warn("User doesn't exists with username: " + email);
             return res.status(204).send({ error: "Not found", message: "Usuario no encontrado con username: " + email });
         }
         if (!isValidPassword(user, password)) {
-            console.warn("Invalid credentials for user: " + email);
             return res.status(401).send({ status: "error", error: "El usuario y la contraseña no coinciden!" });
         }
         const tokenUser = {
@@ -32,15 +30,15 @@ export const login = async (req, res) => {
         res.cookie('jwtCookieToken', access_token,
             {
                 maxAge: 3600000,
-                httpOnly: true
+                httpOnly: false
             });
 
         res.cookie('email', user.email, {
             maxAge: 3600000,
-            httpOnly: true 
+            httpOnly: false 
         });
             
-        res.status(201).json({ message: "Login success!!" });
+        res.status(200).json({ message: "Login success!!" });
     } catch (error) {
         console.error(error);
         return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });

@@ -33,10 +33,23 @@ export const getUserById = async (req, res) => {
         }
         res.json(user);
     } catch (error) {
-        console.error("Error consultando el usuario con ID: " + userId);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+
+//OBTENER USUARIO POR EMAIL
+export const getUserByEmail = async (req, res) => {
+    const userEmail = req.params.email
+    try {
+        const user = await UserService.getByEmail(userEmail);
+        if (!user) {
+            return res.status(202).json({ message: "Usuario no encontrado usando email: " + userEmail });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+}
 
 // ACTUALIZAR CONTRASEÑA DEL USUARIO
 export const updatePassword = async (req, res) => {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fakeUser, getUsers, getUserById, changeUserRole, uploadDocuments } from '../controllers/user.controller.js';
+import { fakeUser, getUsers, getUserById, getUserByEmail, changeUserRole, uploadDocuments } from '../controllers/user.controller.js';
 import { upload } from "../utils.js"
 
 const router = Router();
@@ -9,6 +9,8 @@ router.get("/test", fakeUser);
 router.get("/", getUsers);
 
 router.get("/:userId", getUserById);
+
+router.get("/email/:email", getUserByEmail);
 
 router.put('/premium/:userId', changeUserRole);
 

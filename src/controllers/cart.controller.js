@@ -33,12 +33,11 @@ export const getCartByUserId = async (req, res) => {
 export const addItemToCart = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { productName, productId, quantity, productPrice } = req.body;
+        const { productName, productId, quantity, productPrice, productImage } = req.body;
         const user = await UserService.getBy(userId);
         const product = await ProductService.getBy(productId);
         
-        if (!productId || !quantity || !productName || !productPrice) {
-            // Crear y enviar un error personalizado si faltan campos requeridos
+        if (!productId || !quantity || !productName || !productPrice || !productImage) {
             throw new CustomProductError({
                 name: "Product Create Error",
                 cause: generateCartErrorInfo({ productName, productId, quantity, productPrice}),
@@ -54,15 +53,24 @@ export const addItemToCart = async (req, res) => {
         /*if (user.role !== 'premium' && product.owner !== user._id) {
             return res.status(403).json({ message: "No puedes agregar un producto que NO te pertenece a tu carrito." });
         }*/
+        
+        let updatedCart = await CartService.getByUser(userId);
+        const productIdExists = updatedCart.items.some(item => {
+            console.log(item.productId);
+            return item.productId == productId;
+        });
 
-        const updatedCart = await CartService.create({ userId, cartItem: { productName, productId, quantity, productPrice } });
+        if (productIdExists) {
+            updatedCart = await CartService.updateCartItem(userId, productId, quantity);
+        } else {
+            updatedCart = await CartService.create({ userId, cartItem: { productName, productId, quantity, productPrice, productImage } });
+        }
 
         res.status(201).json({
             cart: updatedCart,
             message: "Item agregado al carrito",
         });
     } catch (error) {
-        // Manejar el error aquí de manera más específica o enviar un mensaje genérico si no es manejado específicamente
         console.error("Error al agregar el item:", error);
         res.status(500).json({ message: "Error al agregar el item" });
     }

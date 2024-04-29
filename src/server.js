@@ -2,7 +2,6 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import http from "http";
-import { Server } from "socket.io";
 import path from "path";
 import MongoStore from 'connect-mongo'
 import session from "express-session";
@@ -22,14 +21,10 @@ import jwtRouter from './routes/jwt.router.js';
 import emailRouter from './routes/email.router.js';
 import smsRouter from './routes/sms.router.js';
 
-//IMPORT DAO
-import cartDao from "./dao/cart.dao.js";
-
 //IMPORT VIEWS
 import viewsRouter from "./routes/views.routes.js";
 
 //IMPORTS
-import ProductManager from "../main.js";
 import __dirname, { authToken } from "./utils.js";
 import { passportCall, authorization } from './utils.js';
 import initializePassport from "./config/passport.config.js";
@@ -43,9 +38,7 @@ const COOKIE_SECRET = config.cookieSecret;
 const MONGO_URL = "mongodb://127.0.0.1/ecommerce";
 const app = express();
 const SERVER_PORT = config.port;
-const manejadorProductos = new ProductManager();
 const httpServer = http.createServer(app);
-const socketServer = new Server(httpServer);
 
 //APP SETTINGS
 dotenv.config();
@@ -92,81 +85,9 @@ app.engine("hbs",handlebars.engine({
   extname: "hbs",
   defaultLayout: "main",
   layoutsDir: path.join(__dirname, "views/layouts"),
-})
+  })
 );
 
-/*
-// SOCKET
-socketServer.on("connection", (socketClient) => {
-  try {
-    const decoded = jwt.verify(token, PRIVATE_KEY);
-    // Realiza acciones adicionales según sea necesario, como buscar el usuario en la base de datos, etc.
-
-    console.log('Autenticación exitosa');    
-    socketClient.on("createProduct", (newProduct) => {
-      const product = {
-        id: newProduct.id,
-        title: newProduct.title,
-        description: newProduct.description,
-        price: newProduct.price,
-        thumbnail: newProduct.thumbnail,
-        stock: newProduct.stock,
-        category: newProduct.category,
-      };
-      manejadorProductos.addProduct(product);
-      socketServer.emit("productListUpdated", manejadorProductos.getProducts());
-    });
-  
-    socketClient.on("deleteProduct", (productCode) => {
-      manejadorProductos.deleteProduct(productCode);
-      socketServer.emit("productListUpdated", manejadorProductos.getProducts());
-    });
-  
-    socketClient.on('addToCart', async ({ userId, productId, quantity }) => {
-      try {
-          const cart = await cartDao.findCartByUserId(userId);
-          const existingItem = cart.items.find(item => item.productId === productId);
-          if (existingItem) {
-              const updatedCart = await cartDao.updateCartItem(userId, productId, existingItem.quantity + quantity);
-              socketClient.emit('cartUpdated', updatedCart);
-          } else {
-              const newCartItem = { productId, quantity };
-              const updatedCart = await cartDao.createCartItem(userId, newCartItem);
-              socketClient.emit('cartUpdated', updatedCart);
-          }
-      } catch (error) {
-          console.error('Error al agregar producto al carrito:', error);
-      }
-    });
-    
-    socketClient.on('cartUpdated', (updatedCart) => {
-      const cartItemCountElement = document.getElementById('cartItemCount');
-      if (cartItemCountElement) {
-        cartItemCountElement.textContent = updatedCart.items.length;
-      }
-    
-      const cartItemListElement = document.getElementById('cartItemList');
-      if (cartItemListElement) {
-        cartItemListElement.innerHTML = '';
-        updatedCart.items.forEach((item) => {
-          const listItem = document.createElement('li');
-          listItem.textContent = `${item.product.title} - Cantidad: ${item.quantity}`;
-          cartItemListElement.appendChild(listItem);
-        });
-      }
-  
-      const cartTotalPriceElement = document.getElementById('cartTotalPrice');
-      if (cartTotalPriceElement) {
-        cartTotalPriceElement.textContent = `$${updatedCart.totalPrice}`;
-      }
-    });  
-  } catch (error) {
-    console.error('Error de autenticación:', error);
-    socketClient.emit('authentication_error', { error: 'Authentication failed' });
-    socketClient.disconnect(true);
-  }
-});
-*/
 
 // SWAGGER
 const swaggerOptions = {
@@ -186,8 +107,8 @@ app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 // ROUTER APIS
 app.use("/api/products", passportCall('jwt'), authorization(['admin', 'premium']), productsRouter);
 app.use("/api/messages", passportCall('jwt'), authorization('user'), messagesRouter);
-app.use("/api/carts", passportCall('jwt'), authorization(['user', 'admin', 'premium']), cartsRouter);
-app.use("/api/users", passportCall('jwt'), authorization('admin', 'premium'), userRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/users", passportCall('jwt'), authorization(['admin', 'premium']), userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);

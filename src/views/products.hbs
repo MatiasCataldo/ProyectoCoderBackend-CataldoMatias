@@ -1,0 +1,19 @@
+<main>
+    <div class="container" id="container">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col">
+                    <div style="border-radius: 20px" class="card h-100">
+                        <img src="{{producto.thumbnail}}" style="height: 180px; padding: 5px !important; border-radius: 20px !important;" class="card-img-top" alt="imagen producto">
+                        <div style="flex: 1 1 auto; padding: 1rem 1rem; display: grid; text-align: center;" class="card-body">
+                            <h5 class="card-title">{{producto.title}}</h5>
+                            <p class="card-text">{{producto.description}}</p>
+                            <div style="font-weight: 800;" class="precios">
+                                ${{producto.price}}
+                            </div>
+                            <button style="margin: 10px; margin-inline: auto; background-color: darkred; border-color: darkred;" class="buy-button btn btn-primary buy-button" data-product-id="{{producto._id}}">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</main>

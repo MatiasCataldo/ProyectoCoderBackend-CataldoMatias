@@ -5,6 +5,7 @@ const cartItemSchema = new Schema({
   productName: {type: String},
   productPrice: { type: Number },
   quantity: { type: Number, default: 0 },
+  productImage: { type: String}
 });
 
 const cartSchema = new Schema({
