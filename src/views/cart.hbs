@@ -1,6 +1,33 @@
+<header>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <h1 style="padding: 5px;" class="navbar-brand" href="./index.html">Bienvenido, {{ user.name }}!</h1>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+      </ul>
+    </div>
+    <form id="logoutForm" method="GET">
+      <button style="margin-right: 10px; background-color: darkred; border-color: darkred;" type="submit"
+        class="btn btn-primary">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+      </button>
+    </form>
+  </nav>
+</header>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container px-4 px-lg-5">
-    <a class="navbar-brand" href="/home">
+    <a class="navbar-brand" href="/home/user">
       <img
         src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png"
         class="logoHeader" alt="logo pagina">
@@ -10,107 +37,118 @@
         class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home/user">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
         <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">Sucursales</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/sucursales/#lanus-este-1">Lanus Este</a></li>
+            <li><a class="dropdown-item" href="/sucursales/#lanus-este-2">Lanus Este</a></li>
+            <li><a class="dropdown-item" href="/sucursales/#escalada">Remedios de Escalada</a></li>
+            <li><a class="dropdown-item" href="/sucursales/#lanus-oeste">Lanus Oeste</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
- {{#if cart.items}}
-  <section class="h-100 h-custom">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12">
-          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
-            <div class="card-body p-0">
-              <div class="row g-0">
-                <div class="col-lg-8">
-                  <div class="p-5">
-                    <div class="d-flex justify-content-between align-items-center mb-5">
-                      <h1 class="fw-bold mb-0 text-black">Carrito de Compras</h1>
-                      <h6 class="mb-0 text-muted">{{cart.items.length}} items</h6>
-                    </div>
-                    <hr class="my-4">
+{{#if cart.items}}
+<section class="h-100 h-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12">
+        <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+          <div class="card-body p-0">
+            <div class="row g-0">
+              <div class="col-lg-8">
+                <div class="p-5">
+                  <div class="d-flex justify-content-between align-items-center mb-5">
+                    <h1 class="fw-bold mb-0 text-black">Carrito de Compras</h1>
+                    <h6 class="mb-0 text-muted">{{cart.items.length}} items</h6>
+                  </div>
+                  <hr class="my-4">
 
-                    {{#each cart.items}}
-                    <div class="row mb-4 d-flex justify-content-between align-items-center">
-                      <div class="col-md-2 col-lg-2 col-xl-2">
-                        <img src="{{this.productImage}}" class="img-fluid rounded-3" alt="{{this.productName}}">
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-3">
-                        <h6 class="text-muted">Producto</h6>
-                        <h6 class="text-black mb-0">{{this.productName}}</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                        <h6 class="text-muted">Precio Unidad</h6>
-                        <h6 class="mb-0">$ {{this.productPrice}}</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                        <h6 class="text-muted">Cantidad</h6>
-                        <h6 class="mb-0">{{this.quantity}}</h6>
-                      </div>
-                      <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                        <a href="#" class="text-muted delete-item" data-userid="{{userId}}" data-productid="{{productId}}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                      </div>
+                  {{#each cart.items}}
+                  <div class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div class="col-md-2 col-lg-2 col-xl-2">
+                      <img src="{{this.productImage}}" class="img-fluid rounded-3" alt="{{this.productName}}">
                     </div>
-                    {{/each}}
-
-                    <hr class="my-4">
-
-                    <div class="pt-5">
-                      <h6 class="mb-0"><a href="/home/user" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Volver a Inicio</a></h6>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <h6 class="text-muted">Producto</h6>
+                      <h6 class="text-black mb-0">{{this.productName}}</h6>
                     </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                      <h6 class="text-muted">Precio Unidad</h6>
+                      <h6 class="mb-0">$ {{this.productPrice}}</h6>
+                    </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                      <h6 class="text-muted">Cantidad</h6>
+                      <h6 class="mb-0">{{this.quantity}}</h6>
+                    </div>
+                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                      <a href="#" class="text-muted delete-item" data-userid="{{userId}}"
+                        data-productid="{{productId}}">
+                        <i class="fas fa-times"></i>
+                      </a>
+                    </div>
+                  </div>
+                  {{/each}}
+
+                  <hr class="my-4">
+
+                  <div class="pt-5">
+                    <h6 class="mb-0"><a href="/home/user" class="text-body"><i
+                          class="fas fa-long-arrow-alt-left me-2"></i>Volver a Inicio</a></h6>
                   </div>
                 </div>
-                <div class="col-lg-4 bg-grey">
-                  <div class="p-5">
-                    <h3 class="fw-bold mb-5 mt-2 pt-1">Resumen</h3>
-                    <hr class="my-4">
+              </div>
+              <div class="col-lg-4 bg-grey">
+                <div class="p-5">
+                  <h3 class="fw-bold mb-5 mt-2 pt-1">Resumen</h3>
+                  <hr class="my-4">
 
-                    <div class="d-flex justify-content-between mb-4">
-                      <h5 class="text-uppercase">Productos {{cart.items.length}}</h5>
-                    </div>
-
-                    <h5 class="text-uppercase mb-3">Envio</h5>
-
-                    <div class="mb-4 pb-2">
-                      <select data-mdb-select-init>
-                        <option value="1">Estandar a Domicilio- $5000.00</option>
-                        <option value="2">Express a Domicilio- $10000.00</option>
-                        <option value="3">Retiro en Local- Gratis</option>
-                      </select>
-                    </div>
-
-                    <h5 class="text-uppercase mb-3">Codigo Descuento</h5>
-
-                    <div class="mb-5">
-                      <div data-mdb-input-init class="form-outline">
-                        <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
-                        <label class="form-label" for="form3Examplea2">Enter your code</label>
-                      </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-5">
-                      <h5 class="text-uppercase">Precio Total:</h5>
-                      <h5 id="totalPrice">$ 0.00</h5>
-                    </div>
-                    <script>
-                      // Calcula el precio total
-                      let totalPrice = 0;
-                      {{#each cart.items}}
-                        totalPrice += {{this.productPrice}} * {{this.quantity}};
-                      {{/each}}
-                      // Muestra el precio total en la interfaz
-                      document.getElementById('totalPrice').innerText = "$ " + totalPrice.toFixed(2);
-                    </script>
-
-                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-block btn-lg"
-                      data-mdb-ripple-color="dark">COMPRAR</button>
-
+                  <div class="d-flex justify-content-between mb-4">
+                    <h5 class="text-uppercase">Productos {{cart.items.length}}</h5>
                   </div>
+
+                  <h5 class="text-uppercase mb-3">Envio</h5>
+
+                  <div class="mb-4 pb-2">
+                    <select data-mdb-select-init>
+                      <option value="1">Estandar a Domicilio- $5000.00</option>
+                      <option value="2">Express a Domicilio- $10000.00</option>
+                      <option value="3">Retiro en Local- Gratis</option>
+                    </select>
+                  </div>
+
+                  <h5 class="text-uppercase mb-3">Codigo Descuento</h5>
+
+                  <div class="mb-5">
+                    <div data-mdb-input-init class="form-outline">
+                      <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Examplea2">Enter your code</label>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between mb-5">
+                    <h5 class="text-uppercase">Precio Total:</h5>
+                    <h5 id="totalPrice">$ 0.00</h5>
+                  </div>
+                  <script>
+                    // Calcula el precio total
+                    let totalPrice = 0;
+                    {{#each cart.items}}
+                    totalPrice += {{ this.productPrice }} * {{ this.quantity }};
+                    {{/each}}
+                        // Muestra el precio total en la interfaz
+                        document.getElementById('totalPrice').innerText = "$ " + totalPrice.toFixed(2);
+                  </script>
+
+                  <button id="purchase" type="button" data-mdb-button-init data-mdb-ripple-init
+                    class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark">COMPRAR</button>
+
                 </div>
               </div>
             </div>
@@ -118,27 +156,29 @@
         </div>
       </div>
     </div>
-  </section>
- {{/if}}
- {{#unless cart.items}}
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div style="padding: 20px;" class="col-lg-6 text-center">
-          <div class="alert alert-warning" role="alert" style="background-color: #fff;">
-            <h4 class="alert-heading">¡Carrito Vacío!🛒</h4>
-            <p>No has agregado ningún artículo al carrito. ¡Ve a la tienda y descubre nuestras delicias!</p>
-            <hr>
-            <p class="mb-0">Gracias por elegirnos.</p>
-            <img class="logoCart"
-              src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png">
-            <div class="pt-5">
-              <h6 class="mb-0"><a href="/home/user" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Volver a Inicio</a></h6>
-            </div>
-          </div>
+  </div>
+</section>
+{{/if}}
+{{#unless cart.items}}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div style="padding: 20px;" class="col-lg-6 text-center">
+      <div class="alert alert-warning" role="alert" style="background-color: #fff;">
+        <h4 class="alert-heading">¡Carrito Vacío!🛒</h4>
+        <p>No has agregado ningún artículo al carrito. ¡Ve a la tienda y descubre nuestras delicias!</p>
+        <hr>
+        <p class="mb-0">Gracias por elegirnos.</p>
+        <img class="logoCart"
+          src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png">
+        <div class="pt-5">
+          <h6 class="mb-0"><a href="/home/user" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Volver
+              a Inicio</a></h6>
         </div>
       </div>
+    </div>
   </div>
-  {{/unless}}
+</div>
+{{/unless}}
 <footer class="text-white text-center text-lg-start" id="footer" style="background-color: #23242a;">
   <div class="container p-4">
     <div class="row mt-4">
@@ -148,7 +188,7 @@
           helados artesanales. Cada helado es cuidadosamente elaborado con ingredientes frescos y de la
           más alta calidad, para brindarte un auténtico placer helado. Nuestra pasión por la excelencia y
           la creatividad se refleja en cada sorbo y cada cucharada. Descubre un mundo de sabores
-          cautivadores en Helanus y déjate llevar por el auténtico arte de los helados artesanale</p>
+          cautivadores en Helanus y déjate llevar por el auténtico arte de los helados artesanales</p>
         <div class="mt-4">
           <!-- Facebook -->
           <a type="button" class="btn btn-floating btn-warning btn-lg"
@@ -234,3 +274,4 @@
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">© 2023 Copyright ~ Helanus®</div>
 </footer>
 <script src="/js/cart.js"></script>
+<script src="/js/home.js"></script>

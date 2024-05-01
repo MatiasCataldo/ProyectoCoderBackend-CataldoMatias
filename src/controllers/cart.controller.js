@@ -29,6 +29,28 @@ export const getCartByUserId = async (req, res) => {
     }
 };
 
+// BUSCAR ID DE CARRITO POR ID
+export const getCartIdByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const cartId = await CartService.getCartIdByUser(userId)
+
+        if (!cartId) {
+            return res.status(404).json({ message: "Carrito no encontrado." });
+        }
+
+        res.status(200).json({
+            cartId,
+            message: "Carrito encontrado.",
+        });
+    } catch (error) {
+        res.status(500).json({
+            error,
+            message: "Error al obtener el id del carrito del usuario",
+        });
+    }
+};
+
 // AGREGAR ITEM
 export const addItemToCart = async (req, res) => {
     try {

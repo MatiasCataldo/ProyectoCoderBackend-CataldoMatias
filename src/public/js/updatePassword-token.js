@@ -9,7 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const repeatPassword = form.querySelector('[name="newPassword"]').value;
 
         if (newPassword !== repeatPassword) {
-            alert('Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
+            Toastify({
+                text: `Las contraseñas no coinciden. Por favor, inténtalo de nuevo.⛔`,
+                duration: 1500,
+                gravity: "top", 
+                position: "center",
+                stopOnFocus: true,
+                style: {
+                    background: "rgba(236, 3, 3, 0.945)",
+                }
+            }).showToast();
             return;
         }
 
@@ -26,14 +35,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Contraseña Actualizada con exito!');
+                Swal.fire({
+                    title: 'Contraseña Actializada',
+                    icon: 'success',
+                    text: 'con exito!🔐',
+                    timer: 2500
+                });
                 window.location.replace('/home');
             } else {
-                alert(`Error al actualizar la contraseña: ${data.error}`);
+                Toastify({
+                    text: `Error al actualizar la contraseña: ${data.error}⛔`,
+                    duration: 1500,
+                    gravity: "top", 
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: "rgba(236, 3, 3, 0.945)",
+                    }
+                }).showToast();
             }
         } catch (error) {
             console.error('Error de red:', error);
-            alert('Error de red al intentar actualizar la contraseña.');
+            Toastify({
+                text: `Error de red al intentar actualizar la contraseña.❌`,
+                duration: 1500,
+                gravity: "top", 
+                position: "center",
+                stopOnFocus: true,
+                style: {
+                    background: "rgba(236, 3, 3, 0.945)",
+                }
+            }).showToast();
         }
     })
 }) 

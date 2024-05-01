@@ -57,7 +57,7 @@ export const logout = async (req, res) => {
         }
 
         user.status = 'offline';
-        user.last_connection = new Date();
+        user.last_connection = new Date().toLocaleString();
         await user.save();
 
         res.clearCookie("jwtCookieToken");

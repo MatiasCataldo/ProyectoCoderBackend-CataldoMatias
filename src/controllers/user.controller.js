@@ -1,16 +1,6 @@
 import bcrypt from "bcrypt";
-import {faker} from '@faker-js/faker';
 import { UserService } from '../services/service.js';
-
-// CREAR USUARIO TEST
-export const fakeUser = async (req, res) => {
-    let first_name = faker.name.firstName();
-    let last_name = faker.name.lastName();
-    let email = faker.internet.email();
-    let age = faker.random.numeric(2);
-    let password = faker.internet.password();
-    res.send({first_name, last_name, email, age, password});
-}
+import { sendInactiveAccountEmail } from "../controllers/email.controller.js"
 
 // OBTENER USUARIOS
 export const getUsers = async (req, res) => {
@@ -22,6 +12,27 @@ export const getUsers = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor al obtener los usuarios" });
     }
 };
+
+//ELIMINAR USUARIOS INACTIVOS
+export const deleteInactiveUsers = async (req, res) => {
+    try {
+        //const limiteInactividad = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+        const limiteInactividad = new Date(Date.now() - 30 * 60 * 1000).toLocaleString(); 
+        console.log("LIMITE INACTIVIDAD: ", limiteInactividad);
+        const usuariosEliminados = await UserService.deleteInactives(limiteInactividad);
+        console.log("USUARIOS ELIMINADOS: ", usuariosEliminados);
+        if (usuariosEliminados.deletedCount === 0) {
+            return res.status(404).json({ message: 'No se encontraron usuarios inactivos para eliminar' });
+        }
+        usuariosEliminados.forEach(async (usuario) => {
+            await sendInactiveAccountEmail(usuario.email);
+        });
+        res.status(200).json({ eliminados: usuariosEliminados });
+    } catch (error) {
+        res.status(500).json({ error: 'Error controller al eliminar usuarios inactivos' });
+    }
+}
+
 
 // OBTENER USUARIO POR ID
 export const getUserById = async (req, res) => {

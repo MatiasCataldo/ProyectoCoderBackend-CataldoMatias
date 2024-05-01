@@ -6,6 +6,13 @@ export default class UserRepository extends GenericRepository{
     constructor(dao){
         super(dao);
     }
+
+    deleteInactives =  async (limiteInactividad) => {
+        const usuariosEliminados = await UserModel.deleteMany({ 
+            last_connection: { $lt: limiteInactividad, $ne: null } 
+        });
+        return usuariosEliminados;
+    }
     
     getUserEmailById = async (userId) => {
         try {

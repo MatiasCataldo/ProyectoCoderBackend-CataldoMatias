@@ -1,3 +1,4 @@
+//OBTENER USUARIO POR EMAIL
 async function getUserIdFromEmail(email) {
     try {
         const response = await fetch(`http://localhost:8080/api/users/email/${encodeURIComponent(email)}`, {
@@ -19,6 +20,30 @@ async function getUserIdFromEmail(email) {
     }
 }
 
+//OBTENER ID DEL CARRITO
+async function getCartId(userId) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/carts/${userId}/cartId`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            const responseData = await response.json();
+            const cartId = responseData.cartId;
+            return cartId;
+        } else {
+            console.error('Error al obtener el ID del carrito del backend', response.statusText);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error de red al obtener el ID de usuario', error);
+        return null;
+    }
+}
+
+//OBTENER EMAIL DE LA COOKIE
 function getEmailFromCookie() {
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
     const emailCookie = cookies.find(cookie => cookie.startsWith('email'));
@@ -30,6 +55,7 @@ function getEmailFromCookie() {
     }
 }
 
+//OBTENER TOKEN DE LA JWTCOOKIE
 function getTokenFromCookie() {
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
     const tokenCookie = cookies.find(cookie => cookie.startsWith('jwtCookieToken'));
@@ -41,32 +67,6 @@ function getTokenFromCookie() {
     }
 }
 
-async function updateCartCounter() {
-    const userEmail = getEmailFromCookie();
-    const userId = await getUserIdFromEmail(userEmail);
-
-    try {
-        const response = await fetch(`http://localhost:8080/api/carts/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getTokenFromCookie()}`
-            }
-        });
-
-        if (response.ok) {
-            const cartData = await response.json();
-            const totalProducts = cartData.products.reduce((total, product) => total + product.quantity, 0);
-            const contadorProductosElement = document.querySelector('#productosEnCarrito .badge');
-            contadorProductosElement.textContent = totalProducts;
-        } else {
-            console.error('Error al obtener la información del carrito:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error al actualizar el contador de productos en el carrito:', error);
-    }
-}
-
 //LISTENER
 document.addEventListener('DOMContentLoaded', async () => {
     const token = getTokenFromCookie();
@@ -74,8 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userId = await getUserIdFromEmail(userEmail);
     const decreaseBtns = document.querySelectorAll('.decreaseBtn');
     const increaseBtns = document.querySelectorAll('.increaseBtn');
-
-    updateCartCounter();
 
     decreaseBtns.forEach(decreaseBtn => {
         decreaseBtn.addEventListener('click', () => {
@@ -99,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-
+//AGREGAR PRODUCTO AL CARRITO
     const buyButtons = document.querySelectorAll('.buy-button');
 
     buyButtons.forEach(button => {
@@ -134,14 +132,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     Toastify({
                         text: `Producto agregado: ${productTitle} ✅`,
                         duration: 1500,
-                        gravity: "top", // `top` or `bottom`
-                        position: "right", // `left`, `center` or `right`
+                        gravity: "top", 
+                        position: "right",
                         stopOnFocus: true,
                         style: {
                             background: "darkcyan",
                         },
                     }).showToast();
-                    updateCartCounter();
                     console.log('Producto agregado al carrito');
                 } else {
                     console.error('Error al agregar el producto al carrito:', response.statusText);
@@ -153,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+//ELIMINAR PRODUCTO
 document.addEventListener('DOMContentLoaded', () => {
     const deleteButtons = document.querySelectorAll('.delete-item');
 
@@ -176,18 +174,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 Toastify({
                     text: `Producto Eliminado❌`,
                     duration: 1500,
-                    gravity: "top", // `top` or `bottom`
-                    position: "right", // `left`, `center` or `right`
+                    gravity: "top",
+                    position: "right",
                     stopOnFocus: true,
                     style: {
                         background: "rgba(236, 3, 3, 0.945)",
                     }
                 }).showToast();
-                updateCartCounter();
                 window.location.reload();
             } catch (error) {
                 console.error('Error del servidor al eliminar el producto del carrito:', error);
             }
         });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = getTokenFromCookie();
+    const userEmail = getEmailFromCookie();
+    const userId = await getUserIdFromEmail(userEmail);
+    const userIdString = userId.toString();
+    const cartId = await getCartId(userIdString);
+    const buyButton = document.querySelector('#purchase');
+    console.log("carrito ID: ", cartId)
+    buyButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/carts/${userIdString}/${cartId}/purchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                // Procesar la respuesta del servidor si es necesario
+                Swal.fire({
+                    title: 'Compra realizada',
+                    icon: 'success',
+                    text: 'Gracias por tu compra!',
+                    timer: 2500
+                });
+                window.location.reload();
+            } else {
+                console.error('Error al realizar la compra:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al realizar la compra:', error);
+        }
     });
 });

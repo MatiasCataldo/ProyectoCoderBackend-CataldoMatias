@@ -9,9 +9,18 @@ class ViewsController {
         res.render("register");
     }
 
+    // Renderiza la vista de sucursales
+    static renderSucursales(req, res) {
+        res.render("sucursales");
+    }
+
     // Renderiza la vista del carrito
     static renderCart(req, res) {
         res.render("cart");
+    }
+
+    static renderCart(req, res) {
+        res.render("cartNoUser");
     }
 
     // Renderiza la vista de actualización de contraseña

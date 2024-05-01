@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { fakeUser, getUsers, getUserById, getUserByEmail, changeUserRole, uploadDocuments } from '../controllers/user.controller.js';
+import {  getUsers, deleteInactiveUsers, getUserById, getUserByEmail, changeUserRole, uploadDocuments } from '../controllers/user.controller.js';
 import { upload } from "../utils.js"
 
 const router = Router();
 
-router.get("/test", fakeUser);
-
 router.get("/", getUsers);
+
+router.delete('/', deleteInactiveUsers);
 
 router.get("/:userId", getUserById);
 

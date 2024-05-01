@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { getCartByUserId, addItemToCart, updateCartItem, deleteCartItem, clearCart, purchase} from "../controllers/cart.controller.js";
+import { getCartByUserId, getCartIdByUserId, addItemToCart, updateCartItem, deleteCartItem, clearCart, purchase} from "../controllers/cart.controller.js";
 
 const router = Router();
 
 router.get("/:userId", getCartByUserId);
+
+router.get("/:userId/cartId", getCartIdByUserId);
 
 router.post("/:userId/addItem", addItemToCart);
 

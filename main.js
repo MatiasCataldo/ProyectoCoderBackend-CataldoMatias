@@ -69,13 +69,12 @@ export class ProductManager {
 
 export class CartManager{
     async getCartItems(token, userId) {
-        const userIdString = userId.toString();
         const userToken = token.toString();
         console.log("Token desde main.js: ", userToken)
-        console.log("userId desde main.js: ", userIdString)
+        console.log("userId desde main.js: ", userId)
         
         try {
-            const response = await fetch(`http://localhost:8080/api/carts/${userIdString}`, {
+            const response = await fetch(`http://localhost:8080/api/carts/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,7 +85,7 @@ export class CartManager{
                 const cartItems = await response.json();
                 return cartItems;
             } else {
-                console.error('Error al obtener los productos del carrito:', response.statusText);
+                console.error('Error al obtener los productos del carrito del backend:', response.statusText);
                 return null;
             }
         } catch (error) {

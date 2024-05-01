@@ -20,13 +20,40 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Email enviado! Por favor revise su correo.');
+                Toastify({
+                    text: `Email enviado! Por favor revise su correo.📧`,
+                    duration: 1500,
+                    gravity: "top", 
+                    position: "center", 
+                    stopOnFocus: true,
+                    style: {
+                        background: "darkred",
+                    },
+                }).showToast();
             } else {
-                alert(`Error al enviar el correo: ${data.error}`);
+                Toastify({
+                    text: `Error al enviar el correo: ${data.error}⛔`,
+                    duration: 1500,
+                    gravity: "top", 
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: "rgba(236, 3, 3, 0.945)",
+                    }
+                }).showToast();
             }
         } catch (error) {
             console.error('Error de red:', error);
-            alert('Error de red al intentar actualizar la contraseña.');
+            Toastify({
+                text: `Error de red al intentar actualizar la contraseña.❌`,
+                duration: 1500,
+                gravity: "top", 
+                position: "center",
+                stopOnFocus: true,
+                style: {
+                    background: "rgba(236, 3, 3, 0.945)",
+                }
+            }).showToast();
         }
     });
 });

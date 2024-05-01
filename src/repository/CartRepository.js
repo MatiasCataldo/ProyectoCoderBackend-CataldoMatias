@@ -7,6 +7,11 @@ export default class CartRepository extends GenericRepository {
         super(dao);
     }
 
+    getCartIdByUser = async (userId) => {
+        const cart = await cartModel.findOne({ userId });
+        return cart._id
+    }
+
     getByUser = async (userId) => {
         return await cartModel.findOne({ userId });
     }

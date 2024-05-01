@@ -22,7 +22,7 @@ router.get("/register", (req, res) => {
 // CART
 router.get("/cart", 
     passportCall('jwt'),
-    authorization(['admin', 'premiun']),
+    authorization(['admin' , 'premiun']),
     async (req, res) => {
         const cookieToken = req.cookies.jwtCookieToken;
         let userId;
@@ -37,7 +37,6 @@ router.get("/cart",
             console.error('Error al buscar usuario:', err);
         }
         const cartItems = await manejadorItemsCart.getCartItems(cookieToken, userId);
-        console.log(cartItems.cart.items)
         res.render("cart", {  
             cart: cartItems.cart,
             user: req.user
@@ -45,7 +44,17 @@ router.get("/cart",
         
 });
 
+//CART NO USER
+router.get("/cart/noUser", (req, res) => {
+    res.render("cartNoUser");
+});
 
+// SUCURSALES
+router.get('/sucursales', (req, res) => {
+    res.render('sucursales',{
+        user: req.user
+    });
+});
 
 // UPDATE PASSWORD
 router.get('/updatePassword', (req, res) => {

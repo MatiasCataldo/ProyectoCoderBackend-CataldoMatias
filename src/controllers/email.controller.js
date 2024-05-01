@@ -5,7 +5,6 @@ import { generateUniqueCode } from "../utils.js";
 import userModel from '../dao/models/user.model.js';
 import bcrypt from "bcrypt";
 
- 
 // configuracion de transport
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -176,4 +175,22 @@ export const resetPassword = async (req, res) => {
         console.error("Error al actualizar la contraseña2:", error);
         res.status(500).json({ status: 'error', error: "Error interno del servidor" });
     }
+};
+
+export const sendInactiveAccountEmail = (email) => {
+    const mailOptions = {
+        from: "Helanus Test - " + config.gmailAccount,
+        to: email,
+        subject: "Cuenta eliminada por inactividad",
+        html: `<div><h1>Su cuenta ha sido eliminada por inactividad</h1>
+                <p>Lamentamos informarle que su cuenta ha sido eliminada debido a la inactividad. Si desea volver a registrarse, por favor visite nuestro sitio web.</p></div>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("Error al enviar el correo electrónico:", error);
+        } else {
+            console.log("Correo electrónico enviado con éxito:", info.response);
+        }
+    });
 };
