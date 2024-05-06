@@ -81,9 +81,9 @@ const initializePassport = () => {
         // GOOGLE
         passport.use('google', new GoogleStrategy(
             {
-            clientID: config.googleClientId,
-            clientSecret: config.googleSecretKey,
-            callbackURL: config.googleCallback
+            clientID: 'GOOGLE_CLIENT_ID',
+            clientSecret: 'GOOGLE_SECRET',
+            callbackURL: "GOOGLE_CALLBACK"
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {

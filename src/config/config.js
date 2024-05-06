@@ -30,9 +30,5 @@ export default {
     twilioAccountSID: process.env.TWILIO_ACCOUNT_SID,
     twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
     twilioSmsNumber: process.env.TWILIO_SMS_NUMBER,
-    twilioToSmsNumber: process.env.TWILIO_TO_SMS_NUMBER,
-    googleClientId:  process.env.GOOGLE_CID,
-    googleSecretKey:  process.env.GOOGLE_SK,
-    googleCallback:  process.env.GOOGLE_CALLBACK
-
+    twilioToSmsNumber: process.env.TWILIO_TO_SMS_NUMBER
 }
