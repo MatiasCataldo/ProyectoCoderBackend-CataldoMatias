@@ -71,7 +71,7 @@ export const logout = async (req, res) => {
 
 // REGISTER
 export const register = async (req, res) => {
-    res.status(201).send({ status: "success", message: "Usuario creado con extito." });
+    res.status(200).send({ status: "success", message: "Usuario creado con extito." });
 };
 
 // GOOGLE LOGIN
@@ -91,9 +91,15 @@ export const googleCallback = async (req, res) => {
         };
         const access_token = generateJWToken(tokenUser);
 
-        // Establece la cookie con el token JWT
-        res.cookie('jwtCookieToken', access_token, {
-            maxAge: 6000,
+        res.cookie('jwtCookieToken', access_token,
+            {
+                maxAge: 3600000,
+                httpOnly: false
+            });
+
+        res.cookie('email', user.email, {
+            maxAge: 3600000,
+            httpOnly: false 
         });
 
         // Redirige al usuario a la página de inicio después de iniciar sesión
@@ -121,11 +127,23 @@ export const githubCallback = async (req, res) => {
         };
 
         const access_token = generateJWToken(tokenUser);
+        user.status = 'online';
+        user.last_connection  = null;
 
-        // Se establece la cookie con el token JWT
-        res.cookie('jwtCookieToken', access_token, {
-            maxAge: 600000,
+        await user.save();
+
+        res.cookie('jwtCookieToken', access_token,
+        {
+            maxAge: 3600000,
+            httpOnly: false
         });
+
+        res.cookie('email', user.email, {
+            maxAge: 3600000,
+            httpOnly: false 
+        });
+
+        
     } catch (error) {
         console.error(error);
         return res.status(500).send({ status: "error", error: "Error interno de la aplicación." });

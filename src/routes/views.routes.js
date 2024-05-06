@@ -2,12 +2,31 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import {ProductManager} from '../../main.js';
 import { CartManager } from '../../main.js';
+import { UserManager } from '../../main.js'
 import { passportCall, authorization } from "../utils.js";
 import { UserService } from '../services/service.js';
 
 const router = express.Router();
 const manejadorProductos = new ProductManager();
 const manejadorItemsCart = new CartManager();
+const manejadorUsuarios = new UserManager();
+
+// ADMIN-PANEL  
+router.get("/AdminPanel", 
+    passportCall('jwt'), authorization(['admin']),
+    async (req, res) => {
+    try {
+        const cookieToken = req.cookies.jwtCookieToken;
+        const users = await manejadorUsuarios.getUsers(cookieToken);
+        res.render("Admin", {
+            user: req.user,
+            isAdmin: req.user.role === 'admin',
+            users: users
+        });
+    } catch (error) {
+        res.status(500).render('error');
+    }
+});
 
 // LOGIN
 router.get("/login", (req, res) => {
@@ -22,7 +41,7 @@ router.get("/register", (req, res) => {
 // CART
 router.get("/cart", 
     passportCall('jwt'),
-    authorization(['admin' , 'premiun']),
+    authorization(['user', 'admin' , 'premiun']),
     async (req, res) => {
         const cookieToken = req.cookies.jwtCookieToken;
         let userId;
@@ -37,8 +56,10 @@ router.get("/cart",
             console.error('Error al buscar usuario:', err);
         }
         const cartItems = await manejadorItemsCart.getCartItems(cookieToken, userId);
+        console.log(cartItems);
         res.render("cart", {  
             cart: cartItems.cart,
+            isAdmin: req.user.role === 'admin',
             user: req.user
         });
         
@@ -49,11 +70,19 @@ router.get("/cart/noUser", (req, res) => {
     res.render("cartNoUser");
 });
 
-// SUCURSALES
-router.get('/sucursales', (req, res) => {
+// SUCURSALES USER
+router.get('/sucursales',
+    passportCall('jwt'),
+    authorization(['user', 'admin' , 'premiun']), async (req, res) => {
     res.render('sucursales',{
+        isAdmin: req.user.role === 'admin',
         user: req.user
     });
+});
+
+// SUCURSALES NO USER
+router.get('/sucursales/NoUser', (req, res) => {
+    res.render('sucursales');
 });
 
 // UPDATE PASSWORD
@@ -82,11 +111,12 @@ router.get('/home', async (req, res) => {
 // HOME USER
 router.get("/home/user",
     passportCall('jwt'),
-    authorization(['admin' , 'premiun']),
+    authorization(['user', 'admin' , 'premiun']),
     async (req, res) => {
         try {
             const products = await manejadorProductos.getProducts();
             res.render('home', {
+                isAdmin: req.user.role === 'admin',
                 products: products,
                 user: req.user
             });

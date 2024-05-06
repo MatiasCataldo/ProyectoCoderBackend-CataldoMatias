@@ -70,11 +70,12 @@ export class ProductManager {
 export class CartManager{
     async getCartItems(token, userId) {
         const userToken = token.toString();
+        const userString = userId.toString();
         console.log("Token desde main.js: ", userToken)
-        console.log("userId desde main.js: ", userId)
+        console.log("userId desde main.js: ", userString)
         
         try {
-            const response = await fetch(`http://localhost:8080/api/carts/${userId}`, {
+            const response = await fetch(`http://localhost:8080/api/carts/${userString}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,6 +92,30 @@ export class CartManager{
         } catch (error) {
             console.error('Error de red al obtener el carrito:', error);
             return null;
+        }
+    }
+}
+
+export class UserManager{
+    async getUsers(token) {
+        try {
+            const response = await fetch('http://localhost:8080/api/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const users = await response.json();
+                return users; 
+            } else {
+                console.error('Error al cargar los usuarios:', response.statusText);
+                return {};
+            }
+        } catch (error) {
+            console.error('Error al obtener los usuarios:', error);
+            return [];
         }
     }
 }

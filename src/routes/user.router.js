@@ -1,12 +1,14 @@
 import { Router } from "express";
-import {  getUsers, deleteInactiveUsers, getUserById, getUserByEmail, changeUserRole, uploadDocuments } from '../controllers/user.controller.js';
-import { upload } from "../utils.js"
+import {  getUsers, deleteUser, deleteInactiveUsers, getUserById, getUserByEmail, changeUserRole, uploadDocuments } from '../controllers/user.controller.js';
+import { upload, passportCall, authorization } from "../utils.js"
 
 const router = Router();
 
 router.get("/", getUsers);
 
-router.delete('/', deleteInactiveUsers);
+router.delete("/:userId/deleteUser", deleteUser);
+
+router.delete('/',  passportCall('jwt'), authorization('admin'), deleteInactiveUsers);
 
 router.get("/:userId", getUserById);
 

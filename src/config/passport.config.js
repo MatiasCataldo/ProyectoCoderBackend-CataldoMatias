@@ -5,9 +5,11 @@ import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import googleStrategy from "passport-google-oauth20"
 import { PRIVATE_KEY, createHash } from '../utils.js';
+import { enviarCorreoBienvenida } from '../controllers/email.controller.js'
 import { addLogger } from "./logger_CUSTOM.js";
 import config from './config.js';
 import { CartService, UserService } from '../services/service.js';
+import cartModel from '../dao/models/cart.model.js';
 
 const GoogleStrategy = googleStrategy.Strategy;
 const localStrategy = passportLocal.Strategy;
@@ -20,7 +22,7 @@ const COOKIE_SECRET = config.cookieSecret;
 const cookieExtractor = req => {
     let token = null;
     if (req && req.cookies) {
-        token = req.cookies[COOKIE_SECRET];
+        token = req.cookies.jwtCookieToken;
     } else{
         
     }
@@ -41,6 +43,7 @@ const initializePassport = () => {
         }
     ));
 
+    // GITHUB
     passport.use('github', new GitHubStrategy(
         {
             clientID: 'Iv1.3809f01a7b3c6013',
@@ -51,8 +54,8 @@ const initializePassport = () => {
             try {
                 const user = await userModel.findOne({ email: profile._json.email });
                 if (!user) {
-                    const cartItem = {};
-                    const createdCart = await cartDao.createCartItem(user, cartItem);
+                    const createdCart = await CartService.createNewCart();
+                    const cartId = createdCart._id;
                     
                     let newUser = {
                         first_name: profile._json.name,
@@ -61,10 +64,11 @@ const initializePassport = () => {
                         email: profile._json.email,
                         password: '',
                         loggedBy: "GitHub",
-                        cartId: createdCart._id
+                        cartId: cartId
                     }
-                    const result = await userModel.create(newUser);
-                    return done(null, result)
+                    const result = await UserService.create(newUser);
+                    await cartModel.findByIdAndUpdate(cartId, { userId: result._id });
+                    return done(null, user)
                 } else {
                     return done(null, user)
                 }
@@ -74,11 +78,12 @@ const initializePassport = () => {
         }
         ))
         
+        // GOOGLE
         passport.use('google', new GoogleStrategy(
             {
-            clientID: 'GOOGLE_CLIENT_ID',
-            clientSecret: 'GOOGLE_SECRET',
-            callbackURL: "GOOGLE_CALLBACK"
+            clientID: config.googleClientId,
+            clientSecret: config.googleSecretKey,
+            callbackURL: config.googleCallback
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
@@ -107,6 +112,7 @@ const initializePassport = () => {
             }
         ))
         
+        // REGISTER
         passport.use('register', new localStrategy(
             { passReqToCallback: true, usernameField: 'email' },
             async (req, username, password, done) => {
@@ -129,6 +135,8 @@ const initializePassport = () => {
                         cartId: cartId
                     }
                     const result = await UserService.create(user);
+                    await cartModel.findByIdAndUpdate(createdCart._id, { userId: result._id });
+                    await enviarCorreoBienvenida(user);
                     return done(null, result)
                 } catch (error) {
                     return done(error)

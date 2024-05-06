@@ -25,17 +25,17 @@ transporter.verify(function (error, success) {
 })
 
 const mailOptions = {
-    from: "Helanus Test - " + config.gmailAccount,
+    from: "Helanus - " + config.gmailAccount,
     to: 'matiascataldo923@gmail.com',
-    subject: "Correo de prueba HELANUS!",
+    subject: "Correo de HELANUS!",
     html: `<div><h1> Esto es un test de correo con NodeMailer </h1></div>`,
     attachments: []
 }
 
 const mailOptionsWithAttachments = {
-    from: "Helanus Test - " + config.gmailAccount,
+    from: "Helanus - " + config.gmailAccount,
     to: `${config.gmailAccount}`,
-    subject: "Correo de prueba HELANUS!",
+    subject: "Correo de HELANUS!",
     html: `<div>
                 <h1>Esto es un Test de envio de correos con Nodemailer!</h1>
                 <p>Ahora usando imagenes: </p>
@@ -50,12 +50,13 @@ const mailOptionsWithAttachments = {
     ]
 }
 
-export const sendEmail = (req, res, ticketData) => {
+export const sendEmail = (email, ticketData) => {
     try {
         const { code, purchase_datetime, amount, purchaser, items } = ticketData;
 
         const mailOptionsWithTicket = {
             ...mailOptions,
+            to: email,
             html: `
                 <div>
                     <h1>GRACIAS POR SU COMPRA!</h1>
@@ -67,7 +68,7 @@ export const sendEmail = (req, res, ticketData) => {
                     <p><strong>Detalles de la compra:</strong></p>
                     <br>
                     <ul>
-                        ${items.map( item => `
+                        ${items.map(item => `
                             <li>
                                 <p><strong>Producto:</strong> ${item.productName}</p>
                                 <p><strong>Precio:</strong> $ ${item.productPrice}</p>
@@ -81,15 +82,16 @@ export const sendEmail = (req, res, ticketData) => {
 
         transporter.sendMail(mailOptionsWithTicket, (error, info) => {
             if (error) {
-                res.status(400).send({ message: "Error", payload: error });
+                console.error('Error al enviar el correo electrónico de compra:', error);
+            } else {
+                console.log('Correo electrónico de compra enviado:', info.response);
             }
-            res.send({ message: "Éxito", payload: info });
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: error, message: "No se pudo enviar el correo electrónico desde:" + config.gmailAccount });
+        console.error('Error al enviar el correo electrónico de compra:', error);
     }
 };
+
 
 export const sendEmailWithAttachments = (req, res) => {
     try {
@@ -179,7 +181,7 @@ export const resetPassword = async (req, res) => {
 
 export const sendInactiveAccountEmail = (email) => {
     const mailOptions = {
-        from: "Helanus Test - " + config.gmailAccount,
+        from: "Helanus - " + config.gmailAccount,
         to: email,
         subject: "Cuenta eliminada por inactividad",
         html: `<div><h1>Su cuenta ha sido eliminada por inactividad</h1>
@@ -194,3 +196,37 @@ export const sendInactiveAccountEmail = (email) => {
         }
     });
 };
+
+export const sendProductDeletedEmail = async (email, productName) => {
+    try {
+        const mailOptions = {
+            from: "Helanus - " + config.gmailAccount,
+            to: email,
+            subject: "Producto eliminado",
+            html: `<div><h1>Producto Eliminado</h1>
+                    <p>Lamentamos informarle que el producto "${productName}" ha sido eliminado.</p></div>`
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log("Correo electrónico de producto eliminado enviado con éxito a:", email);
+    } catch (error) {
+        console.error("Error al enviar el correo electrónico de producto eliminado:", error);
+    }
+};
+
+export function enviarCorreoBienvenida(usuario) {
+    const mailOptions = {
+        from: "Helanus - " + config.gmailAccount,
+        to: usuario.email,
+        subject: 'Bienvenido a Helanus',
+        text: `Hola ${usuario.first_name} ${usuario.last_name},\n\n¡Bienvenido a Helanus! Gracias por registrarte en nuestra plataforma.\n\nEsperamos que disfrutes de nuestros servicios.\n\nSaludos,\nEl equipo de Helanus`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.error('Error al enviar el correo electrónico de bienvenida:', error);
+        } else {
+            console.log('Correo electrónico de bienvenida enviado:', info.response);
+        }
+    });
+}

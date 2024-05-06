@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { UserService } from '../services/service.js';
+import { CartService, UserService } from '../services/service.js';
 import { sendInactiveAccountEmail } from "../controllers/email.controller.js"
 
 // OBTENER USUARIOS
@@ -8,30 +8,64 @@ export const getUsers = async (req, res) => {
         const users = await UserService.getAll();
         res.json(users);
     } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
         res.status(500).json({ error: "Error interno del servidor al obtener los usuarios" });
     }
 };
 
+// ELIMINAR UN USUARIO
+export const deleteUser = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const user = await UserService.getBy(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found with ID: " + userId });
+        }
+        await CartService.delete(user.cartId);
+        await UserService.delete(userId);
+        res.status(200).json({ message: "Usuario eliminado correctamente" });
+    } catch (error) {
+        console.error("Error al eliminar usuario:", error);
+        res.status(500).json({ error: "Error interno del servidor al eliminar el usuario" });
+    }
+}
+
+
+
 //ELIMINAR USUARIOS INACTIVOS
 export const deleteInactiveUsers = async (req, res) => {
     try {
-        //const limiteInactividad = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
-        const limiteInactividad = new Date(Date.now() - 30 * 60 * 1000).toLocaleString(); 
-        console.log("LIMITE INACTIVIDAD: ", limiteInactividad);
-        const usuariosEliminados = await UserService.deleteInactives(limiteInactividad);
-        console.log("USUARIOS ELIMINADOS: ", usuariosEliminados);
-        if (usuariosEliminados.deletedCount === 0) {
-            return res.status(404).json({ message: 'No se encontraron usuarios inactivos para eliminar' });
+        const allUsers = await UserService.getAll();
+
+        const now = Date.now(); // Obtener la hora actual
+
+        const usuariosEliminados = []; // Array para almacenar los IDs de los usuarios eliminados
+
+        for (let i = 0; i < allUsers.length; i++) {
+            const lastConnection = allUsers[i].last_connection;
+
+            // Verificar si la última conexión es válida y calcular el tiempo transcurrido desde entonces
+            if (lastConnection !== null) {
+                const lastConnectionDate = new Date(lastConnection);
+                const timeSinceLastConnection = now - lastConnectionDate.getTime(); // Tiempo transcurrido en milisegundos
+                const hoursSinceLastConnection = timeSinceLastConnection / (1000 * 60 * 60); // Convertir a horas
+
+                // Si han pasado más de 48 horas desde la última conexión, eliminar al usuario
+                if (hoursSinceLastConnection > 48) {
+                    await sendInactiveAccountEmail(allUsers[i].email); // Enviar correos electrónicos a los usuarios eliminados
+                    await CartService.delete(allUsers[i].cartId);
+                    await UserService.delete(allUsers[i]._id);
+                    usuariosEliminados.push(allUsers[i]); // Agregar el ID del usuario eliminado al array
+                }
+            }
         }
-        usuariosEliminados.forEach(async (usuario) => {
-            await sendInactiveAccountEmail(usuario.email);
-        });
+
         res.status(200).json({ eliminados: usuariosEliminados });
     } catch (error) {
-        res.status(500).json({ error: 'Error controller al eliminar usuarios inactivos' });
+        console.error("Error al eliminar usuarios inactivos:", error);
+        res.status(500).json({ error: 'Error al eliminar usuarios inactivos' });
     }
 }
+
 
 
 // OBTENER USUARIO POR ID
@@ -94,12 +128,14 @@ export const changeUserRole = async (req, res) => {
             return res.status(400).json({ message: `El usuario no ha terminado de procesar su documentación. ` });
         }
 
-        if (user.role !== 'admin') {
+        if (user.role !== 'user') {
             user.role = 'premium';
             await user.save();
             return res.status(201).json({ message: `Rol de usuario ${userId} actualizado a ${user.role}` });
         } else {
-            return res.status(400).json({ message: 'No se puede actualizar el rol de un usuario administrador a premium.' });
+            user.role = 'user';
+            await user.save();
+            return res.status(201).json({ message: `Rol de usuario ${userId} actualizado a ${user.role}` });
         }
     } catch (error) {
         console.error('Error al cambiar el rol de usuario:', error);

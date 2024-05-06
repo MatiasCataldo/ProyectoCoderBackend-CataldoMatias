@@ -21,15 +21,16 @@ async function getUserIdFromEmail(email) {
 }
 
 //OBTENER ID DEL CARRITO
-async function getCartId(userId) {
+async function getCartId(userId, token) {
     try {
         const response = await fetch(`http://localhost:8080/api/carts/${userId}/cartId`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         });
-        if (response.ok) {
+        if (response.status === 200) {
             const responseData = await response.json();
             const cartId = responseData.cartId;
             return cartId;
@@ -102,6 +103,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     buyButtons.forEach(button => {
         button.addEventListener('click', async () => {
+            if(!token){
+                Toastify({
+                    text: `Debes Iniciar Sesion🔐`,
+                    duration: 1500,
+                    gravity: "top", 
+                    position: "right",
+                    stopOnFocus: true,
+                    style: {
+                        background: "#3498db",
+                    },
+                }).showToast();
+            }
             const productId = button.dataset["_id"];
             const productTitle = button.dataset["title"];
             const productPrice = button.dataset["price"];
@@ -117,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 quantity: productQuantity,
                 productImage: productImage
             };
-            console.log("DATA PRODUCT: ", productData)
+            
             try {
                 const response = await fetch(`http://localhost:8080/api/carts/${userId}/addItem`, {
                     method: 'POST',
@@ -194,8 +207,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userEmail = getEmailFromCookie();
     const userId = await getUserIdFromEmail(userEmail);
     const userIdString = userId.toString();
-    const cartId = await getCartId(userIdString);
+    const cartId = await getCartId(userId, token);
     const buyButton = document.querySelector('#purchase');
+    console.log("TOKEN: ", token)
+    console.log("USERID: ", userId)
+    console.log("USER EMAIL: ", userEmail)
     console.log("carrito ID: ", cartId)
     buyButton.addEventListener('click', async () => {
         try {

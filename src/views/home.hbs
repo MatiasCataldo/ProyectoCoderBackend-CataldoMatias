@@ -48,6 +48,9 @@
                             <li><a class="dropdown-item" href="/sucursales/#lanus-oeste">Lanus Oeste</a></li>
                         </ul>
                     </li>
+                    {{#if isAdmin}}
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/AdminPanel">ADMIN<i class="fa-solid fa-user-tie"></i></a></li>
+                    {{/if}}
                 </ul>
                 <form class="d-flex">
                     <a href="/cart" class="btn btn-outline-dark" type="submit">
@@ -79,10 +82,10 @@
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Sucursales</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/sucursales/#lanus-este-1">Lanus Este</a></li>
-                            <li><a class="dropdown-item" href="/sucursales/#lanus-este-2">Lanus Este</a></li>
-                            <li><a class="dropdown-item" href="/sucursales/#escalada">Remedios de Escalada</a></li>
-                            <li><a class="dropdown-item" href="/sucursales/#lanus-oeste">Lanus Oeste</a></li>
+                            <li><a class="dropdown-item" href="/sucursales/NoUser/#lanus-este-1">Lanus Este</a></li>
+                            <li><a class="dropdown-item" href="/sucursales/NoUser/#lanus-este-2">Lanus Este</a></li>
+                            <li><a class="dropdown-item" href="/sucursales/NoUser/#escalada">Remedios de Escalada</a></li>
+                            <li><a class="dropdown-item" href="/sucursales/NoUser/#lanus-oeste">Lanus Oeste</a></li>
                         </ul>
                     </li>
                 </ul>

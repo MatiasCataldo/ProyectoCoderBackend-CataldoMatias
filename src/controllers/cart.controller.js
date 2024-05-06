@@ -11,7 +11,8 @@ import { generateCartErrorInfo } from "../services/messages/cart-add-error.messa
 export const getCartByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        const cart = await CartService.getByUser(userId)
+        const user = await UserService.getBy(userId);
+        const cart = await CartService.getBy(user.cartId);
 
         if (!cart) {
             return res.status(404).json({ message: "Carrito no encontrado." });
@@ -33,8 +34,10 @@ export const getCartByUserId = async (req, res) => {
 export const getCartIdByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        const cartId = await CartService.getCartIdByUser(userId)
-
+        const user = await UserService.getBy(userId);
+        const cart = await CartService.getBy(user.cartId);
+        const cartId = cart._id;
+        
         if (!cartId) {
             return res.status(404).json({ message: "Carrito no encontrado." });
         }
@@ -57,6 +60,7 @@ export const addItemToCart = async (req, res) => {
         const { userId } = req.params;
         const { productName, productId, quantity, productPrice, productImage } = req.body;
         const user = await UserService.getBy(userId);
+        const cart = await CartService.getBy(user.cartId);
         const product = await ProductService.getBy(productId);
         
         if (!productId || !quantity || !productName || !productPrice || !productImage) {
@@ -76,7 +80,7 @@ export const addItemToCart = async (req, res) => {
             return res.status(403).json({ message: "No puedes agregar un producto que NO te pertenece a tu carrito." });
         }*/
         
-        let updatedCart = await CartService.getByUser(userId);
+        let updatedCart = cart;
         const productIdExists = updatedCart.items.some(item => {
             console.log(item.productId);
             return item.productId == productId;
@@ -188,9 +192,9 @@ export const purchase = async (req, res) => {
         }
     
         const userTiket = await UserService.getBy(userId)
-        const nameUser = userTiket.last_name + userTiket.first_name
+        const nameUser = userTiket.last_name + " " + userTiket.first_name
 
-        await sendEmail(null, null, {
+        await sendEmail(userEmail, {
             code: ticket.code,
             purchaser: nameUser,
             purchase_datetime: ticket.purchase_datetime,

@@ -34,10 +34,9 @@ import MongoSingleton from './config/mongodb-singleton.js';
 
 // CONSTANTES DE ENTORNO
 const COOKIE_SECRET = config.cookieSecret;
-//mongodb://127.0.0.1/clase40-adoptme-test - mongodb://127.0.0.1/ecommerce
-const MONGO_URL = "mongodb://127.0.0.1/ecommerce";
+const MONGO_URL = config.urlMongo;
 const app = express();
-const SERVER_PORT = config.port;
+const SERVER_PORT = config.port || 8080;
 const httpServer = http.createServer(app);
 
 //APP SETTINGS
@@ -108,7 +107,7 @@ app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 app.use("/api/products", passportCall('jwt'), authorization(['admin', 'premium']), productsRouter);
 app.use("/api/messages", passportCall('jwt'), authorization('user'), messagesRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/users", passportCall('jwt'), authorization(['admin', 'premium']), userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/sms", smsRouter);

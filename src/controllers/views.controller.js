@@ -1,4 +1,9 @@
 class ViewsController {
+        // Renderiza la vista de Admin
+        static renderLogin(req, res) {
+            res.render("Admin");
+        }
+
     // Renderiza la vista de login
     static renderLogin(req, res) {
         res.render("login");

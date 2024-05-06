@@ -13,9 +13,16 @@ form.addEventListener('submit', e => {
         }
     }).then(result => {
         if (result.status === 200) {
-            console.log("Usuario Registrado")
-            alert("Register realizado con exito!");
-            //window.location.replace('/login')
+            Toastify({
+                text: `Usuario creado con exito✅`,
+                duration: 1500,
+                gravity: "top", 
+                position: "center", 
+                stopOnFocus: true,
+                style: {
+                    background: "darkred",
+                },
+            }).showToast();
             window.location.href = '/login';
         }
     })

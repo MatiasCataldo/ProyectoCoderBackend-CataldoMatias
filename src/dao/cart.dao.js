@@ -5,6 +5,10 @@ export default class CartDao {
         return await CartModel.findById(cartId);
     }
 
+    delete = (cartId) => {
+        return CartModel.findByIdAndDelete(cartId);
+    }
+
     async save(doc) {
         const { userId, cartItem } = doc;
         let cart = await CartModel.findOne({ userId });

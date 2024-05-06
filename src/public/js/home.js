@@ -12,7 +12,7 @@ document.getElementById('logoutForm').addEventListener('click', async (e) => {
           }
         })
       console.log("Response: ", response)
-      if (response.ok) {
+      if (response.status === 200) {
         window.location.replace('/home')
       } else {
           console.error('Error al obtener respuesta al cerrar sesión:', response.statusText);

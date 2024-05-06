@@ -78,6 +78,8 @@ export const DeleteProduct = async (req, res) => {
     if (!deletedProduct) {
         res.status(404).json({ message: 'Producto no encontrado' });
     } else {
+        const user = await userService.getBy(deletedProduct.owner);
+        await sendProductDeletedEmail(user.email, deletedProduct.name);
         res.status(200).json({ message: 'Producto eliminado correctamente', deletedProduct });
     }
 };
