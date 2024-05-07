@@ -1,0 +1,134 @@
+[{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b8d"
+  },
+  "id": "H14",
+  "title": "Helado Artesanal de 1/4Kg",
+  "description": "Helado artesanal de 1/4 de kilo con 2 sabores a elegir.",
+  "price": 3200,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/c_fill,q_auto/f_auto/1-4_lv42m7.png",
+  "stock": 47,
+  "category": "Helado",
+  "status": true,
+  "code": 1,
+  "owner": {
+    "$oid": "6638e9f7f2e66e169c88b94c"
+  }
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b8e"
+  },
+  "id": "H12",
+  "title": "Helado Artesanal de 1/2Kg",
+  "description": "Helado artesanal de 1/2 de kilo con 3 sabores a elegir.",
+  "price": 5600,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/h_200/1-2_embzlp.webp",
+  "stock": 49,
+  "category": "Helado",
+  "status": true,
+  "code": 2,
+  "owner": {
+    "$oid": "661e6d4aeee547a9f5d47eda"
+  }
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b8f"
+  },
+  "id": "H1",
+  "title": "Helado Artesanal de 1Kg",
+  "description": "Helado artesanal de 1 kilo con 4 sabores a elegir.",
+  "price": 10000,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/v1705924565/1_kxmfmp.jpg",
+  "stock": 48,
+  "category": "Helado",
+  "status": true,
+  "code": 3,
+  "owner": {
+    "$oid": "661e6d4aeee547a9f5d47eda"
+  }
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b90"
+  },
+  "id": "F1",
+  "title": "Frambuesas Huapis",
+  "description": "Frambuesas bañadas en chocolate Huapis 150gr.",
+  "price": 5200,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/v1705924565/huapis_ss3cwz.jpg",
+  "stock": 46,
+  "category": "Helado",
+  "status": true,
+  "code": 4,
+  "owner": {
+    "$oid": "661e6d4aeee547a9f5d47eda"
+  }
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b91"
+  },
+  "id": "BT1",
+  "title": "Torta Helada Chocotorta",
+  "description": "Base de pionono rellena de dulce de leche, galletitas y helado de chocotorta. Decorada con una fina capa de dulce de leche y galletitas. 2.5kg aprox.",
+  "price": 24000,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/v1705924566/chocotorta_th6l8i.png",
+  "stock": 49,
+  "category": "Bombones/Tortas",
+  "status": true,
+  "code": 5,
+  "owner": {
+    "$oid": "6638e9f7f2e66e169c88b94c"
+  }
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b92"
+  },
+  "id": "BT2",
+  "title": "Torta Helada Oreo",
+  "description": "Base de pionono, con helado artesanal de crema oreo, veteado de chocolate, crema y galletitas oreo.",
+  "price": 24000,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/v1705924566/oreo_nwggti.png",
+  "stock": 50,
+  "category": "Bombones/Tortas",
+  "status": true,
+  "code": 6,
+  "owner": "admin"
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b93"
+  },
+  "id": "BT3",
+  "title": "Barra Patagónica",
+  "description": "Base de pionono con helado de frutos rojos y mascarpone, corazón de frutos del bosque y veteado de frutos del bosque. Crema cereza y frambuesa.",
+  "price": 20000,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/v1705924567/patagonia_lxqu3z.png",
+  "stock": 49,
+  "category": "Bombones/Tortas",
+  "status": true,
+  "code": 7,
+  "owner": {
+    "$oid": "663585f0cd868701175424ba"
+  }
+},
+{
+  "_id": {
+    "$oid": "661fcc670fdd71547fb34b94"
+  },
+  "id": "BT4",
+  "title": "Bombon Escoces",
+  "description": "Helado Artesanal de chocolate y crema americana, con corazón de dulce de leche repostero, cubierto con baño de repostería.",
+  "price": 20000,
+  "thumbnail": "https://res.cloudinary.com/dbff77zsg/image/upload/v1705924566/escoses_hcwcku.jpg",
+  "stock": 49,
+  "category": "Bombones/Tortas",
+  "status": true,
+  "code": 8,
+  "owner": {
+    "$oid": "6638e9f7f2e66e169c88b94c"
+  }
+}]

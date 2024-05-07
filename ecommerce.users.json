@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$oid": "66344214c74edb38fa6ab69a"
+  },
+  "first_name": "MATIAS",
+  "last_name": "CATALDO",
+  "email": "matiascataldo923@gmail.com",
+  "age": 25,
+  "password": "$2b$10$VycWoARkV2xg4EObFmAaTeXTbMFi0FmzmCH32gyPwT5rz2TFhLR1K",
+  "loggedBy": "form",
+  "role": "admin",
+  "cartId": {
+    "$oid": "6634da3422a36ae04af26077"
+  },
+  "status": "offline",
+  "last_connection": {
+    "$date": "2024-06-05T14:14:58.000Z"
+  },
+  "documents": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6638e9f7f2e66e169c88b94c"
+  },
+  "first_name": "Matias Leandro",
+  "last_name": "Cataldo",
+  "email": "maticataldo21@gmail.com",
+  "age": 25,
+  "password": "$2b$10$WHNx8stwmp8HJu3rwuqI.eViKxsI3pj/7gwe773ilBbnwA2LuUi3K",
+  "loggedBy": "form",
+  "role": "user",
+  "cartId": {
+    "$oid": "6638e9f7f2e66e169c88b949"
+  },
+  "status": "offline",
+  "last_connection": {
+    "$date": "2024-06-05T22:47:14.000Z"
+  },
+  "documents": [],
+  "__v": 0
+}]

@@ -1,11 +1,11 @@
 import config from "../config/config.js";
 import twilio from 'twilio';
 
-const twilioClient = twilio(config.twilioAccountSID, config.twilioAuthToken);
+const twilioClient = twilio(process.env.twilioAccountSID, process.env.twilioAuthToken);
 const twilioSMSOptions = {
     body: "Esto es un mensaje SMS de prueba usando Twilio desde Coderhouse.",
-    from: config.twilioSmsNumber,
-    to: config.twilioToSmsNumber
+    from: process.env.twilioSmsNumber,
+    to: process.env.twilioToSmsNumber
 }
 
 export const sendSMS = async (req, res) => {

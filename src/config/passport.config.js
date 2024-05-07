@@ -16,7 +16,8 @@ const localStrategy = passportLocal.Strategy;
 const JwtStrategy = jwtStrategy.Strategy;
 const ExtractJWT = jwtStrategy.ExtractJwt;
 const logger = addLogger;
-const COOKIE_SECRET = config.cookieSecret;
+const cookieSecret = process.env.COOKIE_SECRET;
+
 
 
 const cookieExtractor = req => {

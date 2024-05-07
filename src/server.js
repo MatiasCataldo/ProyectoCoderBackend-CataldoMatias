@@ -33,10 +33,10 @@ import { addLogger } from "./config/logger_CUSTOM.js";
 import MongoSingleton from './config/mongodb-singleton.js';
 
 // CONSTANTES DE ENTORNO
-const COOKIE_SECRET = config.cookieSecret;
-const MONGO_URL = config.urlMongo;
+const cookieSecret = process.env.COOKIE_SECRET;
+const mongoURL = process.env.MONGO_URL;
 const app = express();
-const SERVER_PORT = config.port || 8080;
+const SERVER_PORT = process.env.PORT || 9090;
 const httpServer = http.createServer(app);
 
 //APP SETTINGS
@@ -45,13 +45,13 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(COOKIE_SECRET));
+app.use(cookieParser(cookieSecret));
 app.use(addLogger);
 app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
 app.use(session(
   {
       store: MongoStore.create({
-            mongoUrl: MONGO_URL,
+            mongoUrl: mongoURL,
             ttl: 10 * 60  
         }),
         secret: "coderS3cr3t",
