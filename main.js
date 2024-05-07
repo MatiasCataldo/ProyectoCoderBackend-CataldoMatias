@@ -13,7 +13,7 @@ export class ProductManager {
 
     async getProducts() {
         try {
-            const response = await fetch('http://localhost:8080/mockingproducts', {
+            const response = await fetch('https://helanus.netlify.app/mockingproducts', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ export class CartManager{
         console.log("userId desde main.js: ", userString)
         
         try {
-            const response = await fetch(`http://localhost:8080/api/carts/${userString}`, {
+            const response = await fetch(`https://helanus.netlify.app/api/carts/${userString}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ export class CartManager{
 export class UserManager{
     async getUsers(token) {
         try {
-            const response = await fetch('http://localhost:8080/api/users', {
+            const response = await fetch('https://helanus.netlify.app/api/users', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
