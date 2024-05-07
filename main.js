@@ -13,7 +13,7 @@ export class ProductManager {
 
     async getProducts() {
         try {
-            const response = await fetch('http://localhost:8080/mockingproducts', {
+            const response = await fetch('/mockingproducts', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
