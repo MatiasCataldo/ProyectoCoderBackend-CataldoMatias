@@ -1,20 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="/home/user">
-            <img src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png"
-                class="logoHeader" alt="logo pagina">
+            <img src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png" class="logoHeader" alt="logo pagina">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home/user">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
                 <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="true">Sucursales</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">Sucursales</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="/sucursales/#lanus-este-1">Lanus Este</a></li>
                         <li><a class="dropdown-item" href="/sucursales/#lanus-este-2">Lanus Este</a></li>
@@ -23,8 +21,7 @@
                     </ul>
                 </li>
                 {{#if isAdmin}}
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/AdminPanel">ADMIN<i
-                            class="fa-solid fa-user-tie"></i></a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/AdminPanel">ADMIN<i class="fa-solid fa-user-tie"></i></a></li>
                 {{/if}}
             </ul>
             <form class="d-flex">
@@ -38,41 +35,35 @@
     </div>
 </nav>
 <div class="container mt-5">
-    <div>
-        <div class="text-center text-white">
-            <img style="height: 80px;"
-                src="https://res.cloudinary.com/dbff77zsg/image/upload/logo-removebg-preview_s7i8zr.png">
-        </div>
+    <div class="text-center text-white">
+        <img style="height: 80px;" src="https://res.cloudinary.com/dbff77zsg/image/upload/logo-removebg-preview_s7i8zr.png">
     </div>
-    <h1>Administrar Usuarios </h1>
+    <h1 class="text-center">Administrar Usuarios </h1>
 
-    <!-- Botón para agregar nuevo usuario -->
-    <button id="addUserBtn" type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">
-        Agregar Nuevo Usuario <i class="fa-solid fa-user-plus"></i>
-    </button>
+    <div class="d-flex justify-content-center mb-3">
+        <button id="addUserBtn" type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            Agregar Nuevo Usuario <i class="fa-solid fa-user-plus"></i>
+        </button>
+        <button id="eliminarUsuariosBtn" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            Eliminar Usuarios Inactivos <i class="fa-solid fa-trash"></i>
+        </button>
+    </div>
 
-    <!-- Botón para eliminar usuarios -->
-    <button id="eliminarUsuariosBtn" type="button" class="btn btn-danger mb-3" data-toggle="modal"
-        data-target="#addUserModal">
-        Eliminar Usuarios Inactivos <i class="fa-solid fa-trash"></i>
-    </button>
-
-    <!-- Tabla para mostrar la lista de usuarios -->
-    <table class="table" style="background-color: rgba(230, 230, 250, 0.671); border-radius: 15px;">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Correo Electrónico</th>
-                <th scope="col">Rol</th>
-                <th scope="col">Ultima Conexión</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#if users}}
-            {{#each users}}
-            <div>
+    <div class="table-responsive" style="border-radius: 20px;">
+        <table class="table table-bordered table-striped" style="background-color: rgba(230, 230, 250, 0.671); border-radius: 15px;">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Correo Electrónico</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Ultima Conexión</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if users}}
+                {{#each users}}
                 <tr>
                     <th scope="row">{{this._id}}</th>
                     <td>{{this.first_name}} {{this.last_name}}</td>
@@ -84,79 +75,52 @@
                     <td style="color: green;">OnLine</td>
                     {{/if}}
                     <td>
-                        <!-- Botón para modificar rol -->
-                        <button id="changeRoleBtn_{{this._id}}" type="button" class="btn btn-secondary btn-sm"><i
-                                class="fa-solid fa-user-pen"></i></button>
-                        <!-- Botón para eliminar usuario -->
-                        <button type="button" class="btn btn-danger btn-sm ml-2 delete-user-btn"
-                            data-user-id="{{this._id}}"><i class="fa-solid fa-trash"></i></button>
+                        <button id="changeRoleBtn_{{this._id}}" type="button" class="btn btn-secondary btn-sm"><i class="fa-solid fa-user-pen"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm ml-2 delete-user-btn" data-user-id="{{this._id}}"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-            </div>
-            {{/each}}
-            {{else}}
-            <tr>
-                <th scope="row">--</th>
-                <td>NO HAY USUARIOS</td>
-                <td>--</td>
-                <td>--</td>
-            </tr>
-            {{/if}}
-        </tbody>
-    </table>
+                {{/each}}
+                {{else}}
+                <tr>
+                    <th scope="row">--</th>
+                    <td colspan="5" class="text-center">NO HAY USUARIOS</td>
+                </tr>
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- Modal para agregar nuevo usuario -->
-<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addUserModalLabel">Agregar Nuevo Usuario</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Formulario para agregar nuevo usuario -->
                 <form id="registerForm" class="mx-1 mx-md-5">
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            <input name="first_name" type="text" id="form1Example1c" class="form-control" />
-                            <label class="form-label" for="form3Example1c">Nombre</label>
-                        </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Nombre</label>
+                        <input name="first_name" type="text" id="first_name" class="form-control" />
                     </div>
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            <input name="last_name" type="text" id="form3Example1c" class="form-control" />
-                            <label class="form-label" for="form3Example1c">Apellido</label>
-                        </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Apellido</label>
+                        <input name="last_name" type="text" id="last_name" class="form-control" />
                     </div>
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            <input name="email" type="email" id="form3Example3c" class="form-control" />
-                            <label class="form-label" for="form3Example3c">Email</label>
-                        </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input name="email" type="email" id="email" class="form-control" />
                     </div>
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            <input name="password" type="password" id="form3Example4c" class="form-control" />
-                            <label class="form-label" for="form3Example4c">Contraseña</label>
-                        </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input name="password" type="password" id="password" class="form-control" />
                     </div>
-                    <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fa-solid fa-baby fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            <input name="age" id="form3Example4cd" class="form-control" />
-                            <label class="form-label" for="form3Example4cd">Edad</label>
-                        </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Edad</label>
+                        <input name="age" id="age" class="form-control" />
                     </div>
-                    <button style="margin: 10px;" type="submit" class="btn btn-primary">Agregar Usuario <i
-                            class="fa-solid fa-user-plus"></i></button>
+                    <button type="submit" class="btn btn-primary">Agregar Usuario <i class="fa-solid fa-user-plus"></i></button>
                 </form>
             </div>
         </div>

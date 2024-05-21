@@ -58,7 +58,7 @@ export const getProducts = async (rq, res) => {
 
 export const getDatosControllers = async (req, res) => {
     try {
-        const datos = await ProductService.getAll({});
+        const datos = await ProductService.getAll({}).sort({ code: 1 });
         res.status(200).json(datos);
     } catch (error) {
         console.error("Error al obtener los productos:", error);

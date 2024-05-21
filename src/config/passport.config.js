@@ -7,7 +7,6 @@ import googleStrategy from "passport-google-oauth20"
 import { PRIVATE_KEY, createHash } from '../utils.js';
 import { enviarCorreoBienvenida } from '../controllers/email.controller.js'
 import { addLogger } from "./logger_CUSTOM.js";
-import config from './config.js';
 import { CartService, UserService } from '../services/service.js';
 import cartModel from '../dao/models/cart.model.js';
 

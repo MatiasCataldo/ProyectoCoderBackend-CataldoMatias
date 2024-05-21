@@ -126,6 +126,15 @@ router.get("/home/user",
     }
 );
 
+//PAGO EXITOSO
+router.get("/successPayment", 
+    passportCall('jwt'),
+    authorization(['user', 'admin' , 'premiun']), async (req, res) => {
+        res.render("success", {
+            user: req.user
+        });
+});
+
 // REALTIMEPRODUCTS
 router.get("/realTimeProducts", 
     passportCall('jwt'),

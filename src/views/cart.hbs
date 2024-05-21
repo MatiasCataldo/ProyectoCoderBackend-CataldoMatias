@@ -1,65 +1,67 @@
-
-    <header>
-        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-            <h1 style="padding: 5px;" class="navbar-brand" href="./index.html">Bienvenido, {{ user.name }}!</h1>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                </ul>
-            </div>
-            <form id="logoutForm" method="GET">
-                <button style="margin-right: 10px; background-color: darkred; border-color: darkred;" type="submit"
-                    class="btn btn-primary">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
-                </button>
-            </form>
-        </nav>
-    </header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="/home/user">
-                <img src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png"
-                    class="logoHeader" alt="logo pagina">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home/user">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">Sucursales</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/sucursales/#lanus-este-1">Lanus Este</a></li>
-                            <li><a class="dropdown-item" href="/sucursales/#lanus-este-2">Lanus Este</a></li>
-                            <li><a class="dropdown-item" href="/sucursales/#escalada">Remedios de Escalada</a></li>
-                            <li><a class="dropdown-item" href="/sucursales/#lanus-oeste">Lanus Oeste</a></li>
-                        </ul>
-                    </li>
-                    {{#if isAdmin}}
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/AdminPanel">ADMIN<i class="fa-solid fa-user-tie"></i></a></li>
-                    {{/if}}
-                </ul>
-                <form class="d-flex">
-                    <a href="/cart" class="btn btn-outline-dark" type="submit">
-                        <i class="bi-cart-fill me-1"></i>
-                        Cart
-                        <span id="cartItemCount" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                    </a>
-                </form>
-            </div>
-        </div>
-    </nav>
+<header>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <h1 style="padding: 5px;" class="navbar-brand" href="./index.html">Bienvenido, {{ user.name }}!</h1>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+      </ul>
+    </div>
+    <form id="logoutForm" method="GET">
+      <button style="margin-right: 10px; background-color: darkred; border-color: darkred;" type="submit"
+        class="btn btn-primary">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+      </button>
+    </form>
+  </nav>
+</header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href="/home/user">
+      <img
+        src="https://res.cloudinary.com/dbff77zsg/image/upload/w_50,h_55,q_auto/f_auto/logo-removebg-preview_s7i8zr.png"
+        class="logoHeader" alt="logo pagina">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+        class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home/user">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#footer">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="#footer">Nosotros</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="true">Sucursales</a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/sucursales/#lanus-este-1">Lanus Este</a></li>
+            <li><a class="dropdown-item" href="/sucursales/#lanus-este-2">Lanus Este</a></li>
+            <li><a class="dropdown-item" href="/sucursales/#escalada">Remedios de Escalada</a></li>
+            <li><a class="dropdown-item" href="/sucursales/#lanus-oeste">Lanus Oeste</a></li>
+          </ul>
+        </li>
+        {{#if isAdmin}}
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/AdminPanel">ADMIN<i
+              class="fa-solid fa-user-tie"></i></a></li>
+        {{/if}}
+      </ul>
+      <form class="d-flex">
+        <a href="/cart" class="btn btn-outline-dark" type="submit">
+          <i class="bi-cart-fill me-1"></i>
+          Cart
+          <span id="cartItemCount" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+        </a>
+      </form>
+    </div>
+  </div>
+</nav>
 {{#if cart.items}}
 <section class="h-100 h-custom">
   <div class="container py-5 h-100">
@@ -110,17 +112,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-4 bg-grey">
-                <div class="p-5">
-                  <h3 class="fw-bold mb-5 mt-2 pt-1">Resumen</h3>
-                  <hr class="my-4">
-
-                  <div class="d-flex justify-content-between mb-4">
-                    <h5 class="text-uppercase">Productos {{cart.items.length}}</h5>
-                  </div>
-
+              <div class="col-lg-4 bg-grey d-flex align-items-end">
+                <div class="p-5" style="display: grid; width: 100%;">
                   <h5 class="text-uppercase mb-3">Envio</h5>
-
                   <div class="mb-4 pb-2">
                     <select data-mdb-select-init>
                       <option value="1">Estandar a Domicilio- $5000.00</option>
@@ -137,7 +131,6 @@
                       <label class="form-label" for="form3Examplea2">Enter your code</label>
                     </div>
                   </div>
-
                   <div class="d-flex justify-content-between mb-5">
                     <h5 class="text-uppercase">Precio Total:</h5>
                     <h5 id="totalPrice">$ 0.00</h5>
@@ -152,8 +145,13 @@
                         document.getElementById('totalPrice').innerText = "$ " + totalPrice.toFixed(2);
                   </script>
 
-                  <button id="purchase" type="button" data-mdb-button-init data-mdb-ripple-init
-                    class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark">COMPRAR</button>
+                  <!-- Unificado en un solo botón -->
+                  <button id="purchase" type="button" class="btn btn-dark btn-block btn-lg">COMPRAR</button>
+
+                  <!-- Formulario de checkout -->
+                  <form id="checkout-form" action="/checkout/create-checkout-session" method="POST" style="display: none;">
+                    <button type="submit" id="checkout-button">Checkout</button>
+                  </form>
 
                 </div>
               </div>
@@ -279,5 +277,5 @@
   </div>
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">© 2023 Copyright ~ Helanus®</div>
 </footer>
-<script src="/js/cart.js"></script>
+<script type="module" src="/js/cart.js"></script>
 <script src="/js/home.js"></script>

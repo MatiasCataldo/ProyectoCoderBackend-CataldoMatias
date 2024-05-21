@@ -6,6 +6,7 @@ import { sendEmail } from "../controllers/email.controller.js"
 import CustomProductError from "../services/error/CustomError.js";
 import { CartErrors } from "../services/error/errors-enum.js";
 import { generateCartErrorInfo } from "../services/messages/cart-add-error.message.js";
+import Stripe from "stripe";
 
 // BUSCAR CARRITO POR ID
 export const getCartByUserId = async (req, res) => {
@@ -190,7 +191,14 @@ export const purchase = async (req, res) => {
         for (const item of cart.items) {
             await ticketService.updateProductStock(userId, item.productId, item.quantity);
         }
-    
+
+        let totalAmount = 0;
+        for (const item of cart.items) {
+            const itemTotal = item.productPrice * item.quantity;
+            console.log(`Price for ${item.productName}: ${item.productPrice} * ${item.quantity} = ${itemTotal}`);
+            totalAmount += itemTotal;
+        }
+        
         const userTiket = await UserService.getBy(userId)
         const nameUser = userTiket.last_name + " " + userTiket.first_name
 
@@ -201,7 +209,7 @@ export const purchase = async (req, res) => {
             amount: ticket.amount,
             items: cart.items 
         });
-        res.json({ ticket, message: "Compra realizada con éxito." });
+        res.status(200).json({ ticket, message: "Compra realizada con éxito." });
         await CartService.clearCart(userId);
 
     } catch (error) {

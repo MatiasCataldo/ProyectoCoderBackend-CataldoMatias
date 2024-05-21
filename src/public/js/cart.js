@@ -1,14 +1,15 @@
+
 //OBTENER USUARIO POR EMAIL
 async function getUserIdFromEmail(email) {
     try {
-        const response = await fetch(`http://localhost:8080/api/users/email/${encodeURIComponent(email)}`, {
+        const response = await fetch(`https://proyectobackend-cataldomatias-production.up.railway.app/api/users/email/${encodeURIComponent(email)}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
         if (response.ok) {
-            const userData = await response.json();
+            const userData = await response.json(); 
             return userData._id;
         } else {
             console.error('Error al obtener el ID de usuario del backend', response.statusText);
@@ -23,7 +24,7 @@ async function getUserIdFromEmail(email) {
 //OBTENER ID DEL CARRITO
 async function getCartId(userId, token) {
     try {
-        const response = await fetch(`http://localhost:8080/api/carts/${userId}/cartId`, {
+        const response = await fetch(`https://proyectobackend-cataldomatias-production.up.railway.app/api/carts/${userId}/cartId`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,16 +99,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-//AGREGAR PRODUCTO AL CARRITO
+    //AGREGAR PRODUCTO AL CARRITO
     const buyButtons = document.querySelectorAll('.buy-button');
 
     buyButtons.forEach(button => {
         button.addEventListener('click', async () => {
-            if(!token){
+            if (!token) {
                 Toastify({
                     text: `Debes Iniciar Sesion🔐`,
                     duration: 1500,
-                    gravity: "top", 
+                    gravity: "top",
                     position: "right",
                     stopOnFocus: true,
                     style: {
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const productPrice = button.dataset["price"];
             const productImage = button.dataset["image"];
             const productQuantityInput = button.parentElement.querySelector('.quantityInput');
-            const productQuantity = parseInt(productQuantityInput.value);            
+            const productQuantity = parseInt(productQuantityInput.value);
 
 
             const productData = {
@@ -130,9 +131,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 quantity: productQuantity,
                 productImage: productImage
             };
-            
+
             try {
-                const response = await fetch(`http://localhost:8080/api/carts/${userId}/addItem`, {
+                const response = await fetch(`https://proyectobackend-cataldomatias-production.up.railway.app/api/carts/${userId}/addItem`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -145,14 +146,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     Toastify({
                         text: `Producto agregado: ${productTitle} ✅`,
                         duration: 1500,
-                        gravity: "top", 
+                        gravity: "top",
                         position: "right",
                         stopOnFocus: true,
                         style: {
                             background: "darkcyan",
                         },
                     }).showToast();
-                    console.log('Producto agregado al carrito');
                 } else {
                     console.error('Error al agregar el producto al carrito:', response.statusText);
                 }
@@ -174,12 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const userId = await getUserIdFromEmail(userEmail);
             const productId = button.dataset.productid;
 
-            
+
             try {
-                const response = await fetch(`http://localhost:8080/api/carts/${userId}/deleteItem/${productId}`, {
+                const response = await fetch(`https://proyectobackend-cataldomatias-production.up.railway.app/api/carts/${userId}/deleteItem/${productId}`, {
                     method: 'DELETE',
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Error al eliminar el producto del carrito.');
                 }
@@ -202,39 +202,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// COMPRAR
 document.addEventListener('DOMContentLoaded', async () => {
-    const token = getTokenFromCookie();
-    const userEmail = getEmailFromCookie();
-    const userId = await getUserIdFromEmail(userEmail);
-    const userIdString = userId.toString();
-    const cartId = await getCartId(userId, token);
     const buyButton = document.querySelector('#purchase');
-    console.log("TOKEN: ", token)
-    console.log("USERID: ", userId)
-    console.log("USER EMAIL: ", userEmail)
-    console.log("carrito ID: ", cartId)
     buyButton.addEventListener('click', async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/carts/${userIdString}/${cartId}/purchase`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+        try { 
+            Swal.fire({
+                title: 'Estamos Procesando su Compra!',
+                icon: 'info',
+                text: 'Por favor espere un momento!🕐',
+                timer: 2500
+            }).then(() => {
+                document.getElementById('checkout-form').submit();
             });
-
-            if (response.ok) {
-                // Procesar la respuesta del servidor si es necesario
-                Swal.fire({
-                    title: 'Compra realizada',
-                    icon: 'success',
-                    text: 'Gracias por tu compra!',
-                    timer: 2500
-                });
-                window.location.reload();
-            } else {
-                console.error('Error al realizar la compra:', response.statusText);
-            }
         } catch (error) {
             console.error('Error al realizar la compra:', error);
         }

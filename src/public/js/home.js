@@ -5,7 +5,7 @@ document.getElementById('logoutForm').addEventListener('click', async (e) => {
   e.preventDefault(); 
 
   try {
-      const response = await fetch('http://localhost:8080/api/jwt/logout', {
+      const response = await fetch('https://proyectobackend-cataldomatias-production.up.railway.app/api/jwt/logout', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'

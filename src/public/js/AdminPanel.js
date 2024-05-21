@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const obj = {};
         formData.forEach((value, key) => obj[key] = value);
         try {
-            const response = await fetch('http://localhost:8080/api/jwt/register', {
+            const response = await fetch('https://proyectobackend-cataldomatias-production.up.railway.app/api/jwt/register', {
                 method: 'POST',
                 body: JSON.stringify(obj),
                 headers: {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const eliminarUsuariosBtn = document.getElementById('eliminarUsuariosBtn');
     eliminarUsuariosBtn.addEventListener('click', async function () {
         try {
-            const response = await fetch('http://localhost:8080/api/users', {
+            const response = await fetch('https://proyectobackend-cataldomatias-production.up.railway.app/api/users', {
                 method: 'DELETE'
             });
 
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const userId = this.id.split('_')[1];
 
             try {
-                const response = await fetch(`http://localhost:8080/api/users/premium/${userId}`, {
+                const response = await fetch(`https://proyectobackend-cataldomatias-production.up.railway.app/api/users/premium/${userId}`, {
                     method: 'PUT'
                 });
 

@@ -3,6 +3,7 @@ import { generateUniqueCode } from '../utils.js';
 import {ProductService} from "../services/service.js";
 import TicketModel from "../dao/models/ticket.model.js";
 import productModel from "../dao/models/product.model.js";
+import moment from "moment-timezone"
 
 export default class TicketRepository extends GenericRepository {
     constructor(dao) {
@@ -48,7 +49,7 @@ export default class TicketRepository extends GenericRepository {
             const ticket = new TicketModel({
                 code: generateUniqueCode(),
                 purchaser: purchaserEmail,
-                purchase_datetime: new Date("2024-03-16T15:14:55"),
+                purchase_datetime: moment.tz("America/Argentina/Buenos_Aires").toDate(),
                 amount: amount,
                 items: cart.items 
             });

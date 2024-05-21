@@ -1,7 +1,7 @@
-import config from "../config/config.js";
+i/*mport config from "../config/config.js";
 import twilio from 'twilio';
 
-const twilioClient = twilio(process.env.twilioAccountSID, process.env.twilioAuthToken);
+const twilioClient = twilio(config.twilioAccountSID, config.twilioAuthToken);
 const twilioSMSOptions = {
     body: "Esto es un mensaje SMS de prueba usando Twilio desde Coderhouse.",
     from: process.env.twilioSmsNumber,
@@ -16,4 +16,4 @@ export const sendSMS = async (req, res) => {
         console.error("Hubo un problema enviando el SMS usando Twilio.");
         res.status(500).send({ error: error });
     }
-}
+}*/

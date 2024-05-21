@@ -19,7 +19,7 @@ import cartsRouter from "./routes/cart.router.js";
 import userRouter from "./routes/user.router.js";
 import jwtRouter from './routes/jwt.router.js';
 import emailRouter from './routes/email.router.js';
-import smsRouter from './routes/sms.router.js';
+import paymentRouter from './routes/payment.router.js';
 
 //IMPORT VIEWS
 import viewsRouter from "./routes/views.routes.js";
@@ -28,7 +28,6 @@ import viewsRouter from "./routes/views.routes.js";
 import __dirname, { authToken } from "./utils.js";
 import { passportCall, authorization } from './utils.js';
 import initializePassport from "./config/passport.config.js";
-import config from './config/config.js';
 import { addLogger } from "./config/logger_CUSTOM.js";
 import MongoSingleton from './config/mongodb-singleton.js';
 
@@ -110,7 +109,7 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/email", emailRouter);
-app.use("/api/sms", smsRouter);
+app.use("/checkout", paymentRouter);
 app.use("/mockingproducts", mockingRouter);
 
 // ROUTER VISTAS

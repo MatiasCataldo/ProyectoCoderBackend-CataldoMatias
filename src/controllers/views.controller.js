@@ -41,6 +41,11 @@ class ViewsController {
         });
     }
 
+    //Renderiza la vista del pago exitoso
+    static renderRegister(req, res) {
+        res.render("success");
+    }
+
     // Renderiza la vista de error
     static renderError(req, res) {
         res.render("error");
