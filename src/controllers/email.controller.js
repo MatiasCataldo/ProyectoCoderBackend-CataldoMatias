@@ -121,7 +121,7 @@ export const sendEmailToResetPassword = (req, res) => {
         }
 
         const token = generateUniqueCode();
-        const link = `http://localhost:8080/reset-password/${token}`
+        const link = `https://proyectobackend-cataldomatias-production.up.railway.app/reset-password/${token}`
 
         tempDbMails[token] = {
             email,
