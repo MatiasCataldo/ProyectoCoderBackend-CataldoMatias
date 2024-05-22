@@ -16,7 +16,7 @@ export const isValidPassword = (user, password) => {
 }
 
 //JSON WEB Tokens FUNCTIONS
-export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
+export const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 export const generateJWToken = (user) => {
     return jwt.sign({ user }, PRIVATE_KEY, { expiresIn: '3600000' });
