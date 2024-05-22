@@ -46,9 +46,9 @@ const initializePassport = () => {
     // GITHUB
     passport.use('github', new GitHubStrategy(
         {
-            clientID: 'Iv1.3809f01a7b3c6013',
-            clientSecret: '680cc4c10f7b5b25b3f88d8664976302d26f49a4',
-            callbackUrl: 'http://localhost:8080/api/jwt/githubcallback'
+            clientID: process.env.GITHUB_CID,
+            clientSecret: process.env.GITHUB_CS,
+            callbackUrl: process.env.GITHUB_CBK
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -81,9 +81,9 @@ const initializePassport = () => {
         // GOOGLE
         passport.use('google', new GoogleStrategy(
             {
-            clientID: 'GOOGLE_CLIENT_ID',
-            clientSecret: 'GOOGLE_SECRET',
-            callbackURL: "GOOGLE_CALLBACK"
+            clientID: process.env.GOOGLE_CID,
+            clientSecret: process.env.GOOGLE_SK,
+            callbackURL: process.env.GOOGLE_CALLBACK
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
